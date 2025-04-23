@@ -1,0 +1,31 @@
+{
+    "name": "Shiny Blue PTE RuleSet",
+    "description": "Shiny Blue RuleSet File for AL Development. We want the quality benefits of coding PTEs with AppSourceCop code analyzer enabled.",
+    "rules": [
+        {
+            "id": "AS0051",
+            "action": "Info",
+            "justification": "AppSource error toggled for PTE development"
+        },
+        {
+            "id": "AS0084",
+            "action": "Info",
+            "justification": "AppSource error toggled for PTE development"
+        },
+        {
+            "id": "AS0015",
+            "action": "Info",
+            "justification": "AppSource error toggled for PTE development"
+        },
+        {
+            "id": "AS0081",
+            "action": "Info",
+            "justification": "AppSource error toggled for PTE development"
+        },
+        {
+            "id": "AS0092",
+            "action": "Info",
+            "justification": "AppSource error toggled for PTE development"
+        }
+    ]
+}
