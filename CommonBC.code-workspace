@@ -1,15 +1,34 @@
 {
   "folders": [
-	{
-		"path": "CommonBC"
-	},
-	{
-		"path": "CommonBC.Test"
-	},
-	{
-		"path": ".alpackages"
-	}
-],
+    {
+      "name": "Common",
+      "path": "Common"
+    },
+    {
+      "name": "Common.Test",
+      "path": "Common.Test"
+    },
+    {
+      "name": "InventoryStatusSummary",
+      "path": "InventoryStatusSummary"
+    },
+    {
+      "name": "InventoryStatusSummary.Test",
+      "path": "InventoryStatusSummary.Test"
+    },
+    {
+      "name": "Integration",
+      "path": "Integration"
+    },
+    {
+      "name": "Integration.Test",
+      "path": "Integration.Test"
+    },
+    {
+      "name": ".alpackages",
+      "path": ".alpackages"
+    }
+  ],
   "settings": {
     "al.codeAnalyzers": [                
       "${AppSourceCop}",

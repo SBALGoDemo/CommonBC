@@ -1,0 +1,33 @@
+{
+  "id": "4aa5f0f3-e4be-4584-b1e5-21b2721c2346",
+  "name": "Inventory Status Summary",
+  "publisher": "Silver Bay Seafoods",
+  "version": "25.0.0.0",
+  "brief": "Inventory Status Summary",
+  "description": "Silver Bay Seafoods' Inventory Status Summary app contains...need to complete the description...",
+  "privacyStatement": "https://www.silverbayseafoods.com/",
+  "EULA": "https://www.silverbayseafoods.com/",
+  "help": "https://www.silverbayseafoods.com/",
+  "url": "https://www.silverbayseafoods.com/",
+  "logo": "SilverBaySeafoods.png",
+  "platform": "25.0.0.0",
+  "application": "25.0.0.0",
+  "runtime": "14.0",  
+  "idRanges": [
+    {
+      "from": 60300,
+      "to": 60349
+    }
+  ],
+  "features": [
+    "NoImplicitWith"
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": false,
+    "includeSourceInSymbolFile": false
+  },
+  "source": {
+    "repositoryUrl": "https://odydev.visualstudio.com/Business%20Central/_git/CommonBC"    
+  }
+}
