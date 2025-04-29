@@ -1,15 +1,26 @@
 {
   "folders": [
-	{
-		"path": "CommonBC"
-	},
-	{
-		"path": "CommonBC.Test"
-	},
-	{
-		"path": ".alpackages"
-	}
-],
+    {
+      "name": "CommonBC",
+      "path": "CommonBC"
+    },
+    {
+      "name": "CommonBC.Test",
+      "path": "CommonBC.Test"
+    },
+    {
+      "name": "Integration",
+      "path": "Integration"
+    },
+    {
+      "name": "Integration.Test",
+      "path": "Integration.Test"
+    },
+    {
+      "name": ".alpackages",
+      "path": ".alpackages"
+    }
+  ],
   "settings": {
     "al.codeAnalyzers": [                
       "${AppSourceCop}",
@@ -123,6 +134,7 @@
     "al.showHomeAtStartup": "Always",
     "cSpell.words": [
       "addlast",
+      "APIV",
       "asserterror",
       "codeunit",
       "Debuggable",
@@ -130,7 +142,10 @@
       "fieldgroups",
       "Mgmt",
       "pageextension",
-      "SBSCO"
+      "Propertyto",
+      "SBSCO",
+      "silverbay",
+      "Tmpl"
     ],
     "al-test-runner.untestedTestsColor": {
       "red": 250,
@@ -138,6 +153,7 @@
       "blue": 0,
       "alpha": 0.3
     },
-    "CRS.NamespacePrefixToIgnore": "SilverBay.Common"
+    "CRS.NamespacePrefixToIgnore": "SilverBay.Common",
+    "al.compilationOptions": {}
   }
 }

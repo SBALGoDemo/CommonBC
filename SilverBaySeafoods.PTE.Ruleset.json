@@ -26,6 +26,11 @@
             "id": "AS0092",
             "action": "Info",
             "justification": "AppSource error toggled for PTE development"
+        },
+        {
+            "id": "AS0053",
+            "action": "Info",
+            "justification": "AppSource error toggled for PTE development"
         }
     ]
 }

@@ -1,6 +1,38 @@
 {
     "version": "0.2.0",
-    "configurations": [        
+    "configurations": [  
+        {
+            "name": "Publish: SBDEV_BRAD",
+            "type": "al",
+            "request": "launch",
+            "tenant": "silverbayseafoods.com",
+            "environmentType": "Sandbox",
+            "environmentName": "SBDEV_BRAD",
+            "startupObjectId": 22,
+            "breakOnError": "All",
+            "breakOnRecordWrite": "None",
+            "launchBrowser": true,
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10
+        },
+        {
+            "name": "Publish: SBDEV_CALEB",
+            "type": "al",
+            "request": "launch",
+            "tenant": "silverbayseafoods.com",
+            "environmentType": "Sandbox",
+            "environmentName": "SBDEV_CALEB",
+            "startupObjectId": 22,
+            "breakOnError": "All",
+            "breakOnRecordWrite": "None",
+            "launchBrowser": true,
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10
+        },              
         {
             "name": "Publish: Docker - Closest25Sandbox",
             "type": "al",
