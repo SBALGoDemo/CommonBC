@@ -27,6 +27,7 @@
     "allowDownloadingSource": false,
     "includeSourceInSymbolFile": false
   },
+  "preprocessorSymbols": [],
   "source": {
     "repositoryUrl": "https://odydev.visualstudio.com/Business%20Central/_git/CommonBC"    
   }

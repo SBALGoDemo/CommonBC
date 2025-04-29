@@ -24,6 +24,18 @@
       "version": "25.0.0.0"
     },
     {
+      "id": "5d86850b-0d76-4eca-bd7b-951ad998e997",
+      "name": "Tests-TestLibraries",
+      "publisher": "Microsoft",
+      "version": "25.0.0.0"
+    },
+    {
+      "id":  "23de40a6-dfe8-4f80-80db-d70f83ce8caf",
+      "name":  "Test Runner",
+      "publisher":  "Microsoft",
+      "version":  "18.0.0.0"
+    },
+    {
       "publisher": "Silver Bay Seafoods",
       "name": "Inventory Status Summary",
       "id": "4aa5f0f3-e4be-4584-b1e5-21b2721c2346",
@@ -47,6 +59,7 @@
     "allowDownloadingSource": false,
     "includeSourceInSymbolFile": false
   },
+  "preprocessorSymbols": [],
   "source": {
     "repositoryUrl": "https://odydev.visualstudio.com/Business%20Central/_git/CommonBC"    
   }
