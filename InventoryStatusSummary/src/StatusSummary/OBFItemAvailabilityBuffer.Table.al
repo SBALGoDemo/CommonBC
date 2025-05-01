@@ -25,8 +25,9 @@ using Microsoft.Sales.Document;
 table 60301 "OBF-Item Availability Buffer"
 {
     Caption = 'Item Availability Buffer';
-    DrillDownPageID = "OBF-Item Avail. Drilldown";
-    LookupPageID = "OBF-Item Avail. Drilldown";
+    DataClassification = CustomerContent;
+    DrillDownPageId = "OBF-Item Avail. Drilldown";
+    LookupPageId = "OBF-Item Avail. Drilldown";
 
     fields
     {
@@ -52,11 +53,11 @@ table 60301 "OBF-Item Availability Buffer"
         field(5; "Source No."; Code[20])
         {
             Caption = 'Source No.';
-            TableRelation = IF ("Source Type" = CONST(Customer)) Customer
-            ELSE
-            IF ("Source Type" = CONST(Vendor)) Vendor
-            ELSE
-            IF ("Source Type" = CONST(Item)) Item;
+            TableRelation = if ("Source Type" = const(Customer)) Customer
+            else
+            if ("Source Type" = const(Vendor)) Vendor
+            else
+            if ("Source Type" = const(Item)) Item;
         }
         field(6; "Document No."; Code[20])
         {
@@ -96,15 +97,15 @@ table 60301 "OBF-Item Availability Buffer"
         }
         field(33; "Global Dimension 1 Code"; Code[20])
         {
-            CaptionClass = '1,1,1';
             Caption = 'Global Dimension 1 Code';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            CaptionClass = '1,1,1';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(1));
         }
         field(34; "Global Dimension 2 Code"; Code[20])
         {
-            CaptionClass = '1,1,2';
             Caption = 'Global Dimension 2 Code';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            CaptionClass = '1,1,2';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(2));
         }
         field(36; Positive; Boolean)
         {
@@ -118,7 +119,7 @@ table 60301 "OBF-Item Availability Buffer"
         }
         field(47; "Drop Shipment"; Boolean)
         {
-            AccessByPermission = TableData "Drop Shpt. Post. Buffer" = R;
+            AccessByPermission = tabledata "Drop Shpt. Post. Buffer" = R;
             Caption = 'Drop Shipment';
         }
         field(50; "Transaction Type"; Code[10])
@@ -194,10 +195,10 @@ table 60301 "OBF-Item Availability Buffer"
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
         field(93; "Lot Is On Hand"; Boolean)
         {
+            CalcFormula = exist("Item Ledger Entry" where("Item No." = field("Item No."), "Lot No." = field("Lot No.")));
             CaptionML = ENU = 'Lot Is On Hand';
-            FieldClass = FlowField;
-            CalcFormula = exist("Item Ledger Entry" WHERE("Item No." = FIELD("Item No."), "Lot No." = FIELD("Lot No.")));
             Editable = false;
+            FieldClass = FlowField;
         }
         field(480; "Dimension Set ID"; Integer)
         {
@@ -207,7 +208,7 @@ table 60301 "OBF-Item Availability Buffer"
         }
         field(904; "Assemble to Order"; Boolean)
         {
-            AccessByPermission = TableData "BOM Component" = R;
+            AccessByPermission = tabledata "BOM Component" = R;
             Caption = 'Assemble to Order';
         }
         field(1000; "Job No."; Code[20])
@@ -218,7 +219,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(1001; "Job Task No."; Code[20])
         {
             Caption = 'Job Task No.';
-            TableRelation = "Job Task"."Job Task No." WHERE("Job No." = FIELD("Job No."));
+            TableRelation = "Job Task"."Job Task No." where("Job No." = field("Job No."));
         }
         field(1002; "Job Purchase"; Boolean)
         {
@@ -227,7 +228,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5402; "Variant Code"; Code[10])
         {
             Caption = 'Variant Code';
-            TableRelation = "Item Variant".Code WHERE("Item No." = FIELD("Item No."));
+            TableRelation = "Item Variant".Code where("Item No." = field("Item No."));
         }
         field(5404; "Qty. per Unit of Measure"; Decimal)
         {
@@ -237,7 +238,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5407; "Unit of Measure Code"; Code[10])
         {
             Caption = 'Unit of Measure Code';
-            TableRelation = "Item Unit of Measure".Code WHERE("Item No." = FIELD("Item No."));
+            TableRelation = "Item Unit of Measure".Code where("Item No." = field("Item No."));
         }
         field(5408; "Derived from Blanket Order"; Boolean)
         {
@@ -249,15 +250,15 @@ table 60301 "OBF-Item Availability Buffer"
         }
         field(5701; "Originally Ordered No."; Code[20])
         {
-            AccessByPermission = TableData "Item Substitution" = R;
+            AccessByPermission = tabledata "Item Substitution" = R;
             Caption = 'Originally Ordered No.';
             TableRelation = Item;
         }
         field(5702; "Originally Ordered Var. Code"; Code[10])
         {
-            AccessByPermission = TableData "Item Substitution" = R;
+            AccessByPermission = tabledata "Item Substitution" = R;
             Caption = 'Originally Ordered Var. Code';
-            TableRelation = "Item Variant".Code WHERE("Item No." = FIELD("Originally Ordered No."));
+            TableRelation = "Item Variant".Code where("Item No." = field("Originally Ordered No."));
         }
         field(5703; "Out-of-Stock Substitution"; Boolean)
         {
@@ -292,7 +293,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5803; "Cost Amount (Expected)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Cost Amount (Expected)" WHERE("Item Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = sum("Value Entry"."Cost Amount (Expected)" where("Item Ledger Entry No." = field("Entry No.")));
             Caption = 'Cost Amount (Expected)';
             Editable = false;
             FieldClass = FlowField;
@@ -300,8 +301,8 @@ table 60301 "OBF-Item Availability Buffer"
         field(5804; "Cost Amount (Actual)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Cost Amount (Actual)" WHERE("Item Ledger Entry No." = FIELD("Entry No."),
-                                                                          "Posting Date" = FIELD("Date Filter")));
+            CalcFormula = sum("Value Entry"."Cost Amount (Actual)" where("Item Ledger Entry No." = field("Entry No."),
+                                                                          "Posting Date" = field("Date Filter")));
             Caption = 'Cost Amount (Actual)';
             Editable = false;
             FieldClass = FlowField;
@@ -309,7 +310,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5805; "Cost Amount (Non-Invtbl.)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Cost Amount (Non-Invtbl.)" WHERE("Item Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = sum("Value Entry"."Cost Amount (Non-Invtbl.)" where("Item Ledger Entry No." = field("Entry No.")));
             Caption = 'Cost Amount (Non-Invtbl.)';
             Editable = false;
             FieldClass = FlowField;
@@ -317,7 +318,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5806; "Cost Amount (Expected) (ACY)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Cost Amount (Expected) (ACY)" WHERE("Item Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = sum("Value Entry"."Cost Amount (Expected) (ACY)" where("Item Ledger Entry No." = field("Entry No.")));
             Caption = 'Cost Amount (Expected) (ACY)';
             Editable = false;
             FieldClass = FlowField;
@@ -325,7 +326,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5807; "Cost Amount (Actual) (ACY)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Cost Amount (Actual) (ACY)" WHERE("Item Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = sum("Value Entry"."Cost Amount (Actual) (ACY)" where("Item Ledger Entry No." = field("Entry No.")));
             Caption = 'Cost Amount (Actual) (ACY)';
             Editable = false;
             FieldClass = FlowField;
@@ -333,7 +334,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5808; "Cost Amount (Non-Invtbl.)(ACY)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Cost Amount (Non-Invtbl.)(ACY)" WHERE("Item Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = sum("Value Entry"."Cost Amount (Non-Invtbl.)(ACY)" where("Item Ledger Entry No." = field("Entry No.")));
             Caption = 'Cost Amount (Non-Invtbl.)(ACY)';
             Editable = false;
             FieldClass = FlowField;
@@ -341,7 +342,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5813; "Purchase Amount (Expected)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Purchase Amount (Expected)" WHERE("Item Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = sum("Value Entry"."Purchase Amount (Expected)" where("Item Ledger Entry No." = field("Entry No.")));
             Caption = 'Purchase Amount (Expected)';
             Editable = false;
             FieldClass = FlowField;
@@ -349,7 +350,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5814; "Purchase Amount (Actual)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Purchase Amount (Actual)" WHERE("Item Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = sum("Value Entry"."Purchase Amount (Actual)" where("Item Ledger Entry No." = field("Entry No.")));
             Caption = 'Purchase Amount (Actual)';
             Editable = false;
             FieldClass = FlowField;
@@ -357,7 +358,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5815; "Sales Amount (Expected)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Sales Amount (Expected)" WHERE("Item Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = sum("Value Entry"."Sales Amount (Expected)" where("Item Ledger Entry No." = field("Entry No.")));
             Caption = 'Sales Amount (Expected)';
             Editable = false;
             FieldClass = FlowField;
@@ -365,7 +366,7 @@ table 60301 "OBF-Item Availability Buffer"
         field(5816; "Sales Amount (Actual)"; Decimal)
         {
             AutoFormatType = 1;
-            CalcFormula = Sum("Value Entry"."Sales Amount (Actual)" WHERE("Item Ledger Entry No." = FIELD("Entry No.")));
+            CalcFormula = sum("Value Entry"."Sales Amount (Actual)" where("Item Ledger Entry No." = field("Entry No.")));
             Caption = 'Sales Amount (Actual)';
             Editable = false;
             FieldClass = FlowField;
@@ -376,13 +377,13 @@ table 60301 "OBF-Item Availability Buffer"
         }
         field(5818; "Shipped Qty. Not Returned"; Decimal)
         {
-            AccessByPermission = TableData "Sales Header" = R;
+            AccessByPermission = tabledata "Sales Header" = R;
             Caption = 'Shipped Qty. Not Returned';
             DecimalPlaces = 0 : 5;
         }
         field(5833; "Prod. Order Comp. Line No."; Integer)
         {
-            AccessByPermission = TableData "Production Order" = R;
+            AccessByPermission = tabledata "Production Order" = R;
             Caption = 'Prod. Order Comp. Line No.';
         }
         field(6500; "Serial No."; Code[20])
@@ -406,7 +407,7 @@ table 60301 "OBF-Item Availability Buffer"
             Caption = 'Item Tracking';
             Editable = false;
             OptionCaption = 'None,Lot No.,Lot and Serial No.,Serial No.';
-            OptionMembers = "None","Lot No.","Lot and Serial No.","Serial No.";
+            OptionMembers = None,"Lot No.","Lot and Serial No.","Serial No.";
         }
         field(6602; "Return Reason Code"; Code[10])
         {
@@ -422,21 +423,16 @@ table 60301 "OBF-Item Availability Buffer"
             Caption = 'Date Filter';
             FieldClass = FlowFilter;
         }
-
     }
 
     keys
     {
-        key(Key1; "Entry No.")
-        {
-        }
+        key(Key1; "Entry No.") { }
         key(Key2; "Item No.")
         {
             SumIndexFields = "Invoiced Quantity";
         }
-        key(Key3; "Item No.", "Posting Date")
-        {
-        }
+        key(Key3; "Item No.", "Posting Date") { }
         key(Key4; "Item No.", "Entry Type", "Variant Code", "Drop Shipment", "Location Code", "Posting Date")
         {
             SumIndexFields = Quantity, "Invoiced Quantity";
@@ -454,12 +450,8 @@ table 60301 "OBF-Item Availability Buffer"
             Enabled = false;
             SumIndexFields = Quantity, "Remaining Quantity", "Invoiced Quantity";
         }
-        key(Key8; "Country/Region Code", "Entry Type", "Posting Date")
-        {
-        }
-        key(Key9; "Document No.", "Document Type", "Document Line No.")
-        {
-        }
+        key(Key8; "Country/Region Code", "Entry Type", "Posting Date") { }
+        key(Key9; "Document No.", "Document Type", "Document Line No.") { }
         key(Key10; "Item No.", "Entry Type", "Variant Code", "Drop Shipment", "Global Dimension 1 Code", "Global Dimension 2 Code", "Location Code", "Posting Date")
         {
             Enabled = false;
@@ -472,15 +464,11 @@ table 60301 "OBF-Item Availability Buffer"
         }
         key(Key12; "Order Type", "Order No.", "Order Line No.", "Entry Type", "Prod. Order Comp. Line No.")
         {
-            MaintainSIFTIndex = false;
+            MaintainSiftIndex = false;
             SumIndexFields = Quantity;
         }
-        key(Key13; "Item No.", "Applied Entry to Adjust")
-        {
-        }
-        key(Key14; "Item No.", Positive, "Location Code", "Variant Code")
-        {
-        }
+        key(Key13; "Item No.", "Applied Entry to Adjust") { }
+        key(Key14; "Item No.", Positive, "Location Code", "Variant Code") { }
         key(Key15; "Entry Type", Nonstock, "Item No.", "Posting Date")
         {
             Enabled = false;
@@ -493,14 +481,14 @@ table 60301 "OBF-Item Availability Buffer"
         key(Key17; "Item No.", Open, "Variant Code", Positive, "Lot No.", "Serial No.")
         {
             Enabled = false;
-            MaintainSIFTIndex = false;
-            MaintainSQLIndex = false;
+            MaintainSiftIndex = false;
+            MaintainSqlIndex = false;
         }
         key(Key18; "Item No.", Open, "Variant Code", "Location Code", "Item Tracking", "Lot No.", "Serial No.")
         {
             Enabled = false;
-            MaintainSIFTIndex = false;
-            MaintainSQLIndex = false;
+            MaintainSiftIndex = false;
+            MaintainSqlIndex = false;
             SumIndexFields = "Remaining Quantity";
         }
         key(Key19; "Lot No.")
@@ -511,47 +499,39 @@ table 60301 "OBF-Item Availability Buffer"
         {
             Enabled = false;
         }
-        key(Key21; "Entry Type", "Item No.", "Variant Code", "Source Type", "Source No.", "Posting Date")
-        {
-        }
-        key(Key22; "Item No.", "Variant Code", "Location Code", "Posting Date")
-        {
-        }
+        key(Key21; "Entry Type", "Item No.", "Variant Code", "Source Type", "Source No.", "Posting Date") { }
+        key(Key22; "Item No.", "Variant Code", "Location Code", "Posting Date") { }
         key(Key23; "Item No.", "Location Code", "Lot No.", "Serial No.")
         {
             SumIndexFields = "Remaining Quantity";
         }
         key(Key25; "Variant Code", "Item No.", "Location Code", "Lot No.", "Serial No.")
         {
-            MaintainSIFTIndex = false;
-            MaintainSQLIndex = false;
+            MaintainSiftIndex = false;
+            MaintainSqlIndex = false;
         }
         key(Key26; "Document No.", "Posting Date")
         {
-            MaintainSIFTIndex = false;
-            MaintainSQLIndex = false;
+            MaintainSiftIndex = false;
+            MaintainSqlIndex = false;
         }
-
     }
 
     fieldgroups
     {
-        fieldgroup(DropDown; "Entry No.", Description, "Item No.", "Posting Date", "Entry Type", "Document No.")
-        {
-        }
+        fieldgroup(DropDown; "Entry No.", Description, "Item No.", "Posting Date", "Entry Type", "Document No.") { }
     }
 
     var
         GLSetup: Record "General Ledger Setup";
         GLSetupRead: Boolean;
 
-    local procedure GetCurrencyCode(): Code[10];
+    local procedure GetCurrencyCode(): Code[10]
     begin
         if not GLSetupRead then begin
-            GLSetup.Get;
+            GLSetup.Get();
             GLSetupRead := true;
         end;
         exit(GLSetup."Additional Reporting Currency");
     end;
 }
-

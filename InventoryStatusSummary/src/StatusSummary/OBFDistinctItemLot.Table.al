@@ -6,7 +6,7 @@ using Microsoft.Purchases.Vendor;
 
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders 
+// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
 //     Reverse sign of "Qty. on Sales Orders" and "Net Weight on Sales Order" flowfields
 //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
@@ -14,67 +14,66 @@ using Microsoft.Purchases.Vendor;
 table 60300 "OBF-Distinct Item Lot"
 {
     Caption = 'Lots';
+    DataClassification = CustomerContent;
 
     fields
     {
         field(1; "Entry No."; Integer)
         {
-            DataClassification = ToBeClassified;
+            Caption = 'Entry No.';
         }
         field(2; "Item No."; Code[20])
         {
-            DataClassification = ToBeClassified;
+            Caption = 'Item No.';
         }
         field(3; "Lot No."; Code[50])
         {
-            DataClassification = ToBeClassified;
+            Caption = 'Lot No.';
         }
         field(4; "Location Code"; Code[20])
         {
-            DataClassification = ToBeClassified;
+            Caption = 'Location Code';
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue
         field(5; "Item Description"; Text[100])
         {
-            DataClassification = CustomerContent;
+            Caption = 'Item Description';
         }
-
         field(6; "Item Description 2"; Text[50])
         {
-            DataClassification = CustomerContent;
+            Caption = 'Item Description 2';
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue
         field(7; "Search Description"; Text[100])
         {
-            DataClassification = CustomerContent;
+            Caption = 'Search Description';
         }
-
         field(8; "Pack Size"; Text[30])
         {
-            DataClassification = CustomerContent;
+            Caption = 'Pack Size';
         }
         field(9; "Method of Catch"; Text[50])
         {
-            DataClassification = CustomerContent;
+            Caption = 'Method of Catch';
         }
         field(10; "Country of Origin"; Text[30])
         {
-            DataClassification = CustomerContent;
+            Caption = 'Country of Origin';
         }
         field(11; "Brand Code"; Code[20])
         {
-            DataClassification = CustomerContent;
+            Caption = 'Brand Code';
         }
         field(12; "Item Category Code"; Code[20])
         {
-            DataClassification = CustomerContent;
+            Caption = 'Item Category Code';
             TableRelation = "Item Category";
         }
         field(13; "PO Number"; Code[20])
         {
-            DataClassification = CustomerContent;
+            Caption = 'PO Number';
         }
         // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // field(14; "Alternate Lot No."; Code[20])
@@ -87,6 +86,7 @@ table 60300 "OBF-Distinct Item Lot"
         // }
         field(15; "Date Filter"; Date)
         {
+            Caption = 'Date Filter';
             FieldClass = FlowFilter;
         }
         field(16; "Label Value"; Text[50])
@@ -96,23 +96,23 @@ table 60300 "OBF-Distinct Item Lot"
         }
         field(17; "Buyer Code"; Code[20])
         {
-            DataClassification = CustomerContent;
+            Caption = 'Buyer Code';
             TableRelation = "Salesperson/Purchaser";
         }
         field(18; "Vendor No."; Code[20])
         {
-            DataClassification = CustomerContent;
-            TableRelation = "Vendor";
+            Caption = 'Vendor No.';
+            TableRelation = Vendor;
         }
         field(19; "Vendor Name"; Text[100])
         {
-            CalcFormula = lookup(Vendor.Name WHERE("No." = FIELD("Vendor No.")));
-            FieldClass = FlowField;
+            CalcFormula = lookup(Vendor.Name where("No." = field("Vendor No.")));
+            Caption = 'Vendor Name';
             Editable = false;
+            FieldClass = FlowField;
         }
         field(21; "Unit Cost"; Decimal)
         {
-            DataClassification = CustomerContent;
             Caption = 'Unit Cost';
             DecimalPlaces = 2 : 5;
         }
@@ -122,104 +122,105 @@ table 60300 "OBF-Distinct Item Lot"
         }
         field(30; "On Hand Quantity"; Decimal)
         {
-            CalcFormula = Sum("Item Ledger Entry".Quantity WHERE("Item No." = FIELD("Item No."), "Variant Code" = FIELD("Variant Code"),
-                                                                              "Location Code" = FIELD("Location Code"), "Lot No." = FIELD("Lot No."),
-                                                                              "Posting Date" = FIELD("Date Filter")));
-            FieldClass = FlowField;
+            CalcFormula = sum("Item Ledger Entry".Quantity where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+                                                                              "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
+                                                                              "Posting Date" = field("Date Filter")));
+            Caption = 'On Hand Quantity';
             DecimalPlaces = 0 : 0;
+            Editable = false;
+            FieldClass = FlowField;
         }
         field(31; "Total Quantity for Item Lot"; Decimal)
         {
-            CalcFormula = Sum("Item Ledger Entry".Quantity WHERE("Item No." = FIELD("Item No."), "Variant Code" = FIELD("Variant Code"),
-                                                                              "Location Code" = FIELD("Location Code"), "Lot No." = FIELD("Lot No."),
-                                                                              "Posting Date" = FIELD("Date Filter")));
-            FieldClass = FlowField;
+            CalcFormula = sum("Item Ledger Entry".Quantity where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+                                                                              "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
+                                                                              "Posting Date" = field("Date Filter")));
+            Caption = 'Total Quantity for Item Lot';
             DecimalPlaces = 0 : 0;
+            Editable = false;
             Enabled = false;
+            FieldClass = FlowField;
         }
         field(32; "On Order Quantity"; Decimal)
         {
-            Caption = 'On Order Quantity';
-            CalcFormula = Sum("Reservation Entry"."Qty. to Handle (Base)" WHERE("Item No." = FIELD("Item No."), "Variant Code" = FIELD("Variant Code"),
-                                                                                "Location Code" = FIELD("Location Code"), "Lot No." = FIELD("Lot No."),
-                                                                                "Source Type" = CONST(39),
-                                                                                "Source Subtype" = CONST("1"),
+            CalcFormula = sum("Reservation Entry"."Qty. to Handle (Base)" where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+                                                                                "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
+                                                                                "Source Type" = const(39),
+                                                                                "Source Subtype" = const("1"),
                                                                                 "OBF-Lot Is On Hand2" = const(false)));
-
-            FieldClass = FlowField;
-            Editable = false;
+            Caption = 'On Order Quantity';
             DecimalPlaces = 0 : 0;
+            Editable = false;
+            FieldClass = FlowField;
         }
         field(33; "Qty. on Sales Order"; Decimal)
         {
+            CalcFormula = - sum("Reservation Entry"."Qty. to Handle (Base)" where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+                                                                                 "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
+                                                                                 "Source Type" = const(37),
+                                                                                 "Source Subtype" = const("1"),
+                                                                                 "Source ID" = field("Sales Order Filter")));
             Caption = 'Qty. on Sales Orders';
-            CalcFormula = - Sum("Reservation Entry"."Qty. to Handle (Base)" WHERE("Item No." = FIELD("Item No."), "Variant Code" = FIELD("Variant Code"),
-                                                                                 "Location Code" = FIELD("Location Code"), "Lot No." = FIELD("Lot No."),
-                                                                                 "Source Type" = CONST(37),
-                                                                                 "Source Subtype" = CONST("1"),
-                                                                                 "Source ID" = Field("Sales Order Filter")));
-            FieldClass = FlowField;
-            Editable = false;
             DecimalPlaces = 0 : 0;
+            Editable = false;
+            FieldClass = FlowField;
         }
         field(34; "Total Available Quantity"; Decimal)
         {
-            DataClassification = CustomerContent;
             Caption = 'Available Qty.';
             DecimalPlaces = 0 : 0;
         }
         field(35; "Total ILE Weight for Item Lot"; Decimal)
         {
+            CalcFormula = sum("Item Ledger Entry"."OBF-Net Weight" where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+                                                                              "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
+                                                                              "Posting Date" = field("Date Filter")));
             Caption = 'Total Weight for Item Lot';
-            CalcFormula = Sum("Item Ledger Entry"."OBF-Net Weight" WHERE("Item No." = FIELD("Item No."), "Variant Code" = FIELD("Variant Code"),
-                                                                              "Location Code" = FIELD("Location Code"), "Lot No." = FIELD("Lot No."),
-                                                                              "Posting Date" = FIELD("Date Filter")));
-            FieldClass = FlowField;
-            Editable = false;
             DecimalPlaces = 0 : 0;
+            Editable = false;
+            FieldClass = FlowField;
         }
         field(36; "On Order Weight"; Decimal)
         {
+            CalcFormula = sum("Reservation Entry"."OBF-Net Weight to Handle" where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+                                                                                 "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
+                                                                                 "Source Type" = const(39),
+                                                                                 "Source Subtype" = const("1")));
             Caption = 'On Order Weight';
-            CalcFormula = Sum("Reservation Entry"."OBF-Net Weight to Handle" WHERE("Item No." = FIELD("Item No."), "Variant Code" = FIELD("Variant Code"),
-                                                                                 "Location Code" = FIELD("Location Code"), "Lot No." = FIELD("Lot No."),
-                                                                                 "Source Type" = CONST(39),
-                                                                                 "Source Subtype" = CONST("1")));
-            FieldClass = FlowField;
-            Editable = false;
             DecimalPlaces = 0 : 0;
+            Editable = false;
+            FieldClass = FlowField;
         }
         field(37; "Net Weight on Sales Order"; Decimal)
         {
+            CalcFormula = - sum("Reservation Entry"."OBF-Net Weight" where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+                                                                                 "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
+                                                                                 "Source Type" = const(37),
+                                                                                 "Source Subtype" = const("1")));
             Caption = 'Net Weight on Sales Orders';
-            CalcFormula = - Sum("Reservation Entry"."OBF-Net Weight" WHERE("Item No." = FIELD("Item No."), "Variant Code" = FIELD("Variant Code"),
-                                                                                 "Location Code" = FIELD("Location Code"), "Lot No." = FIELD("Lot No."),
-                                                                                 "Source Type" = CONST(37),
-                                                                                 "Source Subtype" = CONST("1")));
-            FieldClass = FlowField;
-            Editable = false;
             DecimalPlaces = 0 : 0;
+            Editable = false;
+            FieldClass = FlowField;
         }
         field(38; "Available Net Weight"; Decimal)
         {
-            DataClassification = CustomerContent;
             Caption = 'Available Weight';
             DecimalPlaces = 0 : 0;
         }
         field(39; "On Hand Weight"; Decimal)
         {
             Caption = 'On Hand Weight';
-            Editable = false;
             DecimalPlaces = 0 : 0;
+            Editable = false;
         }
         field(40; "Value of Inventory on Hand"; Decimal)
         {
-            DataClassification = CustomerContent;
             Caption = 'Value of Inventory on Hand.';
             DecimalPlaces = 2 : 2;
         }
-        field(41; "Sales Order Filter"; code[250])
+        field(41; "Sales Order Filter"; Code[250])
         {
+            Caption = 'Sales Order Filter';
             FieldClass = FlowFilter;
         }
         //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
@@ -230,20 +231,19 @@ table 60300 "OBF-Distinct Item Lot"
         field(43; "Variant Code"; Code[10])
         {
             CaptionML = ENU = 'Variant Code';
-            DataClassification = ToBeClassified;
         }
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
         field(44; "On Order Quantity 2"; Decimal)
         {
             Caption = 'On Order Quantity';
-            Editable = false;
             DecimalPlaces = 0 : 0;
+            Editable = false;
         }
         field(45; "On Order Weight 2"; Decimal)
         {
             Caption = 'On Order Weight';
-            Editable = false;
             DecimalPlaces = 0 : 0;
+            Editable = false;
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/926 - Add Sustainability Cert to Inv. Status Summary Pages
@@ -278,33 +278,31 @@ table 60300 "OBF-Distinct Item Lot"
             Editable = false;
             FieldClass = FlowField;
         }
+        field(71; "On Hand Quantity 2"; Decimal)
+        {
+            Caption = 'On Hand Quantity';
+            DecimalPlaces = 0 : 5;
+            Editable = false;
+        }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
         field(75; "Qty. In Transit"; Decimal)
         {
-            Caption = 'Qty. in Transit';
-            CalcFormula = - sum("Reservation Entry"."Qty. to Handle (Base)" Where("Item No." = field("Item No."),
+            CalcFormula = - sum("Reservation Entry"."Qty. to Handle (Base)" where("Item No." = field("Item No."),
                                                                                  "Lot No." = field("Lot No."),
-                                                                                 "Source Type" = CONST(39),
-                                                                                 "Source Subtype" = CONST("1"),
+                                                                                 "Source Type" = const(39),
+                                                                                 "Source Subtype" = const("1"),
                                                                                  "OBF-Pur. Res. Entry is Neg." = const(true)));
-            FieldClass = FlowField;
-            Editable = false;
+            Caption = 'Qty. in Transit';
             DecimalPlaces = 0 : 0;
+            Editable = false;
+            FieldClass = FlowField;
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
         field(96; "Container No."; Code[20])
         {
             Caption = 'Container No.';
-        }
-
-
-        field(71; "On Hand Quantity 2"; Decimal)
-        {
-            Caption = 'On Hand Quantity';
-            DecimalPlaces = 0 : 5;
-            Editable = false;
         }
         // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // field(93; "Label Text"; Text[50])
@@ -323,25 +321,17 @@ table 60300 "OBF-Distinct Item Lot"
             Caption = 'Purchased For';
             TableRelation = "Salesperson/Purchaser";
         }
-
     }
 
     keys
     {
-        key(Key1; "Entry No.")
-        {
-        }
-        key(Key2; "Item No.", "Variant Code", "Location Code", "Lot No.")
-        {
-        }
+        key(Key1; "Entry No.") { }
+        key(Key2; "Item No.", "Variant Code", "Location Code", "Lot No.") { }
     }
 
-    fieldgroups
-    {
-    }
 
     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
-    procedure CalcAvailableQtyExcludingOrder(ItemNo: Code[20]; VariantCode: code[10]; LocationCode: code[10]; LotNo: Code[20]; OrderNo: Code[20]): Decimal
+    procedure CalcAvailableQtyExcludingOrder(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]; LotNo: Code[20]; OrderNo: Code[20]): Decimal
     var
         DistinctItemLot: Record "OBF-Distinct Item Lot" temporary;
         AvailableQty: Decimal;
@@ -358,7 +348,5 @@ table 60300 "OBF-Distinct Item Lot"
         AvailableQty := DistinctItemLot."On Hand Quantity" + DistinctItemLot."On Order Quantity" - DistinctItemLot."Qty. on Sales Order"; // - DistinctItemLot."Qty. on Quality Hold";
 
         exit(AvailableQty);
-
     end;
 }
-

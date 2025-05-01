@@ -13,6 +13,7 @@ using Microsoft.Utilities;
 
 page 60304 "OBF-Sales Lines"
 {
+    ApplicationArea = All;
     // version NAVW111.00,NAVNA11.00
 
     Caption = 'Sales Lines';
@@ -27,30 +28,35 @@ page 60304 "OBF-Sales Lines"
 
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(Control1)
             {
+                Caption = 'Control1';
                 field("Document Type"; Rec."Document Type")
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Document Type';
                     ToolTip = 'Specifies the type of document that you are about to create.';
                 }
                 field("Document No."; Rec."Document No.")
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Document No.';
                     ToolTip = 'Specifies the document number.';
                 }
                 field("Sell-to Customer No."; Rec."Sell-to Customer No.")
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Sell-to Customer No.';
                     ToolTip = 'Specifies the number of the customer to whom the items in the sales order will be shipped.';
                 }
 
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
                 field(SalesPerson; SalesHeader."Salesperson Code")
                 {
-                    ApplicationArea = All;
+                    Caption = 'Salesperson Code';
+                    ToolTip = 'Specifies the value of the Salesperson Code field.';
                 }
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - End
 
@@ -66,68 +72,76 @@ page 60304 "OBF-Sales Lines"
                 field(ExternalDocumentNo; SalesHeader."External Document No.")
                 {
                     Caption = 'Customer PO';
-                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Customer PO field.';
                 }
-
                 field("Line No."; Rec."Line No.")
                 {
                     ApplicationArea = Advanced;
+                    Caption = 'Line No.';
                     ToolTip = 'Specifies the line number.';
                     Visible = false;
                 }
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Type';
                     ToolTip = 'Specifies the type of entity that will be posted for this sales line, such as Item, Resource, or G/L Account. The type that you enter in this field determines what you can select in the No. field.';
                 }
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'No.';
                     ToolTip = 'Specifies the number of a general ledger account, item, resource, additional cost, or fixed asset, depending on the contents of the Type field.';
                 }
                 field("Variant Code"; Rec."Variant Code")
                 {
                     ApplicationArea = Advanced;
+                    Caption = 'Variant Code';
                     ToolTip = 'Specifies the variant of the item on the line.';
                     Visible = false;
                 }
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Description';
                     ToolTip = 'Specifies a description of the entry of the product to be sold. To add a non-transactional text line, fill in the Description field only.';
                 }
                 field("Package Tracking No."; Rec."Package Tracking No.")
                 {
+                    Caption = 'Package Tracking No.';
                     ToolTip = 'Specifies the shipping agent''s package number.';
                     Visible = false;
-                    ApplicationArea = All;
                 }
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = Location;
+                    Caption = 'Location Code';
                     ToolTip = 'Specifies the inventory location from which the items sold should be picked and where the inventory decrease is registered.';
                     Visible = true;
                 }
                 field(Reserve; Rec.Reserve)
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Reserve';
                     ToolTip = 'Specifies whether a reservation can be made for items on this line.';
                 }
                 field(Quantity; Rec.Quantity)
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Quantity';
                     ToolTip = 'Specifies how many units are being sold.';
                 }
 
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1477 - Add Weight column to Sales Lines Page 
+                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1477 - Add Weight column to Sales Lines Page
                 field("OBF-Line Net Weight"; Rec.SBSISSLineNetWeight)
                 {
-                    ApplicationArea = All;
+                    Caption = 'Line Net Weight';
+                    ToolTip = 'Specifies the value of the Line Net Weight field.';
                 }
-
                 field("Qty. to Ship"; Rec."Qty. to Ship")
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Qty. to Ship';
                     ToolTip = 'Specifies the quantity of items that remain to be shipped.';
                     Visible = false;
                 }
@@ -142,14 +156,15 @@ page 60304 "OBF-Sales Lines"
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page
                 field("OBF-Allocated Quantity"; Rec.SBSISSAllocatedQuantity)
                 {
+                    Caption = 'Allocated Quantity';
                     ToolTipML = ENU = 'This is the quantity that is allocated to lots in Item Tracking.';
-                    ApplicationArea = All;
                 }
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - End
 
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Unit of Measure Code';
                     ToolTip = 'Specifies how each unit of the item or resource is measured, such as in pieces or hours. By default, the value in the Base Unit of Measure field on the item or resource card is inserted.';
                 }
 
@@ -166,84 +181,101 @@ page 60304 "OBF-Sales Lines"
                 {
                     ApplicationArea = Basic, Suite;
                     BlankZero = true;
+                    Caption = 'Line Amount';
                     ToolTip = 'Specifies the net amount, excluding any invoice discount amount, that must be paid for products on the line.';
                 }
                 field("Job No."; Rec."Job No.")
                 {
                     ApplicationArea = Advanced;
+                    Caption = 'Project No.';
                     ToolTip = 'Specifies the number of the related job. If you fill in this field and the Job Task No. field, then a job ledger entry will be posted together with the sales line.';
                     Visible = false;
                 }
                 field("Work Type Code"; Rec."Work Type Code")
                 {
                     ApplicationArea = Manufacturing;
+                    Caption = 'Work Type Code';
                     ToolTip = 'Specifies which work type the resource applies to when the sale is related to a job.';
                     Visible = false;
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = Dimensions;
+                    Caption = 'Shortcut Dimension 1 Code';
                     ToolTip = 'Specifies the code for Shortcut Dimension 1, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                     Visible = false;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = Dimensions;
+                    Caption = 'Shortcut Dimension 2 Code';
                     ToolTip = 'Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                     Visible = false;
                 }
                 field("ShortcutDimCode[3]"; ShortcutDimCode[3])
                 {
                     ApplicationArea = Dimensions;
+                    Caption = 'ShortcutDimCode[3]';
                     CaptionClass = '1,2,3';
-                    TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
-                                                                  "Dimension Value Type" = CONST(Standard),
-                                                                  Blocked = CONST(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(3),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[3] field.';
                     Visible = false;
                 }
                 field("ShortcutDimCode[4]"; ShortcutDimCode[4])
                 {
                     ApplicationArea = Dimensions;
+                    Caption = 'ShortcutDimCode[4]';
                     CaptionClass = '1,2,4';
-                    TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(4),
-                                                                  "Dimension Value Type" = CONST(Standard),
-                                                                  Blocked = CONST(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(4),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[4] field.';
                     Visible = false;
                 }
                 field("ShortcutDimCode[5]"; ShortcutDimCode[5])
                 {
                     ApplicationArea = Dimensions;
+                    Caption = 'ShortcutDimCode[5]';
                     CaptionClass = '1,2,5';
-                    TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(5),
-                                                                  "Dimension Value Type" = CONST(Standard),
-                                                                  Blocked = CONST(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(5),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[5] field.';
                     Visible = false;
                 }
                 field("ShortcutDimCode[6]"; ShortcutDimCode[6])
                 {
                     ApplicationArea = Dimensions;
+                    Caption = 'ShortcutDimCode[6]';
                     CaptionClass = '1,2,6';
-                    TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(6),
-                                                                  "Dimension Value Type" = CONST(Standard),
-                                                                  Blocked = CONST(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(6),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[6] field.';
                     Visible = false;
                 }
                 field("ShortcutDimCode[7]"; ShortcutDimCode[7])
                 {
                     ApplicationArea = Dimensions;
+                    Caption = 'ShortcutDimCode[7]';
                     CaptionClass = '1,2,7';
-                    TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(7),
-                                                                  "Dimension Value Type" = CONST(Standard),
-                                                                  Blocked = CONST(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(7),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[7] field.';
                     Visible = false;
                 }
                 field("ShortcutDimCode[8]"; ShortcutDimCode[8])
                 {
                     ApplicationArea = Dimensions;
+                    Caption = 'ShortcutDimCode[8]';
                     CaptionClass = '1,2,8';
-                    TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(8),
-                                                                  "Dimension Value Type" = CONST(Standard),
-                                                                  Blocked = CONST(false));
+                    TableRelation = "Dimension Value".Code where("Global Dimension No." = const(8),
+                                                                  "Dimension Value Type" = const(Standard),
+                                                                  Blocked = const(false));
+                    ToolTip = 'Specifies the value of the ShortcutDimCode[8] field.';
                     Visible = false;
                 }
 
@@ -259,11 +291,12 @@ page 60304 "OBF-Sales Lines"
                 field(OrderDate; SalesHeader."Order Date")
                 {
                     Caption = 'Order Date';
-                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Order Date field.';
                 }
                 field("Outstanding Quantity"; Rec."Outstanding Quantity")
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Outstanding Quantity';
                     ToolTip = 'Specifies how many units on the order line have not yet been shipped.';
                 }
 
@@ -285,14 +318,13 @@ page 60304 "OBF-Sales Lines"
                 //     ApplicationArea = All;
                 // }
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - End
-
             }
         }
     }
 
     actions
     {
-        area(navigation)
+        area(Navigation)
         {
             group("&Line")
             {
@@ -306,10 +338,10 @@ page 60304 "OBF-Sales Lines"
                     Promoted = true;
                     PromotedCategory = Process;
                     PromotedIsBig = true;
-                    ShortCutKey = 'Shift+F7';
+                    ShortcutKey = 'Shift+F7';
                     ToolTip = 'Open the document that the selected line exists on.';
 
-                    trigger OnAction();
+                    trigger OnAction()
                     var
                         PageManagement: Codeunit "Page Management";
                     begin
@@ -321,61 +353,32 @@ page 60304 "OBF-Sales Lines"
         }
     }
 
-    trigger OnAfterGetRecord();
+    trigger OnAfterGetRecord()
     begin
         Rec.ShowShortcutDimCode(ShortcutDimCode);
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
         SalesHeader.Get(Rec."Document Type", Rec."Document No.");
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - End
-
     end;
 
-    trigger OnNewRecord(BelowxRec: Boolean);
+    trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        CLEAR(ShortcutDimCode);
+        Clear(ShortcutDimCode);
     end;
 
-    procedure SetUnallocatedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean);
     var
-        SalesLine: Record "Sales Line";
-        TrackingPercent: Decimal;
-        ItemTracking: Boolean;
-        InfoPaneMgmt: Codeunit "OBF-Info Pane Mgmt";
-    begin
-        SalesLine.SetRange("No.", ItemNo);
-        SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
-        SalesLine.SetRange(Type, SalesLine.Type::Item);
-        SalesLine.SetFilter("Quantity (Base)", '<>%1', 0);
-        if not IncludeAllVariants then
-            SalesLine.SetRange("Variant Code", VariantCode);
-        if SalesLine.FindSet then begin
-            repeat
-                TrackingPercent := Round(SalesLine.GetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
-                if TrackingPercent <> 100 then begin
-                    Rec.Init;
-                    Rec.TransferFields(SalesLine);
-
-                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
-                    // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                    // Rec.CalcFields("OBF-Order Shipment Date");
-                    // Rec."OBF-Order Shipment Date 2" := Rec."OBF-Order Shipment Date";
-
-                    Rec.Insert;
-                end;
-            until SalesLine.Next = 0;
-        end;
-    end;
+        SalesHeader: Record "Sales Header";
+        ShowReserved: Boolean;
+        ShortcutDimCode: array[8] of Code[20];
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
-    Procedure SetOnOrderCommittedSalesLines(ItemNo: code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; LotIsOnHand: Boolean)
+    procedure SetOnOrderCommittedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; LotIsOnHand: Boolean)
     var
         ReservEntry: Record "Reservation Entry";
-        ReservEntryTEMP: Record "Reservation Entry" temporary;
-        ItemLedgEntry: Record "Item Ledger Entry";
         SalesLine: Record "Sales Line";
     begin
-        ReservEntry.Reset;
+        ReservEntry.Reset();
         ReservEntry.SetRange("Item No.", ItemNo);
         ReservEntry.SetRange(Positive, false);
         ReservEntry.SetFilter("Lot No.", '<>%1', '');
@@ -383,12 +386,12 @@ page 60304 "OBF-Sales Lines"
         ReservEntry.SetRange(SBSISSLotIsOnHand, LotIsOnHand);
         if not IncludeAllVariants then
             ReservEntry.SetRange("Variant Code", VariantCode);
-        if ReservEntry.FindSet then
+        if ReservEntry.FindSet() then
             repeat
                 if SalesLine.Get(ReservEntry."Source Subtype", ReservEntry."Source ID", ReservEntry."Source Ref. No.") then
-                    if Rec.Get(ReservEntry."Source Subtype", ReservEntry."Source ID", ReservEntry."Source Ref. No.") then begin
+                    if Rec.Get(ReservEntry."Source Subtype", ReservEntry."Source ID", ReservEntry."Source Ref. No.") then
 
-                        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page - 
+                        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page -
                         //      Replace "OBF-Reserved Qty. (Base)" flowfield with "OBF-Allocated Quantity" normal field in following block of code
 
                         //Rec.CalcFields("OBF-Reserved Qty. (Base)");
@@ -402,9 +405,9 @@ page 60304 "OBF-Sales Lines"
                         //     //Rec."OBF-On-Hand Reserved Qty." := Rec."OBF-Reserved Qty. (Base)" - "OBF-Committed Reserved Qty.";
                         //     Rec."OBF-On-Hand Reserved Qty." := Rec."OBF-Allocated Quantity" - "OBF-Committed Reserved Qty.";
                         // end;
-                        Rec.Modify;
-                    end else begin
-                        Rec.Init;
+                        Rec.Modify()
+                    else begin
+                        Rec.Init();
                         Rec.TransferFields(SalesLine);
                         //Rec.CalcFields("OBF-Reserved Qty. (Base)");
 
@@ -423,19 +426,42 @@ page 60304 "OBF-Sales Lines"
                         // Rec.CalcFields("OBF-Order Shipment Date");
                         // Rec."OBF-Order Shipment Date 2" := Rec."OBF-Order Shipment Date";
 
-                        Rec.Insert;
+                        Rec.Insert();
                     end;
-            until (ReservEntry.Next = 0);
+            until (ReservEntry.Next() = 0);
     end;
 
-    procedure SetShowReserved(pShowReserved: Boolean);
+    procedure SetShowReserved(pShowReserved: Boolean)
     begin
         ShowReserved := pShowReserved;
     end;
 
+    procedure SetUnallocatedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
     var
-        SalesHeader: Record "Sales Header";
-        ShortcutDimCode: array[8] of Code[20];
-        ShowReserved: Boolean;
-}
+        SalesLine: Record "Sales Line";
+        ItemTracking: Boolean;
+        TrackingPercent: Decimal;
+    begin
+        SalesLine.SetRange("No.", ItemNo);
+        SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+        SalesLine.SetRange(Type, SalesLine.Type::Item);
+        SalesLine.SetFilter("Quantity (Base)", '<>%1', 0);
+        if not IncludeAllVariants then
+            SalesLine.SetRange("Variant Code", VariantCode);
+        if SalesLine.FindSet() then
+            repeat
+                TrackingPercent := Round(SalesLine.GetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
+                if TrackingPercent <> 100 then begin
+                    Rec.Init();
+                    Rec.TransferFields(SalesLine);
 
+                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
+                    // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                    // Rec.CalcFields("OBF-Order Shipment Date");
+                    // Rec."OBF-Order Shipment Date 2" := Rec."OBF-Order Shipment Date";
+
+                    Rec.Insert();
+                end;
+            until SalesLine.Next() = 0;
+    end;
+}
