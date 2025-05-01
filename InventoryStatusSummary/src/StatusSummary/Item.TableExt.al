@@ -7,12 +7,12 @@ tableextension 60301 "Item" extends Item
     fields
     {
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
-        field(50020; "OBF-Exclude from Weight Calc."; Boolean)
+        field(60300; "OBF-Exclude from Weight Calc."; Boolean)
         {
             CaptionML = ENU = 'Exclude from Weight Calculation';
         }
 
-        field(51002; "OBF-Qty on Quality Hold"; Decimal)
+        field(60301; "OBF-Qty on Quality Hold"; Decimal)
         {
             Caption = 'Qty. on Quality Hold';
             Editable = false;

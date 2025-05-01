@@ -9,7 +9,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
 {
     fields
     {
-        field(50000; "OBF-Site Code"; Code[20])
+        field(60300; "OBF-Site Code"; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'Site Code';
@@ -21,7 +21,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
                 SubDimension.UpdateDimSetIDForSubDimension('SITE', "OBF-SITE Code", Rec."Dimension Set ID");
             end;
         }
-        field(50001; "OBF-CIP Code"; Code[20])
+        field(60301; "OBF-CIP Code"; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'CIP Code';
@@ -37,7 +37,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications
-        field(50002; "OBF-MSC Certification"; Boolean)
+        field(60302; "OBF-MSC Certification"; Boolean)
         {
             DataClassification = CustomerContent;
             Caption = 'MSC Certification';
@@ -46,7 +46,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
                 //Rec.TestField(Type,Rec.Type::Item);
             end;
         }
-        field(50003; "OBF-RFM Certification"; Boolean)
+        field(60303; "OBF-RFM Certification"; Boolean)
         {
             DataClassification = CustomerContent;
             Caption = 'RFM Certification';
@@ -57,26 +57,26 @@ tableextension 60304 "SalesLine" extends "Sales Line"
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1630 - Printed Document Layouts        
-        field(50004; "OBF-Is Van Info Line"; Boolean)
+        field(60304; "OBF-Is Van Info Line"; Boolean)
         {
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(50005; "OBF-Is Certification Info Line"; Boolean)
+        field(60305; "OBF-Is Certification Info Line"; Boolean)
         {
             DataClassification = CustomerContent;
             Editable = false;
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
-        field(50021; "OBF-Line Net Weight"; Decimal)
+        field(60306; "OBF-Line Net Weight"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Line Net Weight';
             Editable = false;
             DecimalPlaces = 0 : 2;
         }
-        field(50200; "OBF-Ship-to Code"; Code[10])
+        field(60311; "OBF-Ship-to Code"; Code[10])
         {
             Caption = 'Ship-to Code';
             FieldClass = FlowField;
@@ -85,21 +85,21 @@ tableextension 60304 "SalesLine" extends "Sales Line"
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1788 - Sales Workflow
-        field(50040; "OBF-Allocated Quantity"; Decimal)
+        field(60307; "OBF-Allocated Quantity"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Allocated Quantity';
             DecimalPlaces = 0 : 5;
             Editable = false;
         }
-        field(50041; "OBF-Item Type"; Enum "Item Type")
+        field(60308; "OBF-Item Type"; Enum "Item Type")
         {
             Caption = 'Item Type';
             CalcFormula = Lookup(Item.Type where("No." = field("No.")));
             Editable = false;
             FieldClass = FlowField;
         }
-        field(50042; "OBF-Item Tracking Code"; Code[10])
+        field(60309; "OBF-Item Tracking Code"; Code[10])
         {
             Caption = 'Item Tracking Code';
             CalcFormula = Lookup(Item."Item Tracking Code" where("No." = field("No.")));
@@ -107,18 +107,18 @@ tableextension 60304 "SalesLine" extends "Sales Line"
             FieldClass = FlowField;
         }
 
-        field(50067; "OBF-Lot Number"; Text[250])
+        field(60310; "OBF-Lot Number"; Text[250])
         {
             Caption = 'Lot Number(s)';
             Editable = false;
         }
 
-        field(54000; "OBF-Off-Inv. Rebate Unit Rate"; Text[50])
+        field(60312; "OBF-Off-Inv. Rebate Unit Rate"; Text[50])
         {
             Caption = 'Off-Inv. Rebate Unit Rate';
             Editable = false;
         }
-        field(54001; "OBF-Off Invoice Rebate Amount"; Decimal)
+        field(60313; "OBF-Off Invoice Rebate Amount"; Decimal)
         {
             Caption = 'Off-Invoice Rebate Amount';
             CalcFormula = Sum("OBF-Rebate Entry"."Rebate Amount" WHERE("Source Type" = FIELD("Document Type"),
@@ -130,7 +130,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1808 - Multi Entity Management Enhancements for Rebates 
-        field(54002; "OBF-Header Subsidiary Code"; Code[20])
+        field(60314; "OBF-Header Subsidiary Code"; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'Header Subsidiary Code';
