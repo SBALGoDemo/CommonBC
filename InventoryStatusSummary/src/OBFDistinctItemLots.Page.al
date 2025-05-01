@@ -9,7 +9,7 @@
 // Drilldowns moved to Info Pane Management codeunit
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1195 - Hold Functionality
 // Replaced "Quantity on Quality Hold" with "Qty on Quality Hold"
-page 50054 "OBF-Distinct Item Lots"
+page 60300 "OBF-Distinct Item Lots"
 {
     Caption = 'Distinct Item Lots';
     PageType = List;

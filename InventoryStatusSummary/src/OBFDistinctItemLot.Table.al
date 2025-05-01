@@ -5,7 +5,7 @@
 //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
 
-table 50018 "OBF-Distinct Item Lot"
+table 60300 "OBF-Distinct Item Lot"
 {
     Caption = 'Lots';
 

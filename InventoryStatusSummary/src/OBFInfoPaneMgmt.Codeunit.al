@@ -1,7 +1,7 @@
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
 
-codeunit 50056 "OBF-Info Pane Mgmt"
+codeunit 60300 "OBF-Info Pane Mgmt"
 {
     trigger OnRun();
     begin
@@ -204,7 +204,7 @@ codeunit 50056 "OBF-Info Pane Mgmt"
         ReservationEntry.SetRange("Variant Code", VariantCode);
         ReservationEntry.SetRange("Location Code", LocationCode);
         ReservationEntry.SetRange("Lot No.", LotNo);
-        ReservationEntry.SetRange("OBF-Pur. Res. Entry is Neg.",true);
+        ReservationEntry.SetRange("OBF-Pur. Res. Entry is Neg.", true);
         ReservationEntries.SetTableView(ReservationEntry);
         ReservationEntries.RunModal;
     End;
@@ -319,21 +319,23 @@ codeunit 50056 "OBF-Info Pane Mgmt"
         IF PurchaseHeader.findfirst then begin
             PurchaseOrder.SetTableView(PurchaseHeader);
             PurchaseOrder.RunModal();
-        end else begin           
+        end else begin
             PurchInvHeader.SetRange("Order No.", PONumber);
             NumInvoices := PurchInvHeader.Count;
-            case NumInvoices of 
-                0: Exit;
-                1: begin 
-                    PurchInvHeader.FindFirst();
-                    PostedPurchaseInvoice.SetTableView(PurchInvHeader);
-                    PostedPurchaseInvoice.RunModal;    
-                end;
-                else begin 
+            case NumInvoices of
+                0:
+                    Exit;
+                1:
+                    begin
+                        PurchInvHeader.FindFirst();
+                        PostedPurchaseInvoice.SetTableView(PurchInvHeader);
+                        PostedPurchaseInvoice.RunModal;
+                    end;
+                else begin
                     PostedPurchaseInvoices.SetTableView(PurchInvHeader);
                     PostedPurchaseInvoices.RunModal;
                 end;
-            end; 
+            end;
         end;
     End;
 

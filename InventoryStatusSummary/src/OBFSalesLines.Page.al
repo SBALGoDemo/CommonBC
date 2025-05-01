@@ -3,7 +3,7 @@
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
 // This is a copy of the standard "Sales Lines" page with SourceTableTemporary set to true
 
-page 50071 "OBF-Sales Lines"
+page 60304 "OBF-Sales Lines"
 {
     // version NAVW111.00,NAVNA11.00
 

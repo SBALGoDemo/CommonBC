@@ -3,7 +3,7 @@
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
 
-page 50057 "OBF-Item Factbox"
+page 60303 "OBF-Item Factbox"
 {
     PageType = CardPart;
     SourceTable = Item;
@@ -59,7 +59,7 @@ page 50057 "OBF-Item Factbox"
                 //     DecimalPlaces = 0 : 3;
                 //     ApplicationArea = All;
                 // }
-                
+
                 field(TotalOnHandWeight; TotalOnHandWeight)
                 {
                     Caption = 'Total Weight';

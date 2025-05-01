@@ -2,7 +2,7 @@
 
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 //  Note - This table is based on the Item Ledger Entry table.
-table 50019 "OBF-Item Availability Buffer"
+table 60301 "OBF-Item Availability Buffer"
 {
     Caption = 'Item Availability Buffer';
     DrillDownPageID = "OBF-Item Avail. Drilldown";

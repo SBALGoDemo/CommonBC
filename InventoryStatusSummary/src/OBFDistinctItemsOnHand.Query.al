@@ -1,7 +1,7 @@
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
-query 50050 "OBF-Distinct Items On Hand"
+query 60303 "OBF-Distinct Items On Hand"
 {
 
     elements
@@ -22,7 +22,7 @@ query 50050 "OBF-Distinct Items On Hand"
     }
 }
 
-query 50054 "OBF-Distinct Items On Order"
+query 60304 "OBF-Distinct Items On Order"
 {
     OrderBy = Ascending(Item_No);
 
@@ -44,7 +44,7 @@ query 50054 "OBF-Distinct Items On Order"
     }
 }
 
-query 50060 "OBF-Dist. Items On Purch. Line"
+query 60305 "OBF-Dist. Items On Purch. Line"
 {
     OrderBy = Ascending(Item_No);
 

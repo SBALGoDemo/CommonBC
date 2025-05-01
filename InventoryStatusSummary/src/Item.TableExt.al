@@ -1,4 +1,4 @@
-tableextension 50020 "OBF-Item" extends Item
+tableextension 60301 "Item" extends Item
 {
     fields
     {

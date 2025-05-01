@@ -4,7 +4,7 @@
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
 
-page 50058 "OBF-Item Avail. Drilldown"
+page 60302 "OBF-Item Avail. Drilldown"
 {
     Caption = 'Item Avail. Drilldown';
     DataCaptionFields = "Item No.";

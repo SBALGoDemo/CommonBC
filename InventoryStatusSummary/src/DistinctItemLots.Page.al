@@ -7,7 +7,7 @@
 
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
 // Drilldowns moved to Info Pane Management codeunit
-page 50053 "OBF-Inv. Stat. Summary by Date"
+page 60301 "OBF-Inv. Stat. Summary by Date"
 {
     Caption = 'Inv. Stat. Summary by Date';
     PageType = List;

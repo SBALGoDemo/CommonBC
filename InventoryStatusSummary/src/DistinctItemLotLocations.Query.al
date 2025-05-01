@@ -2,7 +2,7 @@
 
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
-query 50051 "Distinct Item Lot Locations"
+query 60300 "Distinct Item Lot Locations"
 {
     OrderBy = Ascending(Item_No), Ascending(Lot_No);
 
@@ -43,7 +43,7 @@ query 50051 "Distinct Item Lot Locations"
     }
 }
 
-query 50052 "Distinct Item Lot (Res. Entry)"
+query 60301 "Distinct Item Lot (Res. Entry)"
 {
     OrderBy = Ascending(Item_No), Ascending(Lot_No);
 
@@ -81,7 +81,7 @@ query 50052 "Distinct Item Lot (Res. Entry)"
         }
     }
 }
-query 50061 "OBF-Distinct Item Loc On Order"
+query 60302 "OBF-Distinct Item Loc On Order"
 {
     OrderBy = Ascending(Item_No);
 

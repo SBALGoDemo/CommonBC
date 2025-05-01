@@ -2,7 +2,7 @@
 
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues 
 
-tableextension 50066 "OBF-Reservation Entry" extends "Reservation Entry"
+tableextension 60302 "ReservationEntry" extends "Reservation Entry"
 {
     fields
     {

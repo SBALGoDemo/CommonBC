@@ -1,5 +1,5 @@
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1663 - Create Site Dimension Lookup based on Subsidiary
-tableextension 50006 "OBF-Sales Line" extends "Sales Line"
+tableextension 60304 "SalesLine" extends "Sales Line"
 {
     fields
     {
@@ -19,7 +19,7 @@ tableextension 50006 "OBF-Sales Line" extends "Sales Line"
         {
             DataClassification = CustomerContent;
             Caption = 'CIP Code';
-            TableRelation = "OBF-Subsidiary CIP"."CIP Code" where("Subsidiary Code" = field("Shortcut Dimension 1 Code"),"CIP Code Blocked" = const(false));
+            TableRelation = "OBF-Subsidiary CIP"."CIP Code" where("Subsidiary Code" = field("Shortcut Dimension 1 Code"), "CIP Code Blocked" = const(false));
             ObsoleteState = Pending;
             ObsoleteReason = 'Not Needed';
             trigger OnValidate()
@@ -34,41 +34,41 @@ tableextension 50006 "OBF-Sales Line" extends "Sales Line"
         field(50002; "OBF-MSC Certification"; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'MSC Certification'; 
+            Caption = 'MSC Certification';
             trigger OnValidate()
-            begin 
+            begin
                 //Rec.TestField(Type,Rec.Type::Item);
-            end;   
+            end;
         }
         field(50003; "OBF-RFM Certification"; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'RFM Certification';  
+            Caption = 'RFM Certification';
             trigger OnValidate()
-            begin 
+            begin
                 //Rec.TestField(Type,Rec.Type::Item);
-            end;     
+            end;
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1630 - Printed Document Layouts        
-        field(50004;"OBF-Is Van Info Line"; Boolean)
+        field(50004; "OBF-Is Van Info Line"; Boolean)
         {
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(50005;"OBF-Is Certification Info Line"; Boolean)
+        field(50005; "OBF-Is Certification Info Line"; Boolean)
         {
             DataClassification = CustomerContent;
             Editable = false;
         }
-       
+
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
         field(50021; "OBF-Line Net Weight"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Line Net Weight';
             Editable = false;
-            DecimalPlaces = 0:2;
+            DecimalPlaces = 0 : 2;
         }
         field(50200; "OBF-Ship-to Code"; Code[10])
         {
@@ -89,14 +89,14 @@ tableextension 50006 "OBF-Sales Line" extends "Sales Line"
         field(50041; "OBF-Item Type"; Enum "Item Type")
         {
             Caption = 'Item Type';
-            CalcFormula = Lookup(Item.Type where ("No."=field("No.")));
+            CalcFormula = Lookup(Item.Type where("No." = field("No.")));
             Editable = false;
             FieldClass = FlowField;
         }
         field(50042; "OBF-Item Tracking Code"; Code[10])
         {
             Caption = 'Item Tracking Code';
-            CalcFormula = Lookup(Item."Item Tracking Code" where ("No."=field("No.")));
+            CalcFormula = Lookup(Item."Item Tracking Code" where("No." = field("No.")));
             Editable = false;
             FieldClass = FlowField;
         }
@@ -122,7 +122,7 @@ tableextension 50006 "OBF-Sales Line" extends "Sales Line"
             Editable = false;
             FieldClass = FlowField;
         }
-        
+
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1808 - Multi Entity Management Enhancements for Rebates 
         field(54002; "OBF-Header Subsidiary Code"; Code[20])
         {
@@ -154,7 +154,7 @@ tableextension 50006 "OBF-Sales Line" extends "Sales Line"
 
     }
 
-    
+
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
     trigger OnDelete()
@@ -187,17 +187,18 @@ tableextension 50006 "OBF-Sales Line" extends "Sales Line"
             exit;
         if Rec."No." = '' then
             exit;
-        Rec."OBF-MSC Certification" := CheckItemCertification(Rec."No.",'MSC');
-        Rec."OBF-RFM Certification" := CheckItemCertification(Rec."No.",'RFM');
+        Rec."OBF-MSC Certification" := CheckItemCertification(Rec."No.", 'MSC');
+        Rec."OBF-RFM Certification" := CheckItemCertification(Rec."No.", 'RFM');
     end;
-    procedure CheckItemCertification ( ItemNo: Code[20]; CertificationCode: Code[20]): Boolean
+
+    procedure CheckItemCertification(ItemNo: Code[20]; CertificationCode: Code[20]): Boolean
     var
         ItemCertification: Record "OBF-Item Certification";
     begin
-        if ( ItemNo = '' ) or ( CertificationCode = '' ) then
+        if (ItemNo = '') or (CertificationCode = '') then
             exit(false);
-        ItemCertification.SetRange("Item No.",ItemNo);
-        ItemCertification.SetRange("Certification Code",CertificationCode);
+        ItemCertification.SetRange("Item No.", ItemNo);
+        ItemCertification.SetRange("Certification Code", CertificationCode);
         exit(not ItemCertification.IsEmpty);
     end;
 
