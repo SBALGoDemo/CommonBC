@@ -523,11 +523,11 @@ page 60301 "OBF-Inv. Stat. Summary by Date"
                     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - END
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date                     
-                    Rec."OBF-Production Date" := ReservationEntry."OBF-Production Date";
+                    Rec."OBF-Production Date" := ReservationEntry.SBSISSProductionDate;
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1653 - Wrong Purchaser for Work Order Lots on ISS by Date
-                    if ReservationEntry."OBF-Purchaser Code" <> '' then
-                        Rec."Buyer Code" := ReservationEntry."OBF-Purchaser Code";
+                    if ReservationEntry.SBSISSPurchaserCode <> '' then
+                        Rec."Buyer Code" := ReservationEntry.SBSISSPurchaserCode;
 
                 end;
             end;

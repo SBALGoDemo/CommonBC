@@ -578,10 +578,10 @@ page 60300 "OBF-Distinct Item Lots"
                     Rec."PO Number" := ReservationEntry."Source ID";
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
-                    Rec."OBF-Production Date" := ReservationEntry."OBF-Production Date";
+                    Rec."OBF-Production Date" := ReservationEntry.SBSISSProductionDate;
                     Rec."Expiration Date" := ReservationEntry."Expiration Date";
-                    if ReservationEntry."OBF-Purchaser Code" <> '' then
-                        Rec."Buyer Code" := ReservationEntry."OBF-Purchaser Code";
+                    if ReservationEntry.SBSISSPurchaserCode <> '' then
+                        Rec."Buyer Code" := ReservationEntry.SBSISSPurchaserCode;
 
                     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
                     if PurchaseLine.get(PurchaseLine."Document Type"::Order, Rec."PO Number", ReservationEntry."Source Ref. No.") then begin

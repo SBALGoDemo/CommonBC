@@ -32,7 +32,7 @@ codeunit 60300 "OBF-Info Pane Mgmt"
         ReservationEntry.SetFilter("Lot No.", '<>%1', '');
         if not IncludeAllVariants then
             reservationEntry.SetRange("Variant Code", VariantCode);
-        ReservationEntry.SetRange("OBF-Lot Is On Hand", false);
+        ReservationEntry.SetRange(SBSISSLotIsOnHand, false);
         if ReservationEntry.FindSet then
             repeat
                 TotalSOReservation += abs(ReservationEntry."Quantity (Base)");
@@ -76,7 +76,7 @@ codeunit 60300 "OBF-Info Pane Mgmt"
         ReservEntry.SetRange(Positive, false);
         ReservEntry.SetFilter("Lot No.", '<>%1', '');
         ReservEntry.SetRange("Source Type", database::"Sales Line");
-        ReservEntry.SetRange("OBF-Lot Is On Hand", true);
+        ReservEntry.SetRange(SBSISSLotIsOnHand, true);
         if not IncludeAllVariants then
             ReservEntry.SetRange("Variant Code", VariantCode);
         TotalOnHandCommitted := 0;
@@ -118,7 +118,7 @@ codeunit 60300 "OBF-Info Pane Mgmt"
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - End Original Code
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page
-                    lTotalUnallocatedSO += SalesLineTemp2.Quantity - SalesLineTemp2."OBF-Allocated Quantity";
+                    lTotalUnallocatedSO += SalesLineTemp2.Quantity - SalesLineTemp2.SBSISSAllocatedQuantity;
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - End
 
                 until SalesLineTemp2.Next = 0;
@@ -216,7 +216,7 @@ codeunit 60300 "OBF-Info Pane Mgmt"
         ReservationEntry.SetRange("Variant Code", VariantCode);
         ReservationEntry.SetRange("Location Code", LocationCode);
         ReservationEntry.SetRange("Lot No.", LotNo);
-        ReservationEntry.SetRange("OBF-Pur. Res. Entry is Neg.", true);
+        ReservationEntry.SetRange(SBSISSPurResEntryisNeg, true);
         ReservationEntries.SetTableView(ReservationEntry);
         ReservationEntries.RunModal;
     End;

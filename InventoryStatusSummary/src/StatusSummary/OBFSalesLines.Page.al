@@ -120,7 +120,7 @@ page 60304 "OBF-Sales Lines"
                 }
 
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1477 - Add Weight column to Sales Lines Page 
-                field("OBF-Line Net Weight"; Rec."OBF-Line Net Weight")
+                field("OBF-Line Net Weight"; Rec.SBSISSLineNetWeight)
                 {
                     ApplicationArea = All;
                 }
@@ -140,7 +140,7 @@ page 60304 "OBF-Sales Lines"
                 // }
 
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page
-                field("OBF-Allocated Quantity"; Rec."OBF-Allocated Quantity")
+                field("OBF-Allocated Quantity"; Rec.SBSISSAllocatedQuantity)
                 {
                     ToolTipML = ENU = 'This is the quantity that is allocated to lots in Item Tracking.';
                     ApplicationArea = All;
@@ -380,7 +380,7 @@ page 60304 "OBF-Sales Lines"
         ReservEntry.SetRange(Positive, false);
         ReservEntry.SetFilter("Lot No.", '<>%1', '');
         ReservEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservEntry.SetRange("OBF-Lot Is On Hand", LotIsOnHand);
+        ReservEntry.SetRange(SBSISSLotIsOnHand, LotIsOnHand);
         if not IncludeAllVariants then
             ReservEntry.SetRange("Variant Code", VariantCode);
         if ReservEntry.FindSet then

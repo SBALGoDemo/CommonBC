@@ -276,9 +276,9 @@ page 60303 "OBF-Item Factbox"
         Rec.CalcFields(Inventory, "Qty. on Purch. Order");
         // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // Rec.CalcFields("OBF-Qty on Quality Hold");
-        TotalQty := Rec.Inventory - Rec."OBF-Qty on Quality Hold";
-        QtyOnQualityHold := Rec."OBF-Qty on Quality Hold";
-        TotalOnHandWeight := (Rec.Inventory - Rec."OBF-Qty on Quality Hold") * Rec."Net Weight";
+        TotalQty := Rec.Inventory - Rec.SBSISSQtyonQualityHold;
+        QtyOnQualityHold := Rec.SBSISSQtyonQualityHold;
+        TotalOnHandWeight := (Rec.Inventory - Rec.SBSISSQtyonQualityHold) * Rec."Net Weight";
 
         OnOrderQty := Rec."Qty. on Purch. Order";
         OnOrderWeight := OnOrderQty * Rec."Net Weight";
@@ -286,11 +286,11 @@ page 60303 "OBF-Item Factbox"
         OnOrderCommittedWeight := OnOrderCommitted * Rec."Net Weight";
         OnHandCommitted := InfoPaneMgmt.CalcOnHandCommitted(Rec."No.", VariantCode, ShowAllVariants);
         OnHandCommittedWeight := OnHandCommitted * Rec."Net Weight";
-        OnHandAvailable := Rec.Inventory - OnHandCommitted - Rec."OBF-Qty on Quality Hold";
+        OnHandAvailable := Rec.Inventory - OnHandCommitted - Rec.SBSISSQtyonQualityHold;
         OnHandAvailableWeight := TotalOnHandWeight - OnHandCommittedWeight;
         UnallocatedSOQty := InfoPaneMgmt.CalcUnallocatedSO(Rec."No.", VariantCode, ShowAllVariants);
         UnallocatedSOWeight := UnallocatedSOQty * Rec."Net Weight";
-        TotalAvailableQuantity := Rec.Inventory + OnOrderQty - OnHandCommitted - OnOrderCommitted - Rec."OBF-Qty on Quality Hold";
+        TotalAvailableQuantity := Rec.Inventory + OnOrderQty - OnHandCommitted - OnOrderCommitted - Rec.SBSISSQtyonQualityHold;
         TotalAvailableWeight := TotalOnHandWeight + OnOrderWeight - OnHandCommittedWeight - OnOrderCommittedWeight;
         TotalValueOfInventoryOnHand := InfoPaneMgmt.CalcInventoryValue(Rec."No.", VariantCode, ShowAllVariants, AsOfDate);
         IF TotalonHandWeight <> 0 then begin

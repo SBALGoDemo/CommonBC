@@ -9,7 +9,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
 {
     fields
     {
-        field(60300; "OBF-Site Code"; Code[20])
+        field(60300; SBSISSSiteCode; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'Site Code';
@@ -18,10 +18,10 @@ tableextension 60304 "SalesLine" extends "Sales Line"
             var
                 SubDimension: Codeunit "OBF-Sub Dimension";
             begin
-                SubDimension.UpdateDimSetIDForSubDimension('SITE', "OBF-SITE Code", Rec."Dimension Set ID");
+                SubDimension.UpdateDimSetIDForSubDimension('SITE', SBSISSSiteCode, Rec."Dimension Set ID");
             end;
         }
-        field(60301; "OBF-CIP Code"; Code[20])
+        field(60301; SBSISSCIPCode; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'CIP Code';
@@ -37,7 +37,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications
-        field(60302; "OBF-MSC Certification"; Boolean)
+        field(60302; SBSISSMSCCertification; Boolean)
         {
             DataClassification = CustomerContent;
             Caption = 'MSC Certification';
@@ -46,7 +46,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
                 //Rec.TestField(Type,Rec.Type::Item);
             end;
         }
-        field(60303; "OBF-RFM Certification"; Boolean)
+        field(60303; SBSISSRFMCertification; Boolean)
         {
             DataClassification = CustomerContent;
             Caption = 'RFM Certification';
@@ -57,26 +57,26 @@ tableextension 60304 "SalesLine" extends "Sales Line"
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1630 - Printed Document Layouts        
-        field(60304; "OBF-Is Van Info Line"; Boolean)
+        field(60304; SBSISSIsVanInfoLine; Boolean)
         {
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(60305; "OBF-Is Certification Info Line"; Boolean)
+        field(60305; SBSISSIsCertificationInfoLine; Boolean)
         {
             DataClassification = CustomerContent;
             Editable = false;
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
-        field(60306; "OBF-Line Net Weight"; Decimal)
+        field(60306; SBSISSLineNetWeight; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Line Net Weight';
             Editable = false;
             DecimalPlaces = 0 : 2;
         }
-        field(60311; "OBF-Ship-to Code"; Code[10])
+        field(60311; SBSISSShiptoCode; Code[10])
         {
             Caption = 'Ship-to Code';
             FieldClass = FlowField;
@@ -85,21 +85,21 @@ tableextension 60304 "SalesLine" extends "Sales Line"
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1788 - Sales Workflow
-        field(60307; "OBF-Allocated Quantity"; Decimal)
+        field(60307; SBSISSAllocatedQuantity; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Allocated Quantity';
             DecimalPlaces = 0 : 5;
             Editable = false;
         }
-        field(60308; "OBF-Item Type"; Enum "Item Type")
+        field(60308; SBSISSItemType; Enum "Item Type")
         {
             Caption = 'Item Type';
             CalcFormula = Lookup(Item.Type where("No." = field("No.")));
             Editable = false;
             FieldClass = FlowField;
         }
-        field(60309; "OBF-Item Tracking Code"; Code[10])
+        field(60309; SBSISSItemTrackingCode; Code[10])
         {
             Caption = 'Item Tracking Code';
             CalcFormula = Lookup(Item."Item Tracking Code" where("No." = field("No.")));
@@ -107,18 +107,18 @@ tableextension 60304 "SalesLine" extends "Sales Line"
             FieldClass = FlowField;
         }
 
-        field(60310; "OBF-Lot Number"; Text[250])
+        field(60310; SBSISSLotNumber; Text[250])
         {
             Caption = 'Lot Number(s)';
             Editable = false;
         }
 
-        field(60312; "OBF-Off-Inv. Rebate Unit Rate"; Text[50])
+        field(60312; SBSISSOffInvRebateUnitRate; Text[50])
         {
             Caption = 'Off-Inv. Rebate Unit Rate';
             Editable = false;
         }
-        field(60313; "OBF-Off Invoice Rebate Amount"; Decimal)
+        field(60313; SBSISSOffInvoiceRebateAmount; Decimal)
         {
             Caption = 'Off-Invoice Rebate Amount';
             CalcFormula = Sum("OBF-Rebate Entry"."Rebate Amount" WHERE("Source Type" = FIELD("Document Type"),
@@ -130,7 +130,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1808 - Multi Entity Management Enhancements for Rebates 
-        field(60314; "OBF-Header Subsidiary Code"; Code[20])
+        field(60314; SBSISSHeaderSubsidiaryCode; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'Header Subsidiary Code';
@@ -144,7 +144,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
             begin
                 if Rec."Shortcut Dimension 1 Code" <> xRec."Shortcut Dimension 1 Code" then begin
                     SubDimension.RemoveSubDimensionsFromDimSetID(Rec."Dimension Set ID");
-                    Rec."OBF-Site Code" := '';
+                    Rec.SBSISSSiteCode := '';
                 end;
             end;
         }
@@ -193,8 +193,8 @@ tableextension 60304 "SalesLine" extends "Sales Line"
             exit;
         if Rec."No." = '' then
             exit;
-        Rec."OBF-MSC Certification" := CheckItemCertification(Rec."No.", 'MSC');
-        Rec."OBF-RFM Certification" := CheckItemCertification(Rec."No.", 'RFM');
+        Rec.SBSISSMSCCertification := CheckItemCertification(Rec."No.", 'MSC');
+        Rec.SBSISSRFMCertification := CheckItemCertification(Rec."No.", 'RFM');
     end;
 
     procedure CheckItemCertification(ItemNo: Code[20]; CertificationCode: Code[20]): Boolean
@@ -216,7 +216,7 @@ tableextension 60304 "SalesLine" extends "Sales Line"
         LotNo: Text[250];
         IntCount: Integer;
     begin
-        SalesLine."OBF-Allocated Quantity" := 0;
+        SalesLine.SBSISSAllocatedQuantity := 0;
         ReservEntry.Reset;
         ReservEntry.SetCurrentKey("Source ID", "Source Ref. No.", "Source Type", "Source Subtype");
         ReservEntry.SetRange("Source ID", SalesLine."Document No.");
@@ -232,9 +232,9 @@ tableextension 60304 "SalesLine" extends "Sales Line"
                         LotNo := CopyStr(LotNo + ',' + ReservEntry."Lot No.", 1, MaxStrLen(LotNo));
                     IntCount := IntCount + 1;
                 end;
-                SalesLine."OBF-Allocated Quantity" -= ReservEntry."Qty. to Handle (Base)";
+                SalesLine.SBSISSAllocatedQuantity -= ReservEntry."Qty. to Handle (Base)";
             until ReservEntry.Next = 0;
-            SalesLine."OBF-Lot Number" := LotNo;
+            SalesLine.SBSISSLotNumber := LotNo;
         end else begin
             TrackingSpecific.SetCurrentKey(
             "Source ID", "Source Type", "Source Subtype",
@@ -253,12 +253,12 @@ tableextension 60304 "SalesLine" extends "Sales Line"
                         else
                             LotNo := LotNo + ',' + TrackingSpecific."Lot No.";
                         IntCount := IntCount + 1;
-                        SalesLine."OBF-Allocated Quantity" -= TrackingSpecific."Qty. to Handle (Base)";
+                        SalesLine.SBSISSAllocatedQuantity -= TrackingSpecific."Qty. to Handle (Base)";
                     end;
                 until TrackingSpecific.Next = 0;
-                SalesLine."OBF-Lot Number" := LotNo;
+                SalesLine.SBSISSLotNumber := LotNo;
             end else
-                SalesLine."OBF-Lot Number" := '';
+                SalesLine.SBSISSLotNumber := '';
         end;
         SalesLine.Modify;
     end;
