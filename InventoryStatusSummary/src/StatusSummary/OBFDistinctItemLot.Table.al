@@ -1,3 +1,9 @@
+namespace SilverBay.Inventory.StatusSummary;
+
+using Microsoft.CRM.Team;
+using Microsoft.Inventory.Item;
+using Microsoft.Purchases.Vendor;
+
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders 

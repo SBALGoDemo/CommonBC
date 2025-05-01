@@ -1,3 +1,7 @@
+namespace SilverBay.Inventory.StatusSummary;
+
+using Microsoft.Purchases.Document;
+
 query 60305 "OBF-Dist. Items On Purch. Line"
 {
     OrderBy = Ascending(Item_No);

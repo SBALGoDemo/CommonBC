@@ -1,4 +1,8 @@
-query 60304 "OBF-Distinct Items On Order"
+namespace SilverBay.Inventory.StatusSummary;
+
+using Microsoft.Inventory.Tracking;
+
+query 60302 "OBF-Distinct Item Loc On Order"
 {
     OrderBy = Ascending(Item_No);
 
@@ -10,6 +14,9 @@ query 60304 "OBF-Distinct Items On Order"
             {
             }
             column(Variant_Code; "Variant Code")
+            {
+            }
+            column(Location_Code; "Location Code")
             {
             }
             column(Count_)

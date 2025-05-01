@@ -1,3 +1,9 @@
+namespace SilverBay.Inventory.StatusSummary;
+
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Tracking;
+using Microsoft.Sales.Document;
+
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1663 - Create Site Dimension Lookup based on Subsidiary
 tableextension 60304 "SalesLine" extends "Sales Line"
 {

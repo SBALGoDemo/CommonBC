@@ -1,3 +1,7 @@
+namespace SilverBay.Inventory.StatusSummary;
+
+using Microsoft.Inventory.Item;
+
 tableextension 60301 "Item" extends Item
 {
     fields

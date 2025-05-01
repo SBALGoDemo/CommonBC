@@ -1,3 +1,7 @@
+namespace SilverBay.Inventory.StatusSummary;
+
+using Microsoft.Inventory.Item;
+
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page

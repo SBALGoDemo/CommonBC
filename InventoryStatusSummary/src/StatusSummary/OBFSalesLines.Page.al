@@ -1,3 +1,11 @@
+namespace SilverBay.Inventory.StatusSummary;
+
+using Microsoft.Finance.Dimension;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Tracking;
+using Microsoft.Sales.Document;
+using Microsoft.Utilities;
+
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
