@@ -238,7 +238,7 @@ page 60302 "OBF-Item Avail. Drilldown"
             until ItemLedgerEntry.Next() = 0;
     end;
 
-    local procedure AddPurchaseLinesToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
+    local procedure AddPurchaseLinesToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
     var
         Item: Record Item;
         PurchaseLine: Record "Purchase Line";
@@ -278,7 +278,7 @@ page 60302 "OBF-Item Avail. Drilldown"
             until PurchaseLine.Next() = 0;
     end;
 
-    local procedure AddPurchaseReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
+    local procedure AddPurchaseReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
     var
         Item: Record Item;
         PurchaseHeader: Record "Purchase Header";
@@ -321,7 +321,7 @@ page 60302 "OBF-Item Avail. Drilldown"
             until ReservEntry.Next() = 0;
     end;
 
-    local procedure AddSalesReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
+    local procedure AddSalesReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
     var
         Item: Record Item;
         ReservEntry: Record "Reservation Entry";

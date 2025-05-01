@@ -3,6 +3,8 @@ namespace SilverBay.Inventory.StatusSummary;
 using Microsoft.CRM.Team;
 using Microsoft.Inventory.Item;
 using Microsoft.Purchases.Vendor;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Tracking;
 
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
@@ -147,7 +149,7 @@ table 60300 "OBF-Distinct Item Lot"
                                                                                 "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
                                                                                 "Source Type" = const(39),
                                                                                 "Source Subtype" = const("1"),
-                                                                                "OBF-Lot Is On Hand2" = const(false)));
+                                                                                SBSISSLotIsOnHand2 = const(false)));
             Caption = 'On Order Quantity';
             DecimalPlaces = 0 : 0;
             Editable = false;
@@ -182,7 +184,7 @@ table 60300 "OBF-Distinct Item Lot"
         }
         field(36; "On Order Weight"; Decimal)
         {
-            CalcFormula = sum("Reservation Entry"."OBF-Net Weight to Handle" where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+            CalcFormula = sum("Reservation Entry".SBSISSNetWeighttoHandle where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
                                                                                  "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
                                                                                  "Source Type" = const(39),
                                                                                  "Source Subtype" = const("1")));
@@ -193,7 +195,7 @@ table 60300 "OBF-Distinct Item Lot"
         }
         field(37; "Net Weight on Sales Order"; Decimal)
         {
-            CalcFormula = - sum("Reservation Entry"."OBF-Net Weight" where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+            CalcFormula = - sum("Reservation Entry".SBSISSNetWeight where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
                                                                                  "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
                                                                                  "Source Type" = const(37),
                                                                                  "Source Subtype" = const("1")));
@@ -292,7 +294,7 @@ table 60300 "OBF-Distinct Item Lot"
                                                                                  "Lot No." = field("Lot No."),
                                                                                  "Source Type" = const(39),
                                                                                  "Source Subtype" = const("1"),
-                                                                                 "OBF-Pur. Res. Entry is Neg." = const(true)));
+                                                                                 SBSISSPurResEntryisNeg = const(true)));
             Caption = 'Qty. in Transit';
             DecimalPlaces = 0 : 0;
             Editable = false;
