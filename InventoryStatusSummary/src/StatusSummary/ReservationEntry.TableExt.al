@@ -117,20 +117,21 @@ tableextension 60302 ReservationEntry extends "Reservation Entry"
         }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-        field(60315; SBSISSPurchasedForFlowField; Code[20])
-        {
-            Caption = 'Purchased For';
-            // CalcFormula = lookup("Purchase Line"."OBF-Purchased For" where("Document No." = field("Source ID"),
-            //                                                                       "Line No." = field("Source Ref. No.")));
-            Editable = false;
-            FieldClass = FlowField;
-            TableRelation = "Salesperson/Purchaser";
-        }
+        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        // field(60315; SBSISSPurchasedForFlowField; Code[20])
+        // {
+        //     Caption = 'Purchased For';
+        //     Enabled = false;
+        //     CalcFormula = lookup("Purchase Line"."OBF-Purchased For" where("Document No." = field("Source ID"),
+        //                                                                           "Line No." = field("Source Ref. No.")));
+        //     Editable = false;
+        //     FieldClass = FlowField;
+        //     TableRelation = "Salesperson/Purchaser";
+        // }
     }
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
-    procedure SetPurchResEntryIsNegative()
+    procedure SBSISSSetPurchResEntryIsNegative()
     begin
         if (Rec."Source Type" = Database::"Purchase Line") and
             (Rec."Source Subtype" = 1) and // Orders

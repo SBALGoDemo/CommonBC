@@ -1,7 +1,6 @@
 namespace SilverBay.Inventory.StatusSummary;
 
 using Microsoft.Finance.Dimension;
-using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Foundation.Address;
 using Microsoft.Foundation.AuditCodes;
 using Microsoft.Foundation.NoSeries;
@@ -414,11 +413,11 @@ table 60301 "OBF-Item Availability Buffer"
             Caption = 'Return Reason Code';
             TableRelation = "Return Reason";
         }
-        field(50000; "Entry No. 2"; Integer)
+        field(60300; "Entry No. 2"; Integer)
         {
             Caption = 'Entry No.';
         }
-        field(50001; "Date Filter"; Date)
+        field(60301; "Date Filter"; Date)
         {
             Caption = 'Date Filter';
             FieldClass = FlowFilter;
@@ -521,17 +520,4 @@ table 60301 "OBF-Item Availability Buffer"
     {
         fieldgroup(DropDown; "Entry No.", Description, "Item No.", "Posting Date", "Entry Type", "Document No.") { }
     }
-
-    var
-        GLSetup: Record "General Ledger Setup";
-        GLSetupRead: Boolean;
-
-    local procedure GetCurrencyCode(): Code[10]
-    begin
-        if not GLSetupRead then begin
-            GLSetup.Get();
-            GLSetupRead := true;
-        end;
-        exit(GLSetup."Additional Reporting Currency");
-    end;
 }

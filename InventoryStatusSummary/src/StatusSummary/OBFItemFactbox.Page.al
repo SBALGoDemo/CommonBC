@@ -25,7 +25,7 @@ page 60303 "OBF-Item Factbox"
                     Caption = 'Item No.';
                     ToolTip = 'Specifies the number of the involved entry or record, according to the specified number series.';
                 }
-                field(VariantCode; VariantCode)
+                field(VariantCode; this.VariantCode)
                 {
                     Caption = 'Variant Code';
                     ToolTip = 'Specifies the value of the Variant Code field.';
@@ -35,7 +35,7 @@ page 60303 "OBF-Item Factbox"
                     Caption = 'Description';
                     ToolTip = 'Specifies a description of the item.';
                 }
-                field(AsOfDate; Format(AsOfDate))
+                field(AsOfDate; Format(this.AsOfDate))
                 {
                     Caption = 'As Of Date';
                     ToolTip = 'Specifies the value of the As Of Date field.';
@@ -47,18 +47,18 @@ page 60303 "OBF-Item Factbox"
 
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
-                field(Inventory; TotalQty)
+                field(Inventory; this.TotalQty)
                 {
                     Caption = 'Total Qty.';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the Total Qty. field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.OnHandDrilldown(Rec."No.", VariantCode, ShowAllVariants, AsOfDate);
+                        this.InfoPaneMgmt.OnHandDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
                     end;
                 }
 
-                // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Qty on Quality Hold"; QtyOnQualityHold)
                 // {
                 //     Caption = 'Quality Hold';
@@ -66,27 +66,27 @@ page 60303 "OBF-Item Factbox"
                 //     ApplicationArea = All;
                 // }
 
-                field(TotalOnHandWeight; TotalOnHandWeight)
+                field(TotalOnHandWeight; this.TotalOnHandWeight)
                 {
                     Caption = 'Total Weight';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the Total Weight field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.OnHandDrilldown(Rec."No.", VariantCode, ShowAllVariants, AsOfDate);
+                        this.InfoPaneMgmt.OnHandDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
                     end;
                 }
-                field(TotalValueOfInventoryOnHand; TotalValueOfInventoryOnHand)
+                field(TotalValueOfInventoryOnHand; this.TotalValueOfInventoryOnHand)
                 {
                     Caption = 'Total Value';
                     DecimalPlaces = 2 : 2;
                     ToolTip = 'Specifies the value of the Total Value field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.OnHandDrilldown(Rec."No.", VariantCode, ShowAllVariants, AsOfDate);
+                        this.InfoPaneMgmt.OnHandDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
                     end;
                 }
-                field(AverageCost; AverageCost)
+                field(AverageCost; this.AverageCost)
                 {
                     Caption = 'Average Cost per Pound';
                     ToolTip = 'Specifies the value of the Average Cost per Pound field.';
@@ -95,31 +95,31 @@ page 60303 "OBF-Item Factbox"
             group(OnHandCommittedGroup)
             {
                 Caption = 'On Hand (Committed)';
-                field(OnHandCommitted; OnHandCommitted)
+                field(OnHandCommitted; this.OnHandCommitted)
                 {
                     Caption = 'Total Qty.';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the Total Qty. field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.CommittedDrilldown(Rec."No.", VariantCode, ShowAllVariants, true);
+                        this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
                     end;
                 }
-                field(OnHandCommittedWeight; OnHandCommittedWeight)
+                field(OnHandCommittedWeight; this.OnHandCommittedWeight)
                 {
                     Caption = 'Total Weight';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the Total Weight field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.CommittedDrilldown(Rec."No.", VariantCode, ShowAllVariants, true);
+                        this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
                     end;
                 }
             }
             group(OnHandAvailableGroup)
             {
                 Caption = 'On Hand (Available)';
-                field(OnHandAvailable; OnHandAvailable)
+                field(OnHandAvailable; this.OnHandAvailable)
                 {
                     Caption = 'On-Hand Available';
                     DecimalPlaces = 0 : 3;
@@ -129,15 +129,15 @@ page 60303 "OBF-Item Factbox"
                         DistinctItemLots: Page "OBF-Distinct Item Lots";
                     begin
                         Message('This drilldown is not fully implemented yet. Please contact support.');
-                        if ShowAllVariants then
-                            DistinctItemLots.SetItem(Rec."No.", '', AsOfDate)
+                        if this.ShowAllVariants then
+                            DistinctItemLots.SetItem(Rec."No.", '', this.AsOfDate)
                         else
-                            DistinctItemLots.SetItem(Rec."No.", VariantCode, AsOfDate);
+                            DistinctItemLots.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
                         DistinctItemLots.SetOnHandQtyFilter();
                         DistinctItemLots.RunModal();
                     end;
                 }
-                field(OnHandAvailableWeight; OnHandAvailableWeight)
+                field(OnHandAvailableWeight; this.OnHandAvailableWeight)
                 {
                     Caption = 'On-Hand Available (Weight)';
                     DecimalPlaces = 0 : 3;
@@ -147,10 +147,10 @@ page 60303 "OBF-Item Factbox"
                         DistinctItemLots: Page "OBF-Distinct Item Lots";
                     begin
                         Message('This drilldown is not fully implemented yet. Please contact support.');
-                        if ShowAllVariants then
-                            DistinctItemLots.SetItem(Rec."No.", '', AsOfDate)
+                        if this.ShowAllVariants then
+                            DistinctItemLots.SetItem(Rec."No.", '', this.AsOfDate)
                         else
-                            DistinctItemLots.SetItem(Rec."No.", VariantCode, AsOfDate);
+                            DistinctItemLots.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
                         DistinctItemLots.SetOnHandQtyFilter();
                         DistinctItemLots.RunModal();
                     end;
@@ -159,96 +159,96 @@ page 60303 "OBF-Item Factbox"
             group(OnOrder)
             {
                 Caption = 'On Order';
-                field(OnOrderQty; OnOrderQty)
+                field(OnOrderQty; this.OnOrderQty)
                 {
                     CaptionML = ENU = 'Total Qty.';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the OnOrderQty field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.OnOrderDrilldown(Rec."No.", VariantCode, ShowAllVariants);
+                        this.InfoPaneMgmt.OnOrderDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
                     end;
                 }
-                field(OnOrderWeight; OnOrderWeight)
+                field(OnOrderWeight; this.OnOrderWeight)
                 {
                     CaptionML = ENU = 'Total Weight';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the OnOrderWeight field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.OnOrderDrilldown(Rec."No.", VariantCode, ShowAllVariants);
+                        this.InfoPaneMgmt.OnOrderDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
                     end;
                 }
             }
             group(OnOrderCommittedGroup)
             {
                 Caption = 'On Order Committed';
-                field(OnOrderCommitted; OnOrderCommitted)
+                field(OnOrderCommitted; this.OnOrderCommitted)
                 {
                     Caption = 'Total Qty.';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the Total Qty. field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.CommittedDrilldown(Rec."No.", VariantCode, ShowAllVariants, false);
+                        this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
                     end;
                 }
-                field(OnOrderCommittedWeight; OnOrderCommittedWeight)
+                field(OnOrderCommittedWeight; this.OnOrderCommittedWeight)
                 {
                     Caption = 'Total Weight';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the Total Weight field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.CommittedDrilldown(Rec."No.", VariantCode, ShowAllVariants, false);
+                        this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
                     end;
                 }
             }
             group(UnallocatedSO)
             {
                 Caption = 'Unallocated Sales Orders';
-                field(UnallocatedSOQty; UnallocatedSOQty)
+                field(UnallocatedSOQty; this.UnallocatedSOQty)
                 {
                     Caption = 'Total Qty.';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the Total Qty. field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.UnallocatedSODrilldown(Rec."No.", VariantCode, ShowAllVariants);
+                        this.InfoPaneMgmt.UnallocatedSODrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
                     end;
                 }
-                field(UnallocatedSOWeight; UnallocatedSOWeight)
+                field(UnallocatedSOWeight; this.UnallocatedSOWeight)
                 {
                     Caption = 'Total Weight';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the Total Weight field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.UnallocatedSODrilldown(Rec."No.", VariantCode, ShowAllVariants);
+                        this.InfoPaneMgmt.UnallocatedSODrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
                     end;
                 }
             }
             group(Available)
             {
                 Caption = 'Available ';
-                field(TotalAvailableQuantity; TotalAvailableQuantity)
+                field(TotalAvailableQuantity; this.TotalAvailableQuantity)
                 {
                     Caption = 'Total Qty.';
                     DecimalPlaces = 0 : 3;
                     ToolTipML = ENU = '=On Hand + On Order - On Hand Committed - On Order Committed';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", VariantCode, ShowAllVariants, AsOfDate);
+                        this.InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
                     end;
                 }
-                field(TotalAvailableWeight; TotalAvailableWeight)
+                field(TotalAvailableWeight; this.TotalAvailableWeight)
                 {
                     Caption = 'Total Weight';
                     DecimalPlaces = 0 : 3;
                     ToolTip = 'Specifies the value of the Total Weight field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", VariantCode, ShowAllVariants, AsOfDate);
+                        this.InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
                     end;
                 }
             }
@@ -257,39 +257,39 @@ page 60303 "OBF-Item Factbox"
 
     trigger OnAfterGetRecord()
     begin
-        if AsOfDate <> 0D then
-            Rec.SetFilter("Date Filter", '<=%1', AsOfDate);
+        if this.AsOfDate <> 0D then
+            Rec.SetFilter("Date Filter", '<=%1', this.AsOfDate);
         // SetFilter("Inventory As Of Date Filter",'<=%1',AsOfDate);
 
-        if not ShowAllVariants then
-            Rec.SetRange("Variant Filter", VariantCode);
+        if not this.ShowAllVariants then
+            Rec.SetRange("Variant Filter", this.VariantCode);
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
         Rec.CalcFields(Inventory, "Qty. on Purch. Order");
-        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // Rec.CalcFields("OBF-Qty on Quality Hold");
-        TotalQty := Rec.Inventory - Rec.SBSISSQtyonQualityHold;
-        QtyOnQualityHold := Rec.SBSISSQtyonQualityHold;
-        TotalOnHandWeight := (Rec.Inventory - Rec.SBSISSQtyonQualityHold) * Rec."Net Weight";
+        this.TotalQty := Rec.Inventory - Rec.SBSISSQtyonQualityHold;
+        // this.QtyOnQualityHold := Rec.SBSISSQtyonQualityHold;//TODO: Review Later
+        this.TotalOnHandWeight := (Rec.Inventory - Rec.SBSISSQtyonQualityHold) * Rec."Net Weight";
 
-        OnOrderQty := Rec."Qty. on Purch. Order";
-        OnOrderWeight := OnOrderQty * Rec."Net Weight";
-        OnOrderCommitted := InfoPaneMgmt.CalcOnOrderCommitted(Rec."No.", VariantCode, ShowAllVariants);
-        OnOrderCommittedWeight := OnOrderCommitted * Rec."Net Weight";
-        OnHandCommitted := InfoPaneMgmt.CalcOnHandCommitted(Rec."No.", VariantCode, ShowAllVariants);
-        OnHandCommittedWeight := OnHandCommitted * Rec."Net Weight";
-        OnHandAvailable := Rec.Inventory - OnHandCommitted - Rec.SBSISSQtyonQualityHold;
-        OnHandAvailableWeight := TotalOnHandWeight - OnHandCommittedWeight;
-        UnallocatedSOQty := InfoPaneMgmt.CalcUnallocatedSO(Rec."No.", VariantCode, ShowAllVariants);
-        UnallocatedSOWeight := UnallocatedSOQty * Rec."Net Weight";
-        TotalAvailableQuantity := Rec.Inventory + OnOrderQty - OnHandCommitted - OnOrderCommitted - Rec.SBSISSQtyonQualityHold;
-        TotalAvailableWeight := TotalOnHandWeight + OnOrderWeight - OnHandCommittedWeight - OnOrderCommittedWeight;
-        TotalValueOfInventoryOnHand := InfoPaneMgmt.CalcInventoryValue(Rec."No.", VariantCode, ShowAllVariants, AsOfDate);
-        if TotalOnHandWeight <> 0 then
-            AverageCost := TotalValueOfInventoryOnHand / TotalOnHandWeight
+        this.OnOrderQty := Rec."Qty. on Purch. Order";
+        this.OnOrderWeight := this.OnOrderQty * Rec."Net Weight";
+        this.OnOrderCommitted := this.InfoPaneMgmt.CalcOnOrderCommitted(Rec."No.", this.VariantCode, this.ShowAllVariants);
+        this.OnOrderCommittedWeight := this.OnOrderCommitted * Rec."Net Weight";
+        this.OnHandCommitted := this.InfoPaneMgmt.CalcOnHandCommitted(Rec."No.", this.VariantCode, this.ShowAllVariants);
+        this.OnHandCommittedWeight := this.OnHandCommitted * Rec."Net Weight";
+        this.OnHandAvailable := Rec.Inventory - this.OnHandCommitted - Rec.SBSISSQtyonQualityHold;
+        this.OnHandAvailableWeight := this.TotalOnHandWeight - this.OnHandCommittedWeight;
+        this.UnallocatedSOQty := this.InfoPaneMgmt.CalcUnallocatedSO(Rec."No.", this.VariantCode, this.ShowAllVariants);
+        this.UnallocatedSOWeight := this.UnallocatedSOQty * Rec."Net Weight";
+        this.TotalAvailableQuantity := Rec.Inventory + this.OnOrderQty - this.OnHandCommitted - this.OnOrderCommitted - Rec.SBSISSQtyonQualityHold;
+        this.TotalAvailableWeight := this.TotalOnHandWeight + this.OnOrderWeight - this.OnHandCommittedWeight - this.OnOrderCommittedWeight;
+        this.TotalValueOfInventoryOnHand := this.InfoPaneMgmt.CalcInventoryValue(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
+        if this.TotalOnHandWeight <> 0 then
+            this.AverageCost := this.TotalValueOfInventoryOnHand / this.TotalOnHandWeight
         else
-            AverageCost := 0;
+            this.AverageCost := 0;
     end;
 
     var
@@ -306,7 +306,7 @@ page 60303 "OBF-Item Factbox"
         OnOrderCommittedWeight: Decimal;
         OnOrderQty: Decimal;
         OnOrderWeight: Decimal;
-        QtyOnQualityHold: Decimal;
+        // QtyOnQualityHold: Decimal;//TODO: Review Later
         TotalAvailableQuantity: Decimal;
         TotalAvailableWeight: Decimal;
         TotalOnHandWeight: Decimal;
@@ -317,11 +317,11 @@ page 60303 "OBF-Item Factbox"
 
     procedure SetValues(pAsOfDate: Date; pVariantCode: Code[10]; pShowAllVariants: Boolean)
     begin
-        AsOfDate := pAsOfDate;
-        ShowAllVariants := pShowAllVariants;
-        if ShowAllVariants then
-            VariantCode := '***ALL***'
+        this.AsOfDate := pAsOfDate;
+        this.ShowAllVariants := pShowAllVariants;
+        if this.ShowAllVariants then
+            this.VariantCode := '***ALL***'
         else
-            VariantCode := pVariantCode;
+            this.VariantCode := pVariantCode;
     end;
 }

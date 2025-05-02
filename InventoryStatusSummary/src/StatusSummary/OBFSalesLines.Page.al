@@ -14,8 +14,6 @@ using Microsoft.Utilities;
 page 60304 "OBF-Sales Lines"
 {
     ApplicationArea = All;
-    // version NAVW111.00,NAVNA11.00
-
     Caption = 'Sales Lines';
     DeleteAllowed = false;
     Editable = false;
@@ -53,14 +51,14 @@ page 60304 "OBF-Sales Lines"
                 }
 
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
-                field(SalesPerson; SalesHeader."Salesperson Code")
+                field(SalesPerson; this.SalesHeader."Salesperson Code")
                 {
                     Caption = 'Salesperson Code';
                     ToolTip = 'Specifies the value of the Salesperson Code field.';
                 }
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - End
 
-                // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 
                 // field("OBF-Sell-to Customer Name"; "OBF-Sell-to Customer Name")
                 // {
@@ -69,7 +67,7 @@ page 60304 "OBF-Sales Lines"
                 // }
 
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1017 - Add the columns “OBF-Unit Price (Sales Price UOM)” and “External Document No.” to Sales Lines page
-                field(ExternalDocumentNo; SalesHeader."External Document No.")
+                field(ExternalDocumentNo; this.SalesHeader."External Document No.")
                 {
                     Caption = 'Customer PO';
                     ToolTip = 'Specifies the value of the Customer PO field.';
@@ -171,7 +169,7 @@ page 60304 "OBF-Sales Lines"
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1017 - Add the columns “OBF-Unit Price (Sales Price UOM)” and “External Document No.” to Sales Lines page
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1199 - Add "Sales Unit Price" field and related functionality
 
-                // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-Sales Unit Price"; "OBF-Sales Unit Price")
                 // {
                 //     ApplicationArea = All;
@@ -212,7 +210,7 @@ page 60304 "OBF-Sales Lines"
                     ToolTip = 'Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                     Visible = false;
                 }
-                field("ShortcutDimCode[3]"; ShortcutDimCode[3])
+                field("ShortcutDimCode[3]"; this.ShortcutDimCode[3])
                 {
                     ApplicationArea = Dimensions;
                     Caption = 'ShortcutDimCode[3]';
@@ -223,7 +221,7 @@ page 60304 "OBF-Sales Lines"
                     ToolTip = 'Specifies the value of the ShortcutDimCode[3] field.';
                     Visible = false;
                 }
-                field("ShortcutDimCode[4]"; ShortcutDimCode[4])
+                field("ShortcutDimCode[4]"; this.ShortcutDimCode[4])
                 {
                     ApplicationArea = Dimensions;
                     Caption = 'ShortcutDimCode[4]';
@@ -234,7 +232,7 @@ page 60304 "OBF-Sales Lines"
                     ToolTip = 'Specifies the value of the ShortcutDimCode[4] field.';
                     Visible = false;
                 }
-                field("ShortcutDimCode[5]"; ShortcutDimCode[5])
+                field("ShortcutDimCode[5]"; this.ShortcutDimCode[5])
                 {
                     ApplicationArea = Dimensions;
                     Caption = 'ShortcutDimCode[5]';
@@ -245,7 +243,7 @@ page 60304 "OBF-Sales Lines"
                     ToolTip = 'Specifies the value of the ShortcutDimCode[5] field.';
                     Visible = false;
                 }
-                field("ShortcutDimCode[6]"; ShortcutDimCode[6])
+                field("ShortcutDimCode[6]"; this.ShortcutDimCode[6])
                 {
                     ApplicationArea = Dimensions;
                     Caption = 'ShortcutDimCode[6]';
@@ -256,7 +254,7 @@ page 60304 "OBF-Sales Lines"
                     ToolTip = 'Specifies the value of the ShortcutDimCode[6] field.';
                     Visible = false;
                 }
-                field("ShortcutDimCode[7]"; ShortcutDimCode[7])
+                field("ShortcutDimCode[7]"; this.ShortcutDimCode[7])
                 {
                     ApplicationArea = Dimensions;
                     Caption = 'ShortcutDimCode[7]';
@@ -267,7 +265,7 @@ page 60304 "OBF-Sales Lines"
                     ToolTip = 'Specifies the value of the ShortcutDimCode[7] field.';
                     Visible = false;
                 }
-                field("ShortcutDimCode[8]"; ShortcutDimCode[8])
+                field("ShortcutDimCode[8]"; this.ShortcutDimCode[8])
                 {
                     ApplicationArea = Dimensions;
                     Caption = 'ShortcutDimCode[8]';
@@ -282,13 +280,13 @@ page 60304 "OBF-Sales Lines"
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1493- Change "Sales Lines" drilldown to show the "Shipment Date" from the "Sales Header"
 
-                // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-Order Shipment Date 2"; "OBF-Order Shipment Date 2")
                 // {
                 //     ApplicationArea = All;
                 // }
 
-                field(OrderDate; SalesHeader."Order Date")
+                field(OrderDate; this.SalesHeader."Order Date")
                 {
                     Caption = 'Order Date';
                     ToolTip = 'Specifies the value of the Order Date field.';
@@ -302,7 +300,7 @@ page 60304 "OBF-Sales Lines"
 
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
 
-                // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-On-Hand Reserved Qty."; "OBF-On-Hand Reserved Qty.")
                 // {
                 //     ToolTip = 'Specifies how many units on the order line are reserved from On-Hand Qty.';
@@ -310,7 +308,7 @@ page 60304 "OBF-Sales Lines"
                 //     ApplicationArea = All;
                 // }
 
-                // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-Committed Reserved Qty."; "OBF-Committed Reserved Qty.")
                 // {
                 //     ToolTip = 'Specifies how many units on the order line are reserved from Purchase Orders.';
@@ -338,6 +336,7 @@ page 60304 "OBF-Sales Lines"
                     Promoted = true;
                     PromotedCategory = Process;
                     PromotedIsBig = true;
+                    PromotedOnly = true;
                     ShortcutKey = 'Shift+F7';
                     ToolTip = 'Open the document that the selected line exists on.';
 
@@ -345,8 +344,8 @@ page 60304 "OBF-Sales Lines"
                     var
                         PageManagement: Codeunit "Page Management";
                     begin
-                        SalesHeader.Get(Rec."Document Type", Rec."Document No.");
-                        PageManagement.PageRun(SalesHeader);
+                        this.SalesHeader.Get(Rec."Document Type", Rec."Document No.");
+                        PageManagement.PageRun(this.SalesHeader);
                     end;
                 }
             }
@@ -355,21 +354,21 @@ page 60304 "OBF-Sales Lines"
 
     trigger OnAfterGetRecord()
     begin
-        Rec.ShowShortcutDimCode(ShortcutDimCode);
+        Rec.ShowShortcutDimCode(this.ShortcutDimCode);
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
-        SalesHeader.Get(Rec."Document Type", Rec."Document No.");
+        this.SalesHeader.Get(Rec."Document Type", Rec."Document No.");
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - End
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        Clear(ShortcutDimCode);
+        Clear(this.ShortcutDimCode);
     end;
 
     var
         SalesHeader: Record "Sales Header";
-        ShowReserved: Boolean;
+        // ShowReserved: Boolean; //TODO: Review Later
         ShortcutDimCode: array[8] of Code[20];
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
@@ -395,7 +394,7 @@ page 60304 "OBF-Sales Lines"
                         //      Replace "OBF-Reserved Qty. (Base)" flowfield with "OBF-Allocated Quantity" normal field in following block of code
 
                         //Rec.CalcFields("OBF-Reserved Qty. (Base)");
-                        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // if LotIsOnHand then begin
                         //     Rec."OBF-On-Hand Reserved Qty." -= ReservEntry."Qty. to Handle (Base)";
                         //     //Rec."OBF-Committed Reserved Qty." := Rec."OBF-Reserved Qty. (Base)" - Rec."OBF-On-Hand Reserved Qty.";
@@ -411,7 +410,7 @@ page 60304 "OBF-Sales Lines"
                         Rec.TransferFields(SalesLine);
                         //Rec.CalcFields("OBF-Reserved Qty. (Base)");
 
-                        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // if LotIsOnHand then begin
                         //     Rec."OBF-On-Hand Reserved Qty." := -ReservEntry."Qty. to Handle (Base)";
                         //     //Rec."OBF-Committed Reserved Qty." := Rec."OBF-Reserved Qty. (Base)" - Rec."OBF-On-Hand Reserved Qty.";
@@ -433,7 +432,7 @@ page 60304 "OBF-Sales Lines"
 
     procedure SetShowReserved(pShowReserved: Boolean)
     begin
-        ShowReserved := pShowReserved;
+        // this.ShowReserved := pShowReserved; //TODO: Review Later
     end;
 
     procedure SetUnallocatedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
@@ -450,13 +449,13 @@ page 60304 "OBF-Sales Lines"
             SalesLine.SetRange("Variant Code", VariantCode);
         if SalesLine.FindSet() then
             repeat
-                TrackingPercent := Round(SalesLine.GetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
+                TrackingPercent := Round(SalesLine.SBSISSGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
                 if TrackingPercent <> 100 then begin
                     Rec.Init();
                     Rec.TransferFields(SalesLine);
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
-                    // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                    //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                     // Rec.CalcFields("OBF-Order Shipment Date");
                     // Rec."OBF-Order Shipment Date 2" := Rec."OBF-Order Shipment Date";
 

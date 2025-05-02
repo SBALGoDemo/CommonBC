@@ -145,6 +145,8 @@
       "asserterror",
       "codeunit",
       "Debuggable",
+      "Drilldowns",
+      "Factbox",
       "fieldgroup",
       "fieldgroups",
       "Mgmt",

@@ -95,7 +95,7 @@ codeunit 60300 "OBF-Info Pane Mgmt"
     procedure CalcUnallocatedSO(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean): Decimal
     var
         SalesLine: Record "Sales Line";
-        SalesLineTemp2: Record "Sales Line" temporary;
+        TempSalesLine2: Record "Sales Line" temporary;
         ItemTracking: Boolean;
         lTotalUnallocatedSO: Decimal;
         TrackingPercent: Decimal;
@@ -108,14 +108,14 @@ codeunit 60300 "OBF-Info Pane Mgmt"
             SalesLine.SetRange("Variant Code", VariantCode);
         if SalesLine.FindSet() then begin
             repeat
-                TrackingPercent := Round(SalesLine.GetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
+                TrackingPercent := Round(SalesLine.SBSISSGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
                 if TrackingPercent <> 100 then begin
-                    SalesLineTemp2.Init();
-                    SalesLineTemp2.TransferFields(SalesLine);
-                    SalesLineTemp2.Insert();
+                    TempSalesLine2.Init();
+                    TempSalesLine2.TransferFields(SalesLine);
+                    TempSalesLine2.Insert();
                 end;
             until SalesLine.Next() = 0;
-            if SalesLineTemp2.FindSet() then
+            if TempSalesLine2.FindSet() then
                 repeat
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page - Original Code
                     // SalesLineTemp2.CalcFields("OBF-Reserved Qty. (Base)");
@@ -123,9 +123,9 @@ codeunit 60300 "OBF-Info Pane Mgmt"
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - End Original Code
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page
-                    lTotalUnallocatedSO += SalesLineTemp2.Quantity - SalesLineTemp2.SBSISSAllocatedQuantity;
+                    lTotalUnallocatedSO += TempSalesLine2.Quantity - TempSalesLine2.SBSISSAllocatedQuantity;
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - End
-                until SalesLineTemp2.Next() = 0;
+                until TempSalesLine2.Next() = 0;
         end;
         exit(lTotalUnallocatedSO);
     end;
@@ -148,7 +148,7 @@ codeunit 60300 "OBF-Info Pane Mgmt"
     end;
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
-    procedure InTransitDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; LocationCode: Code[10])
+    procedure InTransitDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; LocationCode: Code[10])
     var
         ReservationEntry: Record "Reservation Entry";
         ReservationEntries: Page "Reservation Entries";
@@ -196,7 +196,7 @@ codeunit 60300 "OBF-Info Pane Mgmt"
     end;
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
-    procedure OnHandDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; LocationCode: Code[10])
+    procedure OnHandDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; LocationCode: Code[10])
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
         ItemLedgerEntries: Page "Item Ledger Entries";
@@ -227,7 +227,7 @@ codeunit 60300 "OBF-Info Pane Mgmt"
         end;
     end;
 
-    procedure OnOrderDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; LocationCode: Code[10])
+    procedure OnOrderDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; LocationCode: Code[10])
     var
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
@@ -295,11 +295,9 @@ codeunit 60300 "OBF-Info Pane Mgmt"
     var
         POReservationEntry: Record "Reservation Entry";
         ReservationEntry: Record "Reservation Entry";
-        ReservationEntryTemp: Record "Reservation Entry" temporary;
+        TempReservationEntry: Record "Reservation Entry" temporary;
         AvailItemTrackLines: Page "Avail. - Item Tracking Lines";
-        TotalSOReservation: Decimal;
     begin
-        TotalSOReservation := 0;
         ReservationEntry.Reset();
         ReservationEntry.SetRange("Source Type", Database::"Sales Line");
         ReservationEntry.SetRange("Item No.", ItemNo);
@@ -313,12 +311,12 @@ codeunit 60300 "OBF-Info Pane Mgmt"
             repeat
                 POReservationEntry.SetRange("Lot No.", ReservationEntry."Lot No.");
                 if not POReservationEntry.IsEmpty then begin
-                    ReservationEntryTemp := ReservationEntryTemp;
-                    ReservationEntryTemp.Insert();
+                    TempReservationEntry := TempReservationEntry;
+                    TempReservationEntry.Insert();
                 end;
             until ReservationEntry.Next() = 0;
-        if not ReservationEntryTemp.IsEmpty then begin
-            AvailItemTrackLines.SetTableView(ReservationEntryTemp);
+        if not TempReservationEntry.IsEmpty then begin
+            AvailItemTrackLines.SetTableView(TempReservationEntry);
             AvailItemTrackLines.RunModal();
             ;
         end;
@@ -344,7 +342,7 @@ codeunit 60300 "OBF-Info Pane Mgmt"
         ItemAvailDrilldown.RunModal();
     end;
 
-    procedure TotalAvailQtyDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; DateFilter: Date)
+    procedure TotalAvailQtyDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; DateFilter: Date)
     var
         ItemAvailDrilldown: Page "OBF-Item Avail. Drilldown";
     begin

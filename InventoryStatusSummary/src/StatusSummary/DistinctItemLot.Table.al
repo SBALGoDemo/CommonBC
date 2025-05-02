@@ -6,17 +6,20 @@ using Microsoft.Purchases.Vendor;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
-//     Reverse sign of "Qty. on Sales Orders" and "Net Weight on Sales Order" flowfields
-//https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
-
-table 60300 "OBF-Distinct Item Lot"
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
+/// Reverse sign of "Qty. on Sales Orders" and "Net Weight on Sales Order" flowfields
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
+/// </summary>
+table 60300 DistinctItemLot
 {
     Caption = 'Lots';
     DataClassification = CustomerContent;
+    Access = Internal;
+    Extensible = false;
 
     fields
     {
@@ -28,15 +31,14 @@ table 60300 "OBF-Distinct Item Lot"
         {
             Caption = 'Item No.';
         }
-        field(3; "Lot No."; Code[50])
+        field(3; "Lot No."; Code[10])
         {
             Caption = 'Lot No.';
         }
-        field(4; "Location Code"; Code[20])
+        field(4; "Location Code"; Code[10])
         {
             Caption = 'Location Code';
         }
-
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue
         field(5; "Item Description"; Text[100])
         {
@@ -46,7 +48,6 @@ table 60300 "OBF-Distinct Item Lot"
         {
             Caption = 'Item Description 2';
         }
-
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue
         field(7; "Search Description"; Text[100])
         {
@@ -77,7 +78,7 @@ table 60300 "OBF-Distinct Item Lot"
         {
             Caption = 'PO Number';
         }
-        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // field(14; "Alternate Lot No."; Code[20])
         // {
         //     CaptionML = ENU = 'Alternate Lot No.';
@@ -268,7 +269,7 @@ table 60300 "OBF-Distinct Item Lot"
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1195 - Hold Functionality
-        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         field(70; "Qty. on Quality Hold"; Decimal)
         {
             // CalcFormula = Sum("OBF-Quality Ledger Entry"."Quantity (Base)" Where("Item No." = field("Item No."),
@@ -278,7 +279,7 @@ table 60300 "OBF-Distinct Item Lot"
             Caption = 'Quantity on Quality Hold';
             DecimalPlaces = 0 : 0;
             Editable = false;
-            FieldClass = FlowField;
+            // FieldClass = FlowField;            
         }
         field(71; "On Hand Quantity 2"; Decimal)
         {
@@ -306,7 +307,7 @@ table 60300 "OBF-Distinct Item Lot"
         {
             Caption = 'Container No.';
         }
-        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // field(93; "Label Text"; Text[50])
         // {
         //     Caption = 'Label';
@@ -318,7 +319,7 @@ table 60300 "OBF-Distinct Item Lot"
         // }
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-        field(50300; "OBF-Purchased For"; Code[20])
+        field(100; "OBF-Purchased For"; Code[20])
         {
             Caption = 'Purchased For';
             TableRelation = "Salesperson/Purchaser";
@@ -333,21 +334,21 @@ table 60300 "OBF-Distinct Item Lot"
 
 
     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
-    procedure CalcAvailableQtyExcludingOrder(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]; LotNo: Code[20]; OrderNo: Code[20]): Decimal
+    procedure CalcAvailableQtyExcludingOrder(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]; LotNo: Code[10]; OrderNo: Code[20]): Decimal
     var
-        DistinctItemLot: Record "OBF-Distinct Item Lot" temporary;
+        TempDistinctItemLot: Record DistinctItemLot temporary;
         AvailableQty: Decimal;
     begin
-        DistinctItemLot."Entry No." := 1;
-        DistinctItemLot."Item No." := ItemNo;
-        DistinctItemLot."Variant Code" := VariantCode;
-        DistinctItemLot."Location Code" := LocationCode;
-        DistinctItemLot."Lot No." := LotNo;
-        DistinctItemLot.SetFilter(DistinctItemLot."Sales Order Filter", '<>%1', OrderNo);
+        TempDistinctItemLot."Entry No." := 1;
+        TempDistinctItemLot."Item No." := ItemNo;
+        TempDistinctItemLot."Variant Code" := VariantCode;
+        TempDistinctItemLot."Location Code" := LocationCode;
+        TempDistinctItemLot."Lot No." := LotNo;
+        TempDistinctItemLot.SetFilter(TempDistinctItemLot."Sales Order Filter", '<>%1', OrderNo);
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
-        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-        DistinctItemLot.CalcFields(DistinctItemLot."On Hand Quantity", DistinctItemLot."On Order Quantity", DistinctItemLot."Qty. on Sales Order"); // , DistinctItemLot."Qty. on Quality Hold"
-        AvailableQty := DistinctItemLot."On Hand Quantity" + DistinctItemLot."On Order Quantity" - DistinctItemLot."Qty. on Sales Order"; // - DistinctItemLot."Qty. on Quality Hold";
+        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        TempDistinctItemLot.CalcFields(TempDistinctItemLot."On Hand Quantity", TempDistinctItemLot."On Order Quantity", TempDistinctItemLot."Qty. on Sales Order"); // , DistinctItemLot."Qty. on Quality Hold"
+        AvailableQty := TempDistinctItemLot."On Hand Quantity" + TempDistinctItemLot."On Order Quantity" - TempDistinctItemLot."Qty. on Sales Order"; // - DistinctItemLot."Qty. on Quality Hold";
 
         exit(AvailableQty);
     end;

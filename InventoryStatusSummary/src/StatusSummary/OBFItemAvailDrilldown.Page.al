@@ -84,7 +84,7 @@ page 60302 "OBF-Item Avail. Drilldown"
                     Caption = 'Lot No.';
                     ToolTip = 'Specifies a lot number if the posted item carries such a number.';
                 }
-                field(LotOnHandText; LotOnHandText)
+                field(LotOnHandText; this.LotOnHandText)
                 {
                     Caption = 'Lot Is On Hand';
                     ToolTip = 'Specifies the value of the Lot Is On Hand field.';
@@ -171,9 +171,9 @@ page 60302 "OBF-Item Avail. Drilldown"
     begin
         Rec.CalcFields("Lot Is On Hand");
         if Rec."Lot No." = '' then
-            LotOnHandText := ''
+            this.LotOnHandText := ''
         else
-            LotOnHandText := Format(Rec."Lot Is On Hand");
+            this.LotOnHandText := Format(Rec."Lot Is On Hand");
     end;
 
     var
@@ -188,34 +188,34 @@ page 60302 "OBF-Item Avail. Drilldown"
         Rec.DeleteAll();
         ItemLedgerEntry.FindLast();
         NextEntryNo := ItemLedgerEntry."Entry No." + 1;
-        AddSeparatorRecToBuffer(NextEntryNo, '----- On Hand Quantity -----');
-        AddILERemainingQtyToBuffer(ItemNo, VariantCode, '', ShowAllVariants, AsOfDate, NextEntryNo);
+        this.AddSeparatorRecToBuffer(NextEntryNo, '----- On Hand Quantity -----');
+        this.AddILERemainingQtyToBuffer(ItemNo, VariantCode, '', ShowAllVariants, AsOfDate, NextEntryNo);
         NextEntryNo := 0;
-        AddSeparatorRecToBuffer(NextEntryNo, '--- On Purch. Order Quantity ---');
-        AddPurchaseLinesToBuffer(ItemNo, VariantCode, ShowAllVariants, AsOfDate, NextEntryNo);
-        AddSeparatorRecToBuffer(NextEntryNo, '--- On Sales Order Quantity ---');
-        AddSalesReservToBuffer(ItemNo, VariantCode, '', ShowAllVariants, AsOfDate, NextEntryNo);
+        this.AddSeparatorRecToBuffer(NextEntryNo, '--- On Purch. Order Quantity ---');
+        this.AddPurchaseLinesToBuffer(ItemNo, VariantCode, ShowAllVariants, NextEntryNo);
+        this.AddSeparatorRecToBuffer(NextEntryNo, '--- On Sales Order Quantity ---');
+        this.AddSalesReservToBuffer(ItemNo, VariantCode, '', ShowAllVariants, NextEntryNo);
         Rec.FindLast();
     end;
 
-    procedure SetItemLotData(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; AsOfDate: Date)
+    procedure SetItemLotData(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; AsOfDate: Date)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
         NextEntryNo: Integer;
     begin
         ItemLedgerEntry.FindLast();
         NextEntryNo := ItemLedgerEntry."Entry No." + 10000;
-        AddSeparatorRecToBuffer(NextEntryNo, '----- On Hand Quantity -----');
-        AddILERemainingQtyToBuffer(ItemNo, VariantCode, LotNo, false, AsOfDate, NextEntryNo);
+        this.AddSeparatorRecToBuffer(NextEntryNo, '----- On Hand Quantity -----');
+        this.AddILERemainingQtyToBuffer(ItemNo, VariantCode, LotNo, false, AsOfDate, NextEntryNo);
         NextEntryNo := 0;
-        AddSeparatorRecToBuffer(NextEntryNo, '--- On Purch. Order Quantity ---');
-        AddPurchaseReservToBuffer(ItemNo, VariantCode, LotNo, false, AsOfDate, NextEntryNo);
-        AddSeparatorRecToBuffer(NextEntryNo, '--- On Sales Order Quantity ---');
-        AddSalesReservToBuffer(ItemNo, VariantCode, LotNo, false, AsOfDate, NextEntryNo);
+        this.AddSeparatorRecToBuffer(NextEntryNo, '--- On Purch. Order Quantity ---');
+        this.AddPurchaseReservToBuffer(ItemNo, VariantCode, LotNo, false, NextEntryNo);
+        this.AddSeparatorRecToBuffer(NextEntryNo, '--- On Sales Order Quantity ---');
+        this.AddSalesReservToBuffer(ItemNo, VariantCode, LotNo, false, NextEntryNo);
         Rec.FindLast();
     end;
 
-    local procedure AddILERemainingQtyToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
+    local procedure AddILERemainingQtyToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
     begin
@@ -238,7 +238,7 @@ page 60302 "OBF-Item Avail. Drilldown"
             until ItemLedgerEntry.Next() = 0;
     end;
 
-    local procedure AddPurchaseLinesToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
+    local procedure AddPurchaseLinesToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
     var
         Item: Record Item;
         PurchaseLine: Record "Purchase Line";
@@ -271,14 +271,14 @@ page 60302 "OBF-Item Avail. Drilldown"
                 Rec."Item Category Code" := Item."Item Category Code";
                 Rec."Location Code" := PurchaseLine."Location Code";
 
-                // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 //Rec."Lot No." := PurchaseLine."OBF-Lot No.";
 
                 Rec.Insert();
             until PurchaseLine.Next() = 0;
     end;
 
-    local procedure AddPurchaseReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
+    local procedure AddPurchaseReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
     var
         Item: Record Item;
         PurchaseHeader: Record "Purchase Header";
@@ -321,7 +321,7 @@ page 60302 "OBF-Item Avail. Drilldown"
             until ReservEntry.Next() = 0;
     end;
 
-    local procedure AddSalesReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[20]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
+    local procedure AddSalesReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
     var
         Item: Record Item;
         ReservEntry: Record "Reservation Entry";

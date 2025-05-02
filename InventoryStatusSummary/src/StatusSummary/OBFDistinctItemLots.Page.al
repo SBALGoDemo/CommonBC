@@ -24,7 +24,7 @@ page 60300 "OBF-Distinct Item Lots"
     Caption = 'Distinct Item Lots';
     Editable = false;
     PageType = List;
-    SourceTable = "OBF-Distinct Item Lot";
+    SourceTable = DistinctItemLot;
     SourceTableTemporary = true;
     layout
     {
@@ -105,7 +105,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Visible = true;
                     Width = 10;
                 }
-                field(DateFilter; DateFilter)
+                field(DateFilter; this.DateFilter)
                 {
                     Caption = 'As Of Date';
                     Editable = false;
@@ -140,7 +140,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Width = 5;
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.LocationOnDrillDown(Rec."Location Code");
+                        this.InfoPaneMgmt.LocationOnDrillDown(Rec."Location Code");
                     end;
                 }
                 field("Vendor Name"; Rec."Vendor Name")
@@ -151,7 +151,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Width = 10;
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.VendorOnDrillDown(Rec."Vendor No.");
+                        this.InfoPaneMgmt.VendorOnDrillDown(Rec."Vendor No.");
                     end;
                 }
 
@@ -193,7 +193,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Width = 5;
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.OnHandDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", Rec."Location Code");
+                        this.InfoPaneMgmt.OnHandDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", Rec."Location Code");
                     end;
                 }
 
@@ -206,7 +206,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Width = 5;
                 }
 
-                // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Qty. on Quality Hold"; "Qty. on Quality Hold")
                 // {
                 //     Editable = false;
@@ -223,7 +223,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Width = 5;
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", Rec."Location Code");
+                        this.InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", Rec."Location Code");
                     end;
                 }
                 field("Qty. on Sales Order"; Rec."Qty. on Sales Order")
@@ -241,7 +241,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Width = 10;
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", DateFilter);
+                        this.InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", this.DateFilter);
                     end;
                 }
                 field("On Hand Weight"; Rec."On Hand Weight")
@@ -276,7 +276,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Width = 10;
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", DateFilter);
+                        this.InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", this.DateFilter);
                     end;
                 }
                 field("Unit Cost"; Rec."Unit Cost")
@@ -301,7 +301,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Width = 10;
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.PONumberOnDrillDown(Rec."PO Number");
+                        this.InfoPaneMgmt.PONumberOnDrillDown(Rec."PO Number");
                     end;
                 }
                 field("Receipt Date"; Rec."Receipt Date")
@@ -337,7 +337,7 @@ page 60300 "OBF-Distinct Item Lots"
                     ToolTip = 'Specifies the value of the Buyer Code field.';
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.BuyerOnDrillDown(Rec."Buyer Code");
+                        this.InfoPaneMgmt.BuyerOnDrillDown(Rec."Buyer Code");
                     end;
                 }
 
@@ -366,7 +366,7 @@ page 60300 "OBF-Distinct Item Lots"
                 ToolTip = 'Executes the Show Source Document action.';
                 trigger OnAction()
                 begin
-                    InfoPaneMgmt.PONumberOnDrillDown(Rec."PO Number");
+                    this.InfoPaneMgmt.PONumberOnDrillDown(Rec."PO Number");
                 end;
             }
         }
@@ -376,7 +376,7 @@ page 60300 "OBF-Distinct Item Lots"
     begin
         Rec.SetCurrentKey("Item No.", "Variant Code", "Location Code", "Lot No.");
         Rec.FindFirst();
-        Rec.SetRange("Date Filter", 0D, DateFilter);
+        Rec.SetRange("Date Filter", 0D, this.DateFilter);
         CurrPage.Update();
     end;
 
@@ -384,18 +384,17 @@ page 60300 "OBF-Distinct Item Lots"
         InfoPaneMgmt: Codeunit "OBF-Info Pane Mgmt";
         ItemNo: Code[20];
         DateFilter: Date;
-        i: Integer;
 
     procedure SetItem(pItemNo: Code[20]; pVariantCode: Code[10]; pDateFilter: Date)
     begin
-        ItemNo := pItemNo;
+        this.ItemNo := pItemNo;
         if pDateFilter = 0D then
-            DateFilter := Today
+            this.DateFilter := Today
         else
-            DateFilter := pDateFilter;
+            this.DateFilter := pDateFilter;
         Rec.DeleteAll();
-        Rec.SetRange("Date Filter", 0D, DateFilter);
-        SetPageDataForItem(pItemNo, pVariantCode, DateFilter);
+        Rec.SetRange("Date Filter", 0D, this.DateFilter);
+        this.SetPageDataForItem(pItemNo, pVariantCode, this.DateFilter);
     end;
 
     procedure SetOnHandQtyFilter()
@@ -403,7 +402,7 @@ page 60300 "OBF-Distinct Item Lots"
         Rec.SetFilter("On Hand Quantity", '<>%1', 0);
     end;
 
-    local procedure AddRecord(pItemNo: Code[20]; pVariantCode: Code[10]; pLotNo: Code[20]; pLocation: Code[20]; FromILE: Boolean; pDateFilter: Date; var pNextRowNo: Integer)
+    local procedure AddRecord(pItemNo: Code[20]; pVariantCode: Code[10]; pLotNo: Code[10]; pLocation: Code[10]; FromILE: Boolean; pDateFilter: Date; var pNextRowNo: Integer)
     var
         InventorySetup: Record "Inventory Setup";
         Item: Record Item;
@@ -435,13 +434,13 @@ page 60300 "OBF-Distinct Item Lots"
 
         Rec.CalcFields("Qty. on Sales Order", "Net Weight on Sales Order", "Qty. In Transit");
 
-        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // Rec.CalcFields("Qty. on Quality Hold");
 
         Rec."On Hand Quantity 2" := Rec."On Hand Quantity" - Rec."Qty. on Quality Hold";
 
         if pLotNo = '' then begin
-            CalculateUnassigned(pItemNo, pVariantCode, pLocation, UnassignedPurchaseLineQty);
+            this.CalculateUnassigned(pItemNo, pVariantCode, pLocation, UnassignedPurchaseLineQty);
             Rec.SetRange("Date Filter", 0D, pDateFilter);
         end;
         Rec."On Order Quantity 2" := Rec."On Order Quantity" + UnassignedPurchaseLineQty;
@@ -462,7 +461,7 @@ page 60300 "OBF-Distinct Item Lots"
             Rec."Item Description 2" := Item."Description 2";
             Rec."Search Description" := Item."Search Description";
 
-            // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+            //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
             // Rec."Pack Size" := Item."OBF-Pack Size";
             // IF MethodofCatch.get(Item."OBF-Method of Catch") then
             //     Rec."Method of Catch" := MethodofCatch.Description;
@@ -500,7 +499,7 @@ page 60300 "OBF-Distinct Item Lots"
                         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/826 - Add Production and Expiration Dates to Misc. Pages
                         if ItemLedgerEntry.Quantity > 0 then
                             Rec."Expiration Date" := ItemLedgerEntry."Expiration Date";
-                        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // Rec."OBF-Production Date" := ItemLedgerEntry."OBF-Production Date";
                         // // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1040 - Set Receipt Date on Item Ledger Entries
                         // Rec."Receipt Date" := ItemLedgerEntry."OBF-Receipt Date";
@@ -509,7 +508,7 @@ page 60300 "OBF-Distinct Item Lots"
                         // // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
                         // Rec."Container No." := ItemLedgerEntry."OBF-Container No.";
 
-                        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // if ItemVariantLotInfo.Get(pItemNo, pVariantCode, pLotNo, pLocation) then
                         //     Rec."Value of Inventory on Hand" := ItemVariantLotInfo."Value Of Inventory On Hand";
                         if ItemLedgerEntry."Document Type" = ItemLedgerEntry."Document Type"::"Purchase Receipt" then begin
@@ -551,7 +550,7 @@ page 60300 "OBF-Distinct Item Lots"
                         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
                         Rec."Vendor No." := PurchaseLine."Buy-from Vendor No.";
 
-                        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // Rec."Sustainability Certification" := PurchaseLine."OBF-Sustainability Cert.";
 
                         // // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
@@ -573,7 +572,6 @@ page 60300 "OBF-Distinct Item Lots"
                 Rec."Unit Cost" := PurchaseUnitCost;
 
             Rec.Insert();
-            i += 1;
         end;
     end;
 
@@ -581,14 +579,12 @@ page 60300 "OBF-Distinct Item Lots"
     var
         PurchaseLine: Record "Purchase Line";
         AssignedPurchaseLineQty: Decimal;
-        AssignedPurchaseLineWeight: Decimal;
     begin
         Rec.SetRange("Item No.", pItemNo);
         Rec.SetRange("Variant Code", pVariantCode);
         Rec.SetRange("Location Code", pLocationCode);
         Rec.CalcSums("On Order Quantity 2", "On Order Weight 2");
         AssignedPurchaseLineQty := Rec."On Order Quantity 2";
-        AssignedPurchaseLineWeight := Rec."On Order Weight 2";
         PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
         PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
         PurchaseLine.SetRange("No.", pItemNo);
@@ -599,7 +595,7 @@ page 60300 "OBF-Distinct Item Lots"
         Rec.Reset();
     end;
 
-    local procedure RecordExists(pItemNo: Code[20]; pVariantCode: Code[10]; pLotNo: Code[20]): Boolean
+    local procedure RecordExists(pItemNo: Code[20]; pVariantCode: Code[10]; pLotNo: Code[10]): Boolean
     var
         result: Boolean;
     begin
@@ -611,15 +607,15 @@ page 60300 "OBF-Distinct Item Lots"
         exit(result);
     end;
 
-    local procedure SetPageDataForItem(ItemNo: Code[20]; VariantCode: Code[10]; pDateFilter: Date)
+    local procedure SetPageDataForItem(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewDateFilter: Date)
     var
         //ItemVariantLotInfo: Record "OBF-Item Variant Lot Info";
-        DistinctItemLotResEntry: Query "Distinct Item Lot (Res. Entry)";
+        DistinctItemLotResEntry: Query DistinctItemLotResEntry;
         DistinctItemsOnPurchLine: Query "OBF-Dist. Items On Purch. Line";
         DistinctItemLocOnOrder: Query "OBF-Distinct Item Loc On Order";
         NextRowNo: Integer;
     begin
-        // REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // ItemVariantLotInfo.SetRange(Rec."Item No.", ItemNo);
         // ItemVariantLotInfo.SetRange(Rec."Variant Code", VariantCode);
 
@@ -631,27 +627,27 @@ page 60300 "OBF-Distinct Item Lots"
         //         AddRecord(ItemVariantLotInfo."Item No.", ItemVariantLotInfo."Variant Code", ItemVariantLotInfo."Lot No.", ItemVariantLotInfo."Location Code", True, pDateFilter, NextRowNo);
         //     until (ItemVariantLotInfo.Next = 0);
 
-        DistinctItemLotResEntry.SetRange(Item_No, ItemNo);
-        DistinctItemLotResEntry.SetRange(Variant_Code, VariantCode);
+        DistinctItemLotResEntry.SetRange(Item_No, NewItemNo);
+        DistinctItemLotResEntry.SetRange(Variant_Code, NewVariantCode);
         DistinctItemLotResEntry.Open();
         while DistinctItemLotResEntry.Read() do
-            if not RecordExists(DistinctItemLotResEntry.Item_No, DistinctItemLotResEntry.Variant_Code, DistinctItemLotResEntry.Lot_No) then
-                AddRecord(DistinctItemLotResEntry.Item_No, DistinctItemLotResEntry.Variant_Code, DistinctItemLotResEntry.Lot_No, DistinctItemLotResEntry.Location_Code, false, pDateFilter, NextRowNo);
+            if not this.RecordExists(DistinctItemLotResEntry.Item_No, DistinctItemLotResEntry.Variant_Code, DistinctItemLotResEntry.Lot_No) then
+                this.AddRecord(DistinctItemLotResEntry.Item_No, DistinctItemLotResEntry.Variant_Code, DistinctItemLotResEntry.Lot_No, DistinctItemLotResEntry.Location_Code, false, NewDateFilter, NextRowNo);
 
-        DistinctItemLocOnOrder.SetRange(Item_No, ItemNo);
-        DistinctItemLocOnOrder.SetRange(Variant_Code, VariantCode);
+        DistinctItemLocOnOrder.SetRange(Item_No, NewItemNo);
+        DistinctItemLocOnOrder.SetRange(Variant_Code, NewVariantCode);
         DistinctItemLocOnOrder.Open();
         while DistinctItemLocOnOrder.Read() do
-            if not RecordExists(DistinctItemLocOnOrder.Item_No, DistinctItemLocOnOrder.Variant_Code, '') then
-                AddRecord(DistinctItemLocOnOrder.Item_No, DistinctItemLocOnOrder.Variant_Code, '',
-                        DistinctItemLocOnOrder.Location_Code, false, pDateFilter, NextRowNo);
+            if not this.RecordExists(DistinctItemLocOnOrder.Item_No, DistinctItemLocOnOrder.Variant_Code, '') then
+                this.AddRecord(DistinctItemLocOnOrder.Item_No, DistinctItemLocOnOrder.Variant_Code, '',
+                        DistinctItemLocOnOrder.Location_Code, false, NewDateFilter, NextRowNo);
 
-        DistinctItemsOnPurchLine.SetRange(Item_No, ItemNo);
-        DistinctItemsOnPurchLine.SetRange(Variant_Code, VariantCode);
+        DistinctItemsOnPurchLine.SetRange(Item_No, NewItemNo);
+        DistinctItemsOnPurchLine.SetRange(Variant_Code, NewVariantCode);
         DistinctItemsOnPurchLine.Open();
         while DistinctItemsOnPurchLine.Read() do
-            if not RecordExists(DistinctItemsOnPurchLine.Item_No, DistinctItemsOnPurchLine.Variant_Code, '') then
-                AddRecord(DistinctItemsOnPurchLine.Item_No, DistinctItemsOnPurchLine.Variant_Code, '',
-                        DistinctItemsOnPurchLine.Location_Code, false, pDateFilter, NextRowNo);
+            if not this.RecordExists(DistinctItemsOnPurchLine.Item_No, DistinctItemsOnPurchLine.Variant_Code, '') then
+                this.AddRecord(DistinctItemsOnPurchLine.Item_No, DistinctItemsOnPurchLine.Variant_Code, '',
+                        DistinctItemsOnPurchLine.Location_Code, false, NewDateFilter, NextRowNo);
     end;
 }

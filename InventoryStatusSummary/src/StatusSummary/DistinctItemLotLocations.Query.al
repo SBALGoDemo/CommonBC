@@ -7,7 +7,7 @@ using Microsoft.Inventory.Ledger;
 
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
-query 60300 "Distinct Item Lot Locations"
+query 60300 DistinctItemLotLocations
 {
     Caption = 'Distinct Item Lot Locations';
     OrderBy = ascending(Item_No), ascending(Lot_No);
@@ -16,7 +16,6 @@ query 60300 "Distinct Item Lot Locations"
     {
         dataitem(Item_Ledger_Entry; "Item Ledger Entry")
         {
-            //DataItemTableFilter = "Remaining Quantity"=FILTER(<>0);
             filter(Posting_Date_Filter; "Posting Date") { }
             column(Item_No; "Item No.") { }
             column(Variant_Code; "Variant Code") { }

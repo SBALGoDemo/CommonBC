@@ -15,7 +15,7 @@ tableextension 60304 SalesLine extends "Sales Line"
         {
             trigger OnAfterValidate()
             begin
-                SetCertificationFields();
+                this.SBSISSSetCertificationFields();
             end;
         }
         modify("Shortcut Dimension 1 Code")
@@ -161,10 +161,10 @@ tableextension 60304 SalesLine extends "Sales Line"
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
     trigger OnDelete()
     begin
-        DeleteRebateEntries();
+        this.DeleteRebateEntries();
     end;
 
-    procedure CheckItemCertification(ItemNo: Code[20]; CertificationCode: Code[20]): Boolean
+    procedure SBSISSCheckItemCertification(ItemNo: Code[20]; CertificationCode: Code[20]): Boolean
     var
         ItemCertification: Record "OBF-Item Certification";
     begin
@@ -176,13 +176,14 @@ tableextension 60304 SalesLine extends "Sales Line"
     end;
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1789 - EDI - Silver Bay
-    procedure GetLotNoAndAllocatedQty(var SalesLine: Record "Sales Line")
+    procedure SBSISSGetLotNoAndAllocatedQty(var SalesLine: Record "Sales Line")
     var
         ReservEntry: Record "Reservation Entry";
         TrackingSpecific: Record "Tracking Specification";
         IntCount: Integer;
         LotNo: Text[250];
     begin
+        IntCount := 0;
         SalesLine.SBSISSAllocatedQuantity := 0;
         ReservEntry.Reset();
         ReservEntry.SetCurrentKey("Source ID", "Source Ref. No.", "Source Type", "Source Subtype");
@@ -218,7 +219,7 @@ tableextension 60304 SalesLine extends "Sales Line"
                         if IntCount = 0 then
                             LotNo := TrackingSpecific."Lot No."
                         else
-                            LotNo := LotNo + ',' + TrackingSpecific."Lot No.";
+                            LotNo := CopyStr(LotNo + ',' + TrackingSpecific."Lot No.", 1, MaxStrLen(LotNo));
                         IntCount := IntCount + 1;
                         SalesLine.SBSISSAllocatedQuantity -= TrackingSpecific."Qty. to Handle (Base)";
                     end;
@@ -231,7 +232,7 @@ tableextension 60304 SalesLine extends "Sales Line"
     end;
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-    procedure GetTrackingPercent(Qty: Decimal; var ItemTracking: Boolean): Decimal
+    procedure SBSISSGetTrackingPercent(Qty: Decimal; var ItemTracking: Boolean): Decimal
     var
         Item: Record Item;
         ReservationEntry: Record "Reservation Entry";
@@ -312,14 +313,14 @@ tableextension 60304 SalesLine extends "Sales Line"
     end;
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications
-    procedure SetCertificationFields()
+    procedure SBSISSSetCertificationFields()
     begin
         if Rec.Type <> Rec.Type::Item then
             exit;
         if Rec."No." = '' then
             exit;
-        Rec.SBSISSMSCCertification := CheckItemCertification(Rec."No.", 'MSC');
-        Rec.SBSISSRFMCertification := CheckItemCertification(Rec."No.", 'RFM');
+        Rec.SBSISSMSCCertification := this.SBSISSCheckItemCertification(Rec."No.", 'MSC');
+        Rec.SBSISSRFMCertification := this.SBSISSCheckItemCertification(Rec."No.", 'RFM');
     end;
 
     local procedure DeleteRebateEntries()
