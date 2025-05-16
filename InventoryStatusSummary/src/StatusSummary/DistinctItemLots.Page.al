@@ -7,15 +7,14 @@ using Microsoft.Inventory.Tracking;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
-
-//  Note: This page was copied from and is similar to Page 50054 "Distinct Item Lots"
-
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
-// Drilldowns moved to Info Pane Management codeunit
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+/// Note: This page was copied from and is similar to Page 50054 "Distinct Item Lots"
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
+/// Drilldowns moved to Info Pane Management codeunit
+/// </summary>
 page 60305 InventoryStatusSummaryByDate
 {
     ApplicationArea = All;
@@ -46,7 +45,7 @@ page 60305 InventoryStatusSummaryByDate
                         this.SetPageData(this.DateFilter);
                         Rec.FindFirst();
                         CurrPage.Update();
-                        CurrPage."Item FactBox".Page.SetValues(this.DateFilter, '', true);
+                        CurrPage.ItemFactBox.Page.SetValues(this.DateFilter, '', true);
                     end;
                 }
             }
@@ -191,9 +190,10 @@ page 60305 InventoryStatusSummaryByDate
                     Editable = false;
                     ToolTip = 'Specifies the value of the Expected Receipt Date field.';
                 }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
-                field("OBF-Production Date"; Rec."OBF-Production Date")
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
+                /// </summary>
+                field("OBF-Production Date"; Rec."Production Date")
                 {
                     Caption = 'Production Date';
                     Editable = false;
@@ -216,7 +216,7 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("On Order Quantity 2"; Rec."On Order Quantity 2")
                 {
-                    CaptionML = ENU = '+On Order Quantity';
+                    Caption = '+On Order Quantity';
                     Editable = false;
                     ToolTip = 'Specifies the value of the On Order Quantity field.';
                     Width = 5;
@@ -227,16 +227,16 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("Qty. on Sales Order"; Rec."Qty. on Sales Order")
                 {
-                    CaptionML = ENU = '-Qty. on Sales Orders';
+                    Caption = '-Qty. on Sales Orders';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Qty. on Sales Orders field.';
                     Width = 5;
                 }
                 field("Total Available Quantity"; Rec."Total Available Quantity")
                 {
-                    CaptionML = ENU = 'Total Available Quantity';
+                    Caption = 'Total Available Quantity';
                     Editable = false;
-                    ToolTipML = ENU = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
+                    ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
                     Width = 10;
                     trigger OnDrillDown()
                     begin
@@ -253,7 +253,7 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("On Order Weight 2"; Rec."On Order Weight 2")
                 {
-                    CaptionML = ENU = '+On Order Weight';
+                    Caption = '+On Order Weight';
                     Editable = false;
                     ToolTip = 'Specifies the value of the On Order Weight field.';
                     Visible = false;
@@ -261,7 +261,7 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("Net Weight on Sales Order"; Rec."Net Weight on Sales Order")
                 {
-                    CaptionML = ENU = '-Net Weight on Sales Orders';
+                    Caption = '-Net Weight on Sales Orders';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Net Weight on Sales Orders field.';
                     Visible = false;
@@ -269,9 +269,9 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("Available Net Weight"; Rec."Available Net Weight")
                 {
-                    CaptionML = ENU = 'Available Net Weight';
+                    Caption = 'Available Net Weight';
                     Editable = false;
-                    ToolTipML = ENU = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
+                    ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
                     Width = 10;
                     trigger OnDrillDown()
                     begin
@@ -304,9 +304,10 @@ page 60305 InventoryStatusSummaryByDate
                         this.InfoPaneMgmt.BuyerOnDrillDown(Rec."Buyer Code");
                     end;
                 }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-                field("OBF-Purchased For"; Rec."OBF-Purchased For")
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
+                /// </summary>
+                field("OBF-Purchased For"; Rec."Purchased For")
                 {
                     Caption = 'Purchased For';
                     ToolTip = 'Specifies the value of the Purchased For field.';
@@ -316,10 +317,9 @@ page 60305 InventoryStatusSummaryByDate
         }
         area(FactBoxes)
         {
-            part("Item FactBox"; "OBF-Item Factbox")
+            part(ItemFactBox; "Item Factbox")
             {
                 ApplicationArea = Suite;
-                Caption = 'OBF-Item Factbox';
                 SubPageLink = "No." = field("Item No.");
             }
         }
@@ -329,10 +329,10 @@ page 60305 InventoryStatusSummaryByDate
     {
         area(Navigation)
         {
-            // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1399 - Prompt for Date when opening Inv. Status by Date
             action(GetData)
             {
                 Caption = 'Get Data';
+                Description = '// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1399 - Prompt for Date when opening Inv. Status by Date';
                 Image = ListPage;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -384,12 +384,12 @@ page 60305 InventoryStatusSummaryByDate
 
     trigger OnAfterGetCurrRecord()
     begin
-        CurrPage."Item FactBox".Page.SetValues(this.DateFilter, '', true);
+        CurrPage.ItemFactBox.Page.SetValues(this.DateFilter, '', true);
     end;
 
     var
         InventorySetup: Record "Inventory Setup";
-        InfoPaneMgmt: Codeunit "OBF-Info Pane Mgmt";
+        InfoPaneMgmt: Codeunit InfoPaneMgmt;
         DateFilter: Date;
 
     local procedure AddRecord(pItemNo: Code[20]; pVariantCode: Code[10]; pLotNo: Code[10]; pLocation: Code[10]; FromILE: Boolean; pDateFilter: Date; var pNextRowNo: Integer)
@@ -493,7 +493,7 @@ page 60305 InventoryStatusSummaryByDate
                     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - END
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
-                    Rec."OBF-Production Date" := ReservationEntry.SBSISSProductionDate;
+                    Rec."Production Date" := ReservationEntry.SBSISSProductionDate;
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1653 - Wrong Purchaser for Work Order Lots on ISS by Date
                     if ReservationEntry.SBSISSPurchaserCode <> '' then
@@ -550,43 +550,43 @@ page 60305 InventoryStatusSummaryByDate
     local procedure SetPageData(pDateFilter: Date)
     var
         ItemT: Record Item;
-        DistinctItemLotResEntry: Query DistinctItemLotResEntry;
-        ISSDistinctItemLots: Query DistinctItemLotLocations;
-        DistinctItemsOnPurchLine: Query "OBF-Dist. Items On Purch. Line";
-        DistinctItemLocOnOrder: Query "OBF-Distinct Item Loc On Order";
+        DistinctItemLotLocResEntry: Query DistinctItemLotLocResEntry;
+        DistinctItemLotLocationILE: Query DistinctItemLotLocationILE;
+        DistinctItemLocationPurchLine: Query DistinctItemLocationPurchLine;
+        DistinctItemLocationResEntry: Query DistinctItemLocationResEntry;
         NextRowNo: Integer;
     begin
         Rec.DeleteAll();
         this.InventorySetup.Get();
-        ISSDistinctItemLots.SetRange(Posting_Date_Filter, 0D, pDateFilter);
-        ISSDistinctItemLots.Open();
-        while ISSDistinctItemLots.Read() do
-            if ISSDistinctItemLots.Item_Tracking_Code <> '' then
-                if not this.RecordExists(ISSDistinctItemLots.Item_No, ISSDistinctItemLots.Variant_Code, ISSDistinctItemLots.Lot_No,
-                                    ISSDistinctItemLots.Location_Code) then
-                    this.AddRecord(ISSDistinctItemLots.Item_No, ISSDistinctItemLots.Variant_Code, ISSDistinctItemLots.Lot_No,
-                              ISSDistinctItemLots.Location_Code, true, pDateFilter, NextRowNo);
+        DistinctItemLotLocationILE.SetRange(Posting_Date_Filter, 0D, pDateFilter);
+        DistinctItemLotLocationILE.Open();
+        while DistinctItemLotLocationILE.Read() do
+            if DistinctItemLotLocationILE.Item_Tracking_Code <> '' then
+                if not this.RecordExists(DistinctItemLotLocationILE.Item_No, DistinctItemLotLocationILE.Variant_Code, DistinctItemLotLocationILE.Lot_No,
+                                    DistinctItemLotLocationILE.Location_Code) then
+                    this.AddRecord(DistinctItemLotLocationILE.Item_No, DistinctItemLotLocationILE.Variant_Code, DistinctItemLotLocationILE.Lot_No,
+                              DistinctItemLotLocationILE.Location_Code, true, pDateFilter, NextRowNo);
 
-        DistinctItemLotResEntry.Open();
-        while DistinctItemLotResEntry.Read() do
-            if DistinctItemLotResEntry.Item_Tracking_Code <> '' then
-                if not this.RecordExists(DistinctItemLotResEntry.Item_No, DistinctItemLotResEntry.Variant_Code, DistinctItemLotResEntry.Lot_No,
-                                    DistinctItemLotResEntry.Location_Code) then
-                    this.AddRecord(DistinctItemLotResEntry.Item_No, DistinctItemLotResEntry.Variant_Code, DistinctItemLotResEntry.Lot_No,
-                              DistinctItemLotResEntry.Location_Code, false, pDateFilter, NextRowNo);
+        DistinctItemLotLocResEntry.Open();
+        while DistinctItemLotLocResEntry.Read() do
+            if DistinctItemLotLocResEntry.Item_Tracking_Code <> '' then
+                if not this.RecordExists(DistinctItemLotLocResEntry.Item_No, DistinctItemLotLocResEntry.Variant_Code, DistinctItemLotLocResEntry.Lot_No,
+                                    DistinctItemLotLocResEntry.Location_Code) then
+                    this.AddRecord(DistinctItemLotLocResEntry.Item_No, DistinctItemLotLocResEntry.Variant_Code, DistinctItemLotLocResEntry.Lot_No,
+                              DistinctItemLotLocResEntry.Location_Code, false, pDateFilter, NextRowNo);
 
-        DistinctItemLocOnOrder.Open();
-        while DistinctItemLocOnOrder.Read() do
-            if this.InfoPaneMgmt.CheckItemTrackingCodeNotBlank(DistinctItemLocOnOrder.Item_No, ItemT) then
-                if not this.RecordExists(DistinctItemLocOnOrder.Item_No, DistinctItemLocOnOrder.Variant_Code, '', DistinctItemLocOnOrder.Location_Code) then
-                    this.AddRecord(DistinctItemLocOnOrder.Item_No, DistinctItemLocOnOrder.Variant_Code, '',
-                              DistinctItemLocOnOrder.Location_Code, false, pDateFilter, NextRowNo);
+        DistinctItemLocationResEntry.Open();
+        while DistinctItemLocationResEntry.Read() do
+            if this.InfoPaneMgmt.CheckItemTrackingCodeNotBlank(DistinctItemLocationResEntry.Item_No, ItemT) then
+                if not this.RecordExists(DistinctItemLocationResEntry.Item_No, DistinctItemLocationResEntry.Variant_Code, '', DistinctItemLocationResEntry.Location_Code) then
+                    this.AddRecord(DistinctItemLocationResEntry.Item_No, DistinctItemLocationResEntry.Variant_Code, '',
+                              DistinctItemLocationResEntry.Location_Code, false, pDateFilter, NextRowNo);
 
-        DistinctItemsOnPurchLine.Open();
-        while DistinctItemsOnPurchLine.Read() do
-            if this.InfoPaneMgmt.CheckItemTrackingCodeNotBlank(DistinctItemsOnPurchLine.Item_No, ItemT) then
-                if not this.RecordExists(DistinctItemsOnPurchLine.Item_No, DistinctItemsOnPurchLine.Variant_Code, '', DistinctItemsOnPurchLine.Location_Code) then
-                    this.AddRecord(DistinctItemsOnPurchLine.Item_No, DistinctItemsOnPurchLine.Variant_Code, '',
-                              DistinctItemsOnPurchLine.Location_Code, false, pDateFilter, NextRowNo);
+        DistinctItemLocationPurchLine.Open();
+        while DistinctItemLocationPurchLine.Read() do
+            if this.InfoPaneMgmt.CheckItemTrackingCodeNotBlank(DistinctItemLocationPurchLine.Item_No, ItemT) then
+                if not this.RecordExists(DistinctItemLocationPurchLine.Item_No, DistinctItemLocationPurchLine.Variant_Code, '', DistinctItemLocationPurchLine.Location_Code) then
+                    this.AddRecord(DistinctItemLocationPurchLine.Item_No, DistinctItemLocationPurchLine.Variant_Code, '',
+                              DistinctItemLocationPurchLine.Location_Code, false, pDateFilter, NextRowNo);
     end;
 }

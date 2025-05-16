@@ -2,9 +2,10 @@ namespace SilverBay.Inventory.StatusSummary;
 
 using Microsoft.Inventory.Tracking;
 
-query 60302 "OBF-Distinct Item Loc On Order"
+query 60302 DistinctItemLocationResEntry
 {
-    Caption = 'OBF-Distinct Item Loc On Order';
+    Access = Internal;
+    Caption = 'Distinct Item Location Reservation Entry';
     OrderBy = ascending(Item_No);
 
     elements

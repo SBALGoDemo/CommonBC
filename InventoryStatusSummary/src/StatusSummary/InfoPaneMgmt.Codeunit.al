@@ -10,11 +10,13 @@ using Microsoft.Purchases.History;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Document;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
-
-codeunit 60300 "OBF-Info Pane Mgmt"
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+/// </summary>
+codeunit 60300 InfoPaneMgmt
 {
+    Access = Internal;
 
     procedure BuyerOnDrillDown(BuyerCode: Code[20])
     var
@@ -137,17 +139,29 @@ codeunit 60300 "OBF-Info Pane Mgmt"
         exit(Item."Item Tracking Code" <> '');
     end;
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
+    /// </summary>
+    /// <param name="ItemNo"></param>
+    /// <param name="VariantCode"></param>
+    /// <param name="IncludeAllVariants"></param>
+    /// <param name="LotIsOnHand"></param>
     procedure CommittedDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; LotIsOnHand: Boolean)
     var
-        SalesLines: Page "OBF-Sales Lines";
+        SalesLines: Page SalesLines;
     begin
         SalesLines.SetOnOrderCommittedSalesLines(ItemNo, VariantCode, IncludeAllVariants, LotIsOnHand);
         SalesLines.SetShowReserved(true);
         SalesLines.RunModal();
     end;
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
+    /// </summary>
+    /// <param name="ItemNo"></param>
+    /// <param name="VariantCode"></param>
+    /// <param name="LotNo"></param>
+    /// <param name="LocationCode"></param>
     procedure InTransitDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; LocationCode: Code[10])
     var
         ReservationEntry: Record "Reservation Entry";
@@ -176,7 +190,6 @@ codeunit 60300 "OBF-Info Pane Mgmt"
         LocationCard.SetTableView(Location);
         LocationCard.RunModal();
     end;
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - End
 
     procedure OnHandDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date)
     var
@@ -195,7 +208,13 @@ codeunit 60300 "OBF-Info Pane Mgmt"
         ItemLedgerEntries.Run();
     end;
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
+    /// </summary>
+    /// <param name="ItemNo"></param>
+    /// <param name="VariantCode"></param>
+    /// <param name="LotNo"></param>
+    /// <param name="LocationCode"></param>
     procedure OnHandDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; LocationCode: Code[10])
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
@@ -255,8 +274,11 @@ codeunit 60300 "OBF-Info Pane Mgmt"
         end;
     end;
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1402 - Show Posted Invoice when drilling into PO Number
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1402 - Show Posted Invoice when drilling into PO Number
+    /// </summary>
+    /// <param name="PONumber"></param>
     procedure PONumberOnDrillDown(PONumber: Code[20])
     var
         PurchInvHeader: Record "Purch. Inv. Header";
@@ -336,23 +358,23 @@ codeunit 60300 "OBF-Info Pane Mgmt"
 
     procedure TotalAvailQtyDrillDown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; DateFilter: Date)
     var
-        ItemAvailDrilldown: Page "OBF-Item Avail. Drilldown";
+        ItemAvailabilityDrilldown: Page ItemAvailabilityDrilldown;
     begin
-        ItemAvailDrilldown.SetItemData(ItemNo, VariantCode, IncludeAllVariants, DateFilter);
-        ItemAvailDrilldown.RunModal();
+        ItemAvailabilityDrilldown.SetItemData(ItemNo, VariantCode, IncludeAllVariants, DateFilter);
+        ItemAvailabilityDrilldown.RunModal();
     end;
 
     procedure TotalAvailQtyDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; DateFilter: Date)
     var
-        ItemAvailDrilldown: Page "OBF-Item Avail. Drilldown";
+        ItemAvailabilityDrilldown: Page ItemAvailabilityDrilldown;
     begin
-        ItemAvailDrilldown.SetItemLotData(ItemNo, VariantCode, LotNo, DateFilter);
-        ItemAvailDrilldown.RunModal();
+        ItemAvailabilityDrilldown.SetItemLotData(ItemNo, VariantCode, LotNo, DateFilter);
+        ItemAvailabilityDrilldown.RunModal();
     end;
 
     procedure UnallocatedSODrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
     var
-        SalesLines: Page "OBF-Sales Lines";
+        SalesLines: Page SalesLines;
     begin
         SalesLines.SetUnallocatedSalesLines(ItemNo, VariantCode, IncludeAllVariants);
         SalesLines.RunModal();

@@ -6,116 +6,138 @@ using Microsoft.Inventory.Tracking;
 using Microsoft.Purchases.Document;
 using Microsoft.Inventory.Item;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
-
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues/// 
+/// </summary>
 tableextension 60302 ReservationEntry extends "Reservation Entry"
 {
     fields
     {
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
+        /// </summary>
         field(60300; SBSISSPurResEntryisNeg; Boolean)
         {
+            Access = Internal;
             Caption = 'Purchase Reservation Entry is Negative';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60301; SBSISSLotIsOnHand2; Boolean)
         {
-            CaptionML = ENU = 'Lot Is On Hand';
+            Access = Internal;
+            Caption = 'Lot Is On Hand';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60302; SBSISSLotIsOnHand; Boolean)
         {
+            Access = Internal;
             CalcFormula = exist("Item Ledger Entry" where("Item No." = field("Item No."), "Lot No." = field("Lot No.")));
-            CaptionML = ENU = 'Lot Is On Hand';
+            Caption = 'Lot Is On Hand';
             Editable = false;
             FieldClass = FlowField;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/760 - Add Cert Field to Purchase Orders
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/760 - Add Cert Field to Purchase Orders
+        /// </summary>
         field(60303; SBSISSSustCert; Code[10])
         {
+            Access = Internal;
             Caption = 'Sustainability Certification';
             DataClassification = CustomerContent;
             Editable = false;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
+        /// </summary>
         field(60304; SBSISSContainerNo; Code[20])
         {
+            Access = Internal;
             Caption = 'Container No.';
             DataClassification = CustomerContent;
             Editable = false;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1185- Lot No. Properties
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1185- Lot No. Properties
+        /// </summary>
         field(60305; SBSISSLabel; Text[50])
         {
+            Access = Internal;
             Caption = 'Label';
             DataClassification = CustomerContent;
         }
         field(60306; SBSISSVessel; Text[50])
         {
+            Access = Internal;
             Caption = 'Vessel';
             DataClassification = CustomerContent;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1074 - Lots for a Purchaser
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1074 - Lots for a Purchaser
+        /// </summary>
         field(60307; SBSISSPurchaserCode; Code[20])
         {
+            Access = Internal;
             Caption = 'Purchaser Code';
             DataClassification = CustomerContent;
             TableRelation = "Salesperson/Purchaser";
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
+        /// </summary>
         field(60308; SBSISSItemCategoryCode; Code[20])
         {
+            Access = Internal;
             CalcFormula = lookup(Item."Item Category Code" where("No." = field("Item No.")));
             Caption = 'Item Category Code';
             Editable = false;
             FieldClass = FlowField;
         }
-        field(60309; SBSISSISSUpdated; Boolean)
+        field(60309; SBSISSUpdated; Boolean)
         {
+            Access = Internal;
             Caption = 'ISS Updated';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60310; SBSISSProductionDate; Date)
         {
+            Access = Internal;
             Caption = 'Production Date';
             DataClassification = CustomerContent;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1332 - Change Production Date using Item Reclass Journal
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1332 - Change Production Date using Item Reclass Journal
+        /// </summary>
         field(60311; SBSISSNewProductionDate; Date)
         {
+            Access = Internal;
             Caption = 'New Production Date';
             DataClassification = CustomerContent;
         }
         field(60312; SBSISSNetWeight; Decimal)
         {
+            Access = Internal;
             Caption = 'Net Weight';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60313; SBSISSNetWeighttoHandle; Decimal)
         {
+            Access = Internal;
             Caption = 'Net Weight to Handle';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60314; SBSISSQuantitySourceUOM; Decimal)
         {
+            Access = Internal;
             Caption = 'Quantity (Source UOM)';
             DataClassification = CustomerContent;
             DecimalPlaces = 0 : 2;
         }
-
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
         //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // field(60315; SBSISSPurchasedForFlowField; Code[20])
@@ -130,8 +152,10 @@ tableextension 60302 ReservationEntry extends "Reservation Entry"
         // }
     }
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
-    procedure SBSISSSetPurchResEntryIsNegative()
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
+    /// </summary>
+    internal procedure SBSISSSetPurchResEntryIsNegative()
     begin
         if (Rec."Source Type" = Database::"Purchase Line") and
             (Rec."Source Subtype" = 1) and // Orders

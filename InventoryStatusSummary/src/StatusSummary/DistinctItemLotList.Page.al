@@ -7,18 +7,19 @@ using Microsoft.Inventory.Tracking;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
-//     Reverse sign of "Qty. on Sales Orders" and Net Weight on Sales Orders in "Total Available Quantity" and "Total Available Net Weight" calculation
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
-// Drilldowns moved to Info Pane Management codeunit
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1195 - Hold Functionality
-// Replaced "Quantity on Quality Hold" with "Qty on Quality Hold"
-page 60300 "OBF-Distinct Item Lots"
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
+/// Reverse sign of "Qty. on Sales Orders" and Net Weight on Sales Orders in "Total Available Quantity" and "Total Available Net Weight" calculation
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
+/// Drilldowns moved to Info Pane Management codeunit
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1195 - Hold Functionality
+/// Replaced "Quantity on Quality Hold" with "Qty on Quality Hold"
+/// </summary>
+page 60300 "Distinct Item Lot List"
 {
     ApplicationArea = All;
     Caption = 'Distinct Item Lots';
@@ -35,63 +36,54 @@ page 60300 "OBF-Distinct Item Lots"
                 Caption = 'Item Information';
                 field(ItemNo; Rec."Item No.")
                 {
-                    Caption = 'Item No.';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Item No. field.';
                     Width = 10;
                 }
                 field(VariantCode; Rec."Variant Code")
                 {
-                    Caption = 'Variant Code';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Variant Code field.';
                     Width = 10;
                 }
                 field("Item Description"; Rec."Item Description")
                 {
-                    Caption = 'Item Description';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Item Description field.';
                     Width = 30;
                 }
                 field("Item Description 2"; Rec."Item Description 2")
                 {
-                    Caption = 'Item Description 2';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Item Description 2 field.';
                     Width = 15;
                 }
                 field("Search Description"; Rec."Search Description")
                 {
-                    Caption = 'Search Description';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Search Description field.';
                     Width = 30;
                 }
                 field("Pack Size"; Rec."Pack Size")
                 {
-                    Caption = 'Pack Size';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Pack Size field.';
                     Width = 10;
                 }
                 field("Method of Catch"; Rec."Method of Catch")
                 {
-                    Caption = 'Method of Catch';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Method of Catch field.';
                     Width = 10;
                 }
                 field("Country of Origin"; Rec."Country of Origin")
                 {
-                    Caption = 'Country of Origin';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Country of Origin field.';
                     Width = 10;
                 }
                 field("Brand Code"; Rec."Brand Code")
                 {
-                    Caption = 'Brand Code';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Brand Code field.';
                     Visible = false;
@@ -99,7 +91,6 @@ page 60300 "OBF-Distinct Item Lots"
                 }
                 field("Item Category Code"; Rec."Item Category Code")
                 {
-                    Caption = 'Item Category Code';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Item Category Code field.';
                     Visible = true;
@@ -118,12 +109,10 @@ page 60300 "OBF-Distinct Item Lots"
                 Caption = 'Group';
                 field("Lot No."; Rec."Lot No.")
                 {
-                    Caption = 'Lot No.';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Lot No. field.';
                     Width = 10;
                 }
-
                 // TODO: REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Alternate Lot No."; "Alternate Lot No.")
                 // {
@@ -131,10 +120,8 @@ page 60300 "OBF-Distinct Item Lots"
                 //     Width = 5;
                 //     ApplicationArea = All;
                 // }
-
                 field("Location Code"; Rec."Location Code")
                 {
-                    Caption = 'Location Code';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Location Code field.';
                     Width = 5;
@@ -145,7 +132,6 @@ page 60300 "OBF-Distinct Item Lots"
                 }
                 field("Vendor Name"; Rec."Vendor Name")
                 {
-                    Caption = 'Vendor Name';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Vendor Name field.';
                     Width = 10;
@@ -154,39 +140,38 @@ page 60300 "OBF-Distinct Item Lots"
                         this.InfoPaneMgmt.VendorOnDrillDown(Rec."Vendor No.");
                     end;
                 }
-
-                // FIXME: REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                // TODO: REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Label Text"; "Label Text")
                 // {
                 //     Editable = false;
                 //     Width = 5;
                 //     ApplicationArea = All;
                 // }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
+                /// </summary>
                 field("Container No."; Rec."Container No.")
                 {
-                    Caption = 'Container No.';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Container No. field.';
                     Visible = true;
                     Width = 10;
                 }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/926 - Add Sustainability Cert to Inv. Status Summary Pages
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/926 - Add Sustainability Cert to Inv. Status Summary Pages
+                /// </summary>
                 field("Sustainability Certification"; Rec."Sustainability Certification")
                 {
-                    Caption = 'Sustainability Certification';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Sustainability Certification field.';
                     Visible = true;
                     Width = 10;
                 }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
+                /// </summary>
                 field("On Hand Quantity 2"; Rec."On Hand Quantity 2")
                 {
-                    Caption = 'On Hand Quantity';
                     DecimalPlaces = 0 : 0;
                     Editable = false;
                     ToolTip = 'Specifies the value of the On Hand Quantity field.';
@@ -196,16 +181,15 @@ page 60300 "OBF-Distinct Item Lots"
                         this.InfoPaneMgmt.OnHandDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", Rec."Location Code");
                     end;
                 }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
+                /// </summary>
                 field("Qty. In Transit"; Rec."Qty. In Transit")
                 {
-                    Caption = 'Qty. in Transit';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Qty. in Transit field.';
                     Width = 5;
                 }
-
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Qty. on Quality Hold"; "Qty. on Quality Hold")
                 // {
@@ -214,10 +198,9 @@ page 60300 "OBF-Distinct Item Lots"
                 //     DecimalPlaces = 0 : 0;
                 //     ApplicationArea = All;
                 // }
-
                 field("On Order Quantity 2"; Rec."On Order Quantity 2")
                 {
-                    CaptionML = ENU = '+On Order Quantity';
+                    Caption = '+On Order Quantity';
                     Editable = false;
                     ToolTip = 'Specifies the value of the On Order Quantity field.';
                     Width = 5;
@@ -228,16 +211,16 @@ page 60300 "OBF-Distinct Item Lots"
                 }
                 field("Qty. on Sales Order"; Rec."Qty. on Sales Order")
                 {
-                    CaptionML = ENU = '-Qty. on Sales Orders';
+                    Caption = '-Qty. on Sales Orders';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Qty. on Sales Orders field.';
                     Width = 5;
                 }
                 field("Total Available Quantity"; Rec."Total Available Quantity")
                 {
-                    CaptionML = ENU = 'Total Available Quantity';
+                    Caption = 'Total Available Quantity';
                     Editable = false;
-                    ToolTipML = ENU = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
+                    ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
                     Width = 10;
                     trigger OnDrillDown()
                     begin
@@ -246,7 +229,6 @@ page 60300 "OBF-Distinct Item Lots"
                 }
                 field("On Hand Weight"; Rec."On Hand Weight")
                 {
-                    Caption = 'On Hand Weight';
                     Editable = false;
                     ToolTip = 'Specifies the value of the On Hand Weight field.';
                     Visible = false;
@@ -254,7 +236,7 @@ page 60300 "OBF-Distinct Item Lots"
                 }
                 field("On Order Weight 2"; Rec."On Order Weight 2")
                 {
-                    CaptionML = ENU = '+On Order Weight';
+                    Caption = '+On Order Weight';
                     Editable = false;
                     ToolTip = 'Specifies the value of the On Order Weight field.';
                     Visible = false;
@@ -262,7 +244,7 @@ page 60300 "OBF-Distinct Item Lots"
                 }
                 field("Net Weight on Sales Order"; Rec."Net Weight on Sales Order")
                 {
-                    CaptionML = ENU = '-Net Weight on Sales Orders';
+                    Caption = '-Net Weight on Sales Orders';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Net Weight on Sales Orders field.';
                     Visible = false;
@@ -270,9 +252,8 @@ page 60300 "OBF-Distinct Item Lots"
                 }
                 field("Available Net Weight"; Rec."Available Net Weight")
                 {
-                    CaptionML = ENU = 'Available Net Weight';
                     Editable = false;
-                    ToolTipML = ENU = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
+                    ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
                     Width = 10;
                     trigger OnDrillDown()
                     begin
@@ -281,21 +262,18 @@ page 60300 "OBF-Distinct Item Lots"
                 }
                 field("Unit Cost"; Rec."Unit Cost")
                 {
-                    Caption = 'Unit Cost';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Unit Cost field.';
                     Width = 10;
                 }
                 field("Value of Inventory on Hand"; Rec."Value of Inventory on Hand")
                 {
-                    Caption = 'Value of Inventory on Hand.';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Value of Inventory on Hand. field.';
                     Width = 10;
                 }
                 field("PO Number"; Rec."PO Number")
                 {
-                    Caption = 'PO Number';
                     Editable = false;
                     ToolTip = 'Specifies the value of the PO Number field.';
                     Width = 10;
@@ -306,43 +284,42 @@ page 60300 "OBF-Distinct Item Lots"
                 }
                 field("Receipt Date"; Rec."Receipt Date")
                 {
-                    Caption = 'Receipt Date';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Receipt Date field.';
                 }
-                //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
+                /// </summary>
                 field("Expected Receipt Date"; Rec."Expected Receipt Date")
                 {
-                    Caption = 'Expected Receipt Date';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Expected Receipt Date field.';
                 }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/826 - Add Production and Expiration Dates to Misc. Pages
-                field("OBF-Production Date"; Rec."OBF-Production Date")
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/826 - Add Production and Expiration Dates to Misc. Pages
+                /// </summary>
+                field("Production Date"; Rec."Production Date")
                 {
-                    Caption = 'Production Date';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Production Date field.';
                 }
                 field("Expiration Date"; Rec."Expiration Date")
                 {
-                    Caption = 'Expiration Date';
                     Editable = false;
                     ToolTip = 'Specifies the value of the Expiration Date field.';
                 }
                 field(Buyer; Rec."Buyer Code")
                 {
-                    Caption = 'Buyer Code';
                     ToolTip = 'Specifies the value of the Buyer Code field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.BuyerOnDrillDown(Rec."Buyer Code");
                     end;
                 }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-                field("OBF-Purchased For"; Rec."OBF-Purchased For")
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
+                /// </summary>
+                field("Purchased For"; Rec."Purchased For")
                 {
                     Caption = 'Purchased For';
                     ToolTip = 'Specifies the value of the Purchased For field.';
@@ -381,11 +358,11 @@ page 60300 "OBF-Distinct Item Lots"
     end;
 
     var
-        InfoPaneMgmt: Codeunit "OBF-Info Pane Mgmt";
+        InfoPaneMgmt: Codeunit InfoPaneMgmt;
         ItemNo: Code[20];
         DateFilter: Date;
 
-    procedure SetItem(pItemNo: Code[20]; pVariantCode: Code[10]; pDateFilter: Date)
+    internal procedure SetItem(pItemNo: Code[20]; pVariantCode: Code[10]; pDateFilter: Date)
     begin
         this.ItemNo := pItemNo;
         if pDateFilter = 0D then
@@ -397,7 +374,7 @@ page 60300 "OBF-Distinct Item Lots"
         this.SetPageDataForItem(pItemNo, pVariantCode, this.DateFilter);
     end;
 
-    procedure SetOnHandQtyFilter()
+    internal procedure SetOnHandQtyFilter()
     begin
         Rec.SetFilter("On Hand Quantity", '<>%1', 0);
     end;
@@ -538,7 +515,7 @@ page 60300 "OBF-Distinct Item Lots"
                     Rec."PO Number" := ReservationEntry."Source ID";
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
-                    Rec."OBF-Production Date" := ReservationEntry.SBSISSProductionDate;
+                    Rec."Production Date" := ReservationEntry.SBSISSProductionDate;
                     Rec."Expiration Date" := ReservationEntry."Expiration Date";
                     if ReservationEntry.SBSISSPurchaserCode <> '' then
                         Rec."Buyer Code" := ReservationEntry.SBSISSPurchaserCode;
@@ -610,9 +587,9 @@ page 60300 "OBF-Distinct Item Lots"
     local procedure SetPageDataForItem(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewDateFilter: Date)
     var
         //ItemVariantLotInfo: Record "OBF-Item Variant Lot Info";
-        DistinctItemLotResEntry: Query DistinctItemLotResEntry;
-        DistinctItemsOnPurchLine: Query "OBF-Dist. Items On Purch. Line";
-        DistinctItemLocOnOrder: Query "OBF-Distinct Item Loc On Order";
+        DistinctItemLotLocResEntry: Query DistinctItemLotLocResEntry;
+        DistinctItemLocationPurchLine: Query DistinctItemLocationPurchLine;
+        DistinctItemLocationResEntry: Query DistinctItemLocationResEntry;
         NextRowNo: Integer;
     begin
         //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
@@ -627,27 +604,27 @@ page 60300 "OBF-Distinct Item Lots"
         //         AddRecord(ItemVariantLotInfo."Item No.", ItemVariantLotInfo."Variant Code", ItemVariantLotInfo."Lot No.", ItemVariantLotInfo."Location Code", True, pDateFilter, NextRowNo);
         //     until (ItemVariantLotInfo.Next = 0);
 
-        DistinctItemLotResEntry.SetRange(Item_No, NewItemNo);
-        DistinctItemLotResEntry.SetRange(Variant_Code, NewVariantCode);
-        DistinctItemLotResEntry.Open();
-        while DistinctItemLotResEntry.Read() do
-            if not this.RecordExists(DistinctItemLotResEntry.Item_No, DistinctItemLotResEntry.Variant_Code, DistinctItemLotResEntry.Lot_No) then
-                this.AddRecord(DistinctItemLotResEntry.Item_No, DistinctItemLotResEntry.Variant_Code, DistinctItemLotResEntry.Lot_No, DistinctItemLotResEntry.Location_Code, false, NewDateFilter, NextRowNo);
+        DistinctItemLotLocResEntry.SetRange(Item_No, NewItemNo);
+        DistinctItemLotLocResEntry.SetRange(Variant_Code, NewVariantCode);
+        DistinctItemLotLocResEntry.Open();
+        while DistinctItemLotLocResEntry.Read() do
+            if not this.RecordExists(DistinctItemLotLocResEntry.Item_No, DistinctItemLotLocResEntry.Variant_Code, DistinctItemLotLocResEntry.Lot_No) then
+                this.AddRecord(DistinctItemLotLocResEntry.Item_No, DistinctItemLotLocResEntry.Variant_Code, DistinctItemLotLocResEntry.Lot_No, DistinctItemLotLocResEntry.Location_Code, false, NewDateFilter, NextRowNo);
 
-        DistinctItemLocOnOrder.SetRange(Item_No, NewItemNo);
-        DistinctItemLocOnOrder.SetRange(Variant_Code, NewVariantCode);
-        DistinctItemLocOnOrder.Open();
-        while DistinctItemLocOnOrder.Read() do
-            if not this.RecordExists(DistinctItemLocOnOrder.Item_No, DistinctItemLocOnOrder.Variant_Code, '') then
-                this.AddRecord(DistinctItemLocOnOrder.Item_No, DistinctItemLocOnOrder.Variant_Code, '',
-                        DistinctItemLocOnOrder.Location_Code, false, NewDateFilter, NextRowNo);
+        DistinctItemLocationResEntry.SetRange(Item_No, NewItemNo);
+        DistinctItemLocationResEntry.SetRange(Variant_Code, NewVariantCode);
+        DistinctItemLocationResEntry.Open();
+        while DistinctItemLocationResEntry.Read() do
+            if not this.RecordExists(DistinctItemLocationResEntry.Item_No, DistinctItemLocationResEntry.Variant_Code, '') then
+                this.AddRecord(DistinctItemLocationResEntry.Item_No, DistinctItemLocationResEntry.Variant_Code, '',
+                        DistinctItemLocationResEntry.Location_Code, false, NewDateFilter, NextRowNo);
 
-        DistinctItemsOnPurchLine.SetRange(Item_No, NewItemNo);
-        DistinctItemsOnPurchLine.SetRange(Variant_Code, NewVariantCode);
-        DistinctItemsOnPurchLine.Open();
-        while DistinctItemsOnPurchLine.Read() do
-            if not this.RecordExists(DistinctItemsOnPurchLine.Item_No, DistinctItemsOnPurchLine.Variant_Code, '') then
-                this.AddRecord(DistinctItemsOnPurchLine.Item_No, DistinctItemsOnPurchLine.Variant_Code, '',
-                        DistinctItemsOnPurchLine.Location_Code, false, NewDateFilter, NextRowNo);
+        DistinctItemLocationPurchLine.SetRange(Item_No, NewItemNo);
+        DistinctItemLocationPurchLine.SetRange(Variant_Code, NewVariantCode);
+        DistinctItemLocationPurchLine.Open();
+        while DistinctItemLocationPurchLine.Read() do
+            if not this.RecordExists(DistinctItemLocationPurchLine.Item_No, DistinctItemLocationPurchLine.Variant_Code, '') then
+                this.AddRecord(DistinctItemLocationPurchLine.Item_No, DistinctItemLocationPurchLine.Variant_Code, '',
+                        DistinctItemLocationPurchLine.Location_Code, false, NewDateFilter, NextRowNo);
     end;
 }

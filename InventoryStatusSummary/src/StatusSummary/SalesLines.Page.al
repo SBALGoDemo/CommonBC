@@ -1,17 +1,16 @@
 namespace SilverBay.Inventory.StatusSummary;
 
 using Microsoft.Finance.Dimension;
-using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Sales.Document;
 using Microsoft.Utilities;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
-// This is a copy of the standard "Sales Lines" page with SourceTableTemporary set to true
-
-page 60304 "OBF-Sales Lines"
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+/// This is a copy of the standard "Sales Lines" page with SourceTableTemporary set to true 
+/// </summary>
+page 60304 SalesLines
 {
     ApplicationArea = All;
     Caption = 'Sales Lines';
@@ -34,38 +33,31 @@ page 60304 "OBF-Sales Lines"
                 field("Document Type"; Rec."Document Type")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Document Type';
                     ToolTip = 'Specifies the type of document that you are about to create.';
                 }
                 field("Document No."; Rec."Document No.")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Document No.';
                     ToolTip = 'Specifies the document number.';
                 }
                 field("Sell-to Customer No."; Rec."Sell-to Customer No.")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Sell-to Customer No.';
                     ToolTip = 'Specifies the number of the customer to whom the items in the sales order will be shipped.';
                 }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
+                /// </summary>
                 field(SalesPerson; this.SalesHeader."Salesperson Code")
                 {
-                    Caption = 'Salesperson Code';
                     ToolTip = 'Specifies the value of the Salesperson Code field.';
                 }
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - End
-
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-
                 // field("OBF-Sell-to Customer Name"; "OBF-Sell-to Customer Name")
                 // {
                 //     Editable = false;
                 //     ApplicationArea = All;
                 // }
-
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1017 - Add the columns “OBF-Unit Price (Sales Price UOM)” and “External Document No.” to Sales Lines page
                 field(ExternalDocumentNo; this.SalesHeader."External Document No.")
                 {
@@ -74,63 +66,55 @@ page 60304 "OBF-Sales Lines"
                 }
                 field("Line No."; Rec."Line No.")
                 {
-                    ApplicationArea = Advanced;
-                    Caption = 'Line No.';
+                    ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies the line number.';
                     Visible = false;
                 }
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Type';
                     ToolTip = 'Specifies the type of entity that will be posted for this sales line, such as Item, Resource, or G/L Account. The type that you enter in this field determines what you can select in the No. field.';
                 }
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'No.';
-                    ToolTip = 'Specifies the number of a general ledger account, item, resource, additional cost, or fixed asset, depending on the contents of the Type field.';
+                    ToolTip = 'Specifies the number of the involved entry or record, according to the specified number series.';
                 }
                 field("Variant Code"; Rec."Variant Code")
                 {
-                    ApplicationArea = Advanced;
-                    Caption = 'Variant Code';
+                    ApplicationArea = Planning;
                     ToolTip = 'Specifies the variant of the item on the line.';
                     Visible = false;
                 }
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Description';
                     ToolTip = 'Specifies a description of the entry of the product to be sold. To add a non-transactional text line, fill in the Description field only.';
                 }
                 field("Package Tracking No."; Rec."Package Tracking No.")
                 {
-                    Caption = 'Package Tracking No.';
                     ToolTip = 'Specifies the shipping agent''s package number.';
                     Visible = false;
                 }
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = Location;
-                    Caption = 'Location Code';
                     ToolTip = 'Specifies the inventory location from which the items sold should be picked and where the inventory decrease is registered.';
                     Visible = true;
                 }
                 field(Reserve; Rec.Reserve)
                 {
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'Reserve';
+                    ApplicationArea = Reservation;
                     ToolTip = 'Specifies whether a reservation can be made for items on this line.';
                 }
                 field(Quantity; Rec.Quantity)
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Quantity';
                     ToolTip = 'Specifies how many units are being sold.';
                 }
-
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1477 - Add Weight column to Sales Lines Page
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1477 - Add Weight column to Sales Lines Page
+                /// </summary>
                 field("OBF-Line Net Weight"; Rec.SBSISSLineNetWeight)
                 {
                     Caption = 'Line Net Weight';
@@ -139,81 +123,66 @@ page 60304 "OBF-Sales Lines"
                 field("Qty. to Ship"; Rec."Qty. to Ship")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Qty. to Ship';
                     ToolTip = 'Specifies the quantity of items that remain to be shipped.';
                     Visible = false;
                 }
-
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page - Commented Out
                 // field("OBF-Reserved Qty. (Base)";"OBF-Reserved Qty. (Base)")
                 // {
                 //     ApplicationArea = Basic,Suite;
                 //     ToolTip = 'Specifies the Reserved Quantity for lots.';
                 // }
-
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page
                 field("OBF-Allocated Quantity"; Rec.SBSISSAllocatedQuantity)
                 {
                     Caption = 'Allocated Quantity';
-                    ToolTipML = ENU = 'This is the quantity that is allocated to lots in Item Tracking.';
+                    ToolTip = 'This is the quantity that is allocated to lots in Item Tracking.';
                 }
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - End
-
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Unit of Measure Code';
                     ToolTip = 'Specifies how each unit of the item or resource is measured, such as in pieces or hours. By default, the value in the Base Unit of Measure field on the item or resource card is inserted.';
                 }
-
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1017 - Add the columns “OBF-Unit Price (Sales Price UOM)” and “External Document No.” to Sales Lines page
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1199 - Add "Sales Unit Price" field and related functionality
-
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-Sales Unit Price"; "OBF-Sales Unit Price")
                 // {
                 //     ApplicationArea = All;
                 // }
-
                 field("Line Amount"; Rec."Line Amount")
                 {
                     ApplicationArea = Basic, Suite;
                     BlankZero = true;
-                    Caption = 'Line Amount';
                     ToolTip = 'Specifies the net amount, excluding any invoice discount amount, that must be paid for products on the line.';
                 }
                 field("Job No."; Rec."Job No.")
                 {
-                    ApplicationArea = Advanced;
-                    Caption = 'Project No.';
-                    ToolTip = 'Specifies the number of the related job. If you fill in this field and the Job Task No. field, then a job ledger entry will be posted together with the sales line.';
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Specifies the number of the related project. If you fill in this field and the Project Task No. field, then a project ledger entry will be posted together with the sales line.';
                     Visible = false;
                 }
                 field("Work Type Code"; Rec."Work Type Code")
                 {
-                    ApplicationArea = Manufacturing;
-                    Caption = 'Work Type Code';
-                    ToolTip = 'Specifies which work type the resource applies to when the sale is related to a job.';
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Specifies which work type the resource applies to when the sale is related to a project.';
                     Visible = false;
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = Dimensions;
-                    Caption = 'Shortcut Dimension 1 Code';
                     ToolTip = 'Specifies the code for Shortcut Dimension 1, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                     Visible = false;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = Dimensions;
-                    Caption = 'Shortcut Dimension 2 Code';
                     ToolTip = 'Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
                     Visible = false;
                 }
                 field("ShortcutDimCode[3]"; this.ShortcutDimCode[3])
                 {
                     ApplicationArea = Dimensions;
-                    Caption = 'ShortcutDimCode[3]';
                     CaptionClass = '1,2,3';
                     TableRelation = "Dimension Value".Code where("Global Dimension No." = const(3),
                                                                   "Dimension Value Type" = const(Standard),
@@ -224,7 +193,6 @@ page 60304 "OBF-Sales Lines"
                 field("ShortcutDimCode[4]"; this.ShortcutDimCode[4])
                 {
                     ApplicationArea = Dimensions;
-                    Caption = 'ShortcutDimCode[4]';
                     CaptionClass = '1,2,4';
                     TableRelation = "Dimension Value".Code where("Global Dimension No." = const(4),
                                                                   "Dimension Value Type" = const(Standard),
@@ -235,7 +203,6 @@ page 60304 "OBF-Sales Lines"
                 field("ShortcutDimCode[5]"; this.ShortcutDimCode[5])
                 {
                     ApplicationArea = Dimensions;
-                    Caption = 'ShortcutDimCode[5]';
                     CaptionClass = '1,2,5';
                     TableRelation = "Dimension Value".Code where("Global Dimension No." = const(5),
                                                                   "Dimension Value Type" = const(Standard),
@@ -246,7 +213,6 @@ page 60304 "OBF-Sales Lines"
                 field("ShortcutDimCode[6]"; this.ShortcutDimCode[6])
                 {
                     ApplicationArea = Dimensions;
-                    Caption = 'ShortcutDimCode[6]';
                     CaptionClass = '1,2,6';
                     TableRelation = "Dimension Value".Code where("Global Dimension No." = const(6),
                                                                   "Dimension Value Type" = const(Standard),
@@ -257,7 +223,6 @@ page 60304 "OBF-Sales Lines"
                 field("ShortcutDimCode[7]"; this.ShortcutDimCode[7])
                 {
                     ApplicationArea = Dimensions;
-                    Caption = 'ShortcutDimCode[7]';
                     CaptionClass = '1,2,7';
                     TableRelation = "Dimension Value".Code where("Global Dimension No." = const(7),
                                                                   "Dimension Value Type" = const(Standard),
@@ -268,7 +233,6 @@ page 60304 "OBF-Sales Lines"
                 field("ShortcutDimCode[8]"; this.ShortcutDimCode[8])
                 {
                     ApplicationArea = Dimensions;
-                    Caption = 'ShortcutDimCode[8]';
                     CaptionClass = '1,2,8';
                     TableRelation = "Dimension Value".Code where("Global Dimension No." = const(8),
                                                                   "Dimension Value Type" = const(Standard),
@@ -276,30 +240,23 @@ page 60304 "OBF-Sales Lines"
                     ToolTip = 'Specifies the value of the ShortcutDimCode[8] field.';
                     Visible = false;
                 }
-
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1493- Change "Sales Lines" drilldown to show the "Shipment Date" from the "Sales Header"
-
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-Order Shipment Date 2"; "OBF-Order Shipment Date 2")
                 // {
                 //     ApplicationArea = All;
                 // }
-
                 field(OrderDate; this.SalesHeader."Order Date")
                 {
-                    Caption = 'Order Date';
                     ToolTip = 'Specifies the value of the Order Date field.';
                 }
                 field("Outstanding Quantity"; Rec."Outstanding Quantity")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Outstanding Quantity';
                     ToolTip = 'Specifies how many units on the order line have not yet been shipped.';
                 }
-
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
-
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-On-Hand Reserved Qty."; "OBF-On-Hand Reserved Qty.")
                 // {
@@ -307,7 +264,6 @@ page 60304 "OBF-Sales Lines"
                 //     Visible = ShowReserved;
                 //     ApplicationArea = All;
                 // }
-
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-Committed Reserved Qty."; "OBF-Committed Reserved Qty.")
                 // {
@@ -315,7 +271,6 @@ page 60304 "OBF-Sales Lines"
                 //     Visible = ShowReserved;
                 //     ApplicationArea = All;
                 // }
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - End
             }
         }
     }
@@ -358,7 +313,6 @@ page 60304 "OBF-Sales Lines"
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
         this.SalesHeader.Get(Rec."Document Type", Rec."Document No.");
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - End
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)
@@ -371,7 +325,13 @@ page 60304 "OBF-Sales Lines"
         // ShowReserved: Boolean; //TODO: Review Later
         ShortcutDimCode: array[8] of Code[20];
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
+    /// </summary>
+    /// <param name="ItemNo"></param>
+    /// <param name="VariantCode"></param>
+    /// <param name="IncludeAllVariants"></param>
+    /// <param name="LotIsOnHand"></param>
     procedure SetOnOrderCommittedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; LotIsOnHand: Boolean)
     var
         ReservEntry: Record "Reservation Entry";
@@ -430,12 +390,12 @@ page 60304 "OBF-Sales Lines"
             until (ReservEntry.Next() = 0);
     end;
 
-    procedure SetShowReserved(pShowReserved: Boolean)
+    internal procedure SetShowReserved(pShowReserved: Boolean)
     begin
         // this.ShowReserved := pShowReserved; //TODO: Review Later
     end;
 
-    procedure SetUnallocatedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
+    internal procedure SetUnallocatedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
     var
         SalesLine: Record "Sales Line";
         ItemTracking: Boolean;

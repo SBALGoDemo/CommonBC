@@ -6,14 +6,18 @@ tableextension 60301 Item extends Item
 {
     fields
     {
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
+        /// </summary>
         field(60300; SBSISSExcludefromWeightCalc; Boolean)
         {
-            CaptionML = ENU = 'Exclude from Weight Calculation';
+            Access = Internal;
+            Caption = 'Exclude from Weight Calculation';
             DataClassification = CustomerContent;
         }
         field(60301; SBSISSQtyonQualityHold; Decimal)
         {
+            Access = Internal;
             Caption = 'Qty. on Quality Hold';
             DataClassification = CustomerContent;
             DecimalPlaces = 0 : 0;

@@ -2,9 +2,10 @@ namespace SilverBay.Inventory.StatusSummary;
 
 using Microsoft.Purchases.Document;
 
-query 60305 "OBF-Dist. Items On Purch. Line"
+query 60305 DistinctItemLocationPurchLine
 {
-    Caption = 'OBF-Dist. Items On Purch. Line';
+    Access = Internal;
+    Caption = 'Distinct Item Location Purchase Line';
     OrderBy = ascending(Item_No);
 
     elements

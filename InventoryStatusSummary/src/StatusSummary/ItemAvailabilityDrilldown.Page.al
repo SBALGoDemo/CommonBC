@@ -6,20 +6,20 @@ using Microsoft.Inventory.Tracking;
 using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
-
-page 60302 "OBF-Item Avail. Drilldown"
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+/// </summary>
+page 60302 ItemAvailabilityDrilldown
 {
     ApplicationArea = All;
-    Caption = 'Item Avail. Drilldown';
+    Caption = 'Item Availability Drilldown';
     DataCaptionFields = "Item No.";
     Editable = false;
     PageType = List;
-    SourceTable = "OBF-Item Availability Buffer";
+    SourceTable = ItemAvailabilityBuffer;
     SourceTableTemporary = true;
     SourceTableView = sorting("Entry No.")
                       order(descending);
@@ -106,7 +106,7 @@ page 60302 "OBF-Item Avail. Drilldown"
                 field("Remaining Quantity"; Rec."Remaining Quantity")
                 {
                     BlankZero = true;
-                    CaptionML = ENU = 'Remaining / Reserved Qty.';
+                    Caption = 'Remaining / Reserved Qty.';
                     ToolTip = 'Specifies the quantity in the Quantity field that remains to be processed or the quantity that is reserved on sales or purchase orders.';
                 }
                 field("Entry No."; Rec."Entry No.")
@@ -179,7 +179,7 @@ page 60302 "OBF-Item Avail. Drilldown"
     var
         LotOnHandText: Text[10];
 
-    procedure SetItemData(ItemNo: Code[20]; VariantCode: Code[10]; ShowAllVariants: Boolean; AsOfDate: Date)
+    internal procedure SetItemData(ItemNo: Code[20]; VariantCode: Code[10]; ShowAllVariants: Boolean; AsOfDate: Date)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
         NextEntryNo: Integer;
@@ -198,7 +198,7 @@ page 60302 "OBF-Item Avail. Drilldown"
         Rec.FindLast();
     end;
 
-    procedure SetItemLotData(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; AsOfDate: Date)
+    internal procedure SetItemLotData(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; AsOfDate: Date)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
         NextEntryNo: Integer;

@@ -3,9 +3,10 @@ namespace SilverBay.Inventory.StatusSummary;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Tracking;
 
-query 60301 DistinctItemLotResEntry
+query 60301 DistinctItemLotLocResEntry
 {
-    Caption = 'Distinct Item Lot (Reservation Entry)';
+    Access = Internal;
+    Caption = 'Distinct Item Lot Location Reservation Entry';
     OrderBy = ascending(Item_No), ascending(Lot_No);
 
     elements

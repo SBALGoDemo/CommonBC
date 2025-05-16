@@ -2,12 +2,12 @@ namespace SilverBay.Inventory.StatusSummary;
 
 using Microsoft.Inventory.Item;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
-
-page 60303 "OBF-Item Factbox"
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+/// </summary>
+page 60303 "Item Factbox"
 {
     ApplicationArea = All;
     Caption = 'Item Details - Summary';
@@ -22,22 +22,18 @@ page 60303 "OBF-Item Factbox"
                 Caption = 'Parameters';
                 field("No."; Rec."No.")
                 {
-                    Caption = 'Item No.';
                     ToolTip = 'Specifies the number of the involved entry or record, according to the specified number series.';
                 }
                 field(VariantCode; this.VariantCode)
                 {
-                    Caption = 'Variant Code';
-                    ToolTip = 'Specifies the value of the Variant Code field.';
+                    ToolTip = 'Specifies a code that identifies an item variant.';
                 }
                 field(Description; Rec.Description)
                 {
-                    Caption = 'Description';
                     ToolTip = 'Specifies a description of the item.';
                 }
                 field(AsOfDate; Format(this.AsOfDate))
                 {
-                    Caption = 'As Of Date';
                     ToolTip = 'Specifies the value of the As Of Date field.';
                 }
             }
@@ -45,8 +41,10 @@ page 60303 "OBF-Item Factbox"
             {
                 Caption = 'On Hand';
 
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
+                /// </summary>
                 field(Inventory; this.TotalQty)
                 {
                     Caption = 'Total Qty.';
@@ -57,7 +55,6 @@ page 60303 "OBF-Item Factbox"
                         this.InfoPaneMgmt.OnHandDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
                     end;
                 }
-
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Qty on Quality Hold"; QtyOnQualityHold)
                 // {
@@ -65,7 +62,6 @@ page 60303 "OBF-Item Factbox"
                 //     DecimalPlaces = 0 : 3;
                 //     ApplicationArea = All;
                 // }
-
                 field(TotalOnHandWeight; this.TotalOnHandWeight)
                 {
                     Caption = 'Total Weight';
@@ -97,9 +93,9 @@ page 60303 "OBF-Item Factbox"
                 Caption = 'On Hand (Committed)';
                 field(OnHandCommitted; this.OnHandCommitted)
                 {
-                    Caption = 'Total Qty.';
+                    Caption = 'On Hand (Committed)';
                     DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the Total Qty. field.';
+                    ToolTip = 'Specifies the value of the On Hand (Committed) field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
@@ -107,9 +103,9 @@ page 60303 "OBF-Item Factbox"
                 }
                 field(OnHandCommittedWeight; this.OnHandCommittedWeight)
                 {
-                    Caption = 'Total Weight';
+                    Caption = 'On Hand (Committed) Weight';
                     DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the Total Weight field.';
+                    ToolTip = 'Specifies the value of the On Hand (Committed) Weight field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
@@ -126,15 +122,15 @@ page 60303 "OBF-Item Factbox"
                     ToolTip = 'Specifies the value of the On-Hand Available field.';
                     trigger OnDrillDown()
                     var
-                        DistinctItemLots: Page "OBF-Distinct Item Lots";
+                        DistinctItemLotList: Page "Distinct Item Lot List";
                     begin
                         Message('This drilldown is not fully implemented yet. Please contact support.');
                         if this.ShowAllVariants then
-                            DistinctItemLots.SetItem(Rec."No.", '', this.AsOfDate)
+                            DistinctItemLotList.SetItem(Rec."No.", '', this.AsOfDate)
                         else
-                            DistinctItemLots.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
-                        DistinctItemLots.SetOnHandQtyFilter();
-                        DistinctItemLots.RunModal();
+                            DistinctItemLotList.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
+                        DistinctItemLotList.SetOnHandQtyFilter();
+                        DistinctItemLotList.RunModal();
                     end;
                 }
                 field(OnHandAvailableWeight; this.OnHandAvailableWeight)
@@ -144,15 +140,15 @@ page 60303 "OBF-Item Factbox"
                     ToolTip = 'Specifies the value of the On-Hand Available (Weight) field.';
                     trigger OnDrillDown()
                     var
-                        DistinctItemLots: Page "OBF-Distinct Item Lots";
+                        DistinctItemLotList: Page "Distinct Item Lot List";
                     begin
                         Message('This drilldown is not fully implemented yet. Please contact support.');
                         if this.ShowAllVariants then
-                            DistinctItemLots.SetItem(Rec."No.", '', this.AsOfDate)
+                            DistinctItemLotList.SetItem(Rec."No.", '', this.AsOfDate)
                         else
-                            DistinctItemLots.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
-                        DistinctItemLots.SetOnHandQtyFilter();
-                        DistinctItemLots.RunModal();
+                            DistinctItemLotList.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
+                        DistinctItemLotList.SetOnHandQtyFilter();
+                        DistinctItemLotList.RunModal();
                     end;
                 }
             }
@@ -161,9 +157,9 @@ page 60303 "OBF-Item Factbox"
                 Caption = 'On Order';
                 field(OnOrderQty; this.OnOrderQty)
                 {
-                    CaptionML = ENU = 'Total Qty.';
+                    Caption = 'On Order Qty';
                     DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the OnOrderQty field.';
+                    ToolTip = 'Specifies the value of the On Order Qty field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.OnOrderDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
@@ -171,9 +167,9 @@ page 60303 "OBF-Item Factbox"
                 }
                 field(OnOrderWeight; this.OnOrderWeight)
                 {
-                    CaptionML = ENU = 'Total Weight';
+                    Caption = 'On Order Weight';
                     DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the OnOrderWeight field.';
+                    ToolTip = 'Specifies the value of the On Order Weight field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.OnOrderDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
@@ -185,9 +181,9 @@ page 60303 "OBF-Item Factbox"
                 Caption = 'On Order Committed';
                 field(OnOrderCommitted; this.OnOrderCommitted)
                 {
-                    Caption = 'Total Qty.';
+                    Caption = 'On Order Committed';
                     DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the Total Qty. field.';
+                    ToolTip = 'Specifies the value of the On Order Committed field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
@@ -195,9 +191,9 @@ page 60303 "OBF-Item Factbox"
                 }
                 field(OnOrderCommittedWeight; this.OnOrderCommittedWeight)
                 {
-                    Caption = 'Total Weight';
+                    Caption = 'On Order Committed Weight';
                     DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the Total Weight field.';
+                    ToolTip = 'Specifies the value of the On Order Committed Weight field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
@@ -209,9 +205,9 @@ page 60303 "OBF-Item Factbox"
                 Caption = 'Unallocated Sales Orders';
                 field(UnallocatedSOQty; this.UnallocatedSOQty)
                 {
-                    Caption = 'Total Qty.';
+                    Caption = 'Unallocated SO Qty.';
                     DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the Total Qty. field.';
+                    ToolTip = 'Specifies the value of the Unallocated SO Qty. field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.UnallocatedSODrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
@@ -219,9 +215,9 @@ page 60303 "OBF-Item Factbox"
                 }
                 field(UnallocatedSOWeight; this.UnallocatedSOWeight)
                 {
-                    Caption = 'Total Weight';
+                    Caption = 'Unallocated SO Weight';
                     DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the Total Weight field.';
+                    ToolTip = 'Specifies the value of the Unallocated SO Weight field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.UnallocatedSODrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
@@ -233,9 +229,9 @@ page 60303 "OBF-Item Factbox"
                 Caption = 'Available ';
                 field(TotalAvailableQuantity; this.TotalAvailableQuantity)
                 {
-                    Caption = 'Total Qty.';
+                    Caption = 'Total Available Quantity';
                     DecimalPlaces = 0 : 3;
-                    ToolTipML = ENU = '=On Hand + On Order - On Hand Committed - On Order Committed';
+                    ToolTip = 'On Hand + On Order - On Hand Committed - On Order Committed';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
@@ -243,9 +239,9 @@ page 60303 "OBF-Item Factbox"
                 }
                 field(TotalAvailableWeight; this.TotalAvailableWeight)
                 {
-                    Caption = 'Total Weight';
+                    Caption = 'Total Available Weight';
                     DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the Total Weight field.';
+                    ToolTip = 'Specifies the value of the Total Available Weight field.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
@@ -293,7 +289,7 @@ page 60303 "OBF-Item Factbox"
     end;
 
     var
-        InfoPaneMgmt: Codeunit "OBF-Info Pane Mgmt";
+        InfoPaneMgmt: Codeunit InfoPaneMgmt;
         ShowAllVariants: Boolean;
         VariantCode: Code[10];
         AsOfDate: Date;
@@ -315,13 +311,13 @@ page 60303 "OBF-Item Factbox"
         UnallocatedSOQty: Decimal;
         UnallocatedSOWeight: Decimal;
 
-    procedure SetValues(pAsOfDate: Date; pVariantCode: Code[10]; pShowAllVariants: Boolean)
+    internal procedure SetValues(NewAsOfDate: Date; NewVariantCode: Code[10]; NewShowAllVariants: Boolean)
     begin
-        this.AsOfDate := pAsOfDate;
-        this.ShowAllVariants := pShowAllVariants;
+        this.AsOfDate := NewAsOfDate;
+        this.ShowAllVariants := NewShowAllVariants;
         if this.ShowAllVariants then
             this.VariantCode := '***ALL***'
         else
-            this.VariantCode := pVariantCode;
+            this.VariantCode := NewVariantCode;
     end;
 }

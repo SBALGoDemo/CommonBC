@@ -4,13 +4,14 @@ using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Sales.Document;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1663 - Create Site Dimension Lookup based on Subsidiary
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1663 - Create Site Dimension Lookup based on Subsidiary
+/// </summary>
 tableextension 60304 SalesLine extends "Sales Line"
 {
     fields
     {
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications
+        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications        
         modify("No.")
         {
             trigger OnAfterValidate()
@@ -32,6 +33,7 @@ tableextension 60304 SalesLine extends "Sales Line"
         }
         field(60300; SBSISSSiteCode; Code[20])
         {
+            Access = Internal;
             Caption = 'Site Code';
             DataClassification = CustomerContent;
             TableRelation = "OBF-Subsidiary Site"."Site Code" where("Subsidiary Code" = field("Shortcut Dimension 1 Code"));
@@ -44,6 +46,7 @@ tableextension 60304 SalesLine extends "Sales Line"
         }
         field(60301; SBSISSCIPCode; Code[20])
         {
+            Access = Internal;
             Caption = 'CIP Code';
             DataClassification = CustomerContent;
             ObsoleteReason = 'Not Needed';
@@ -54,10 +57,12 @@ tableextension 60304 SalesLine extends "Sales Line"
                 //SubDimension.UpdateDimSetIDForSubDimension('CIP', "OBF-CIP Code", Rec."Dimension Set ID");
             end;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications
+        /// </summary>
         field(60302; SBSISSMSCCertification; Boolean)
         {
+            Access = Internal;
             Caption = 'MSC Certification';
             DataClassification = CustomerContent;
             trigger OnValidate()
@@ -67,6 +72,7 @@ tableextension 60304 SalesLine extends "Sales Line"
         }
         field(60303; SBSISSRFMCertification; Boolean)
         {
+            Access = Internal;
             Caption = 'RFM Certification';
             DataClassification = CustomerContent;
             trigger OnValidate()
@@ -74,33 +80,40 @@ tableextension 60304 SalesLine extends "Sales Line"
                 //Rec.TestField(Type,Rec.Type::Item);
             end;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1630 - Printed Document Layouts
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1630 - Printed Document Layouts
+        /// </summary>
         field(60304; SBSISSIsVanInfoLine; Boolean)
         {
+            Access = Internal;
             Caption = 'IsVanInfoLine';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60305; SBSISSIsCertificationInfoLine; Boolean)
         {
+            Access = Internal;
             Caption = 'IsCertificationInfoLine';
             DataClassification = CustomerContent;
             Editable = false;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
+        /// </summary>
         field(60306; SBSISSLineNetWeight; Decimal)
         {
+            Access = Internal;
             Caption = 'Line Net Weight';
             DataClassification = CustomerContent;
             DecimalPlaces = 0 : 2;
             Editable = false;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1788 - Sales Workflow
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1788 - Sales Workflow
+        /// </summary>
         field(60307; SBSISSAllocatedQuantity; Decimal)
         {
+            Access = Internal;
             Caption = 'Allocated Quantity';
             DataClassification = CustomerContent;
             DecimalPlaces = 0 : 5;
@@ -108,6 +121,7 @@ tableextension 60304 SalesLine extends "Sales Line"
         }
         field(60308; SBSISSItemType; Enum "Item Type")
         {
+            Access = Internal;
             CalcFormula = lookup(Item.Type where("No." = field("No.")));
             Caption = 'Item Type';
             Editable = false;
@@ -115,6 +129,7 @@ tableextension 60304 SalesLine extends "Sales Line"
         }
         field(60309; SBSISSItemTrackingCode; Code[10])
         {
+            Access = Internal;
             CalcFormula = lookup(Item."Item Tracking Code" where("No." = field("No.")));
             Caption = 'Item Tracking Code';
             Editable = false;
@@ -122,12 +137,14 @@ tableextension 60304 SalesLine extends "Sales Line"
         }
         field(60310; SBSISSLotNumber; Text[250])
         {
+            Access = Internal;
             Caption = 'Lot Number(s)';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60311; SBSISSShiptoCode; Code[10])
         {
+            Access = Internal;
             CalcFormula = lookup("Sales Header"."Ship-to Code" where("No." = field("Document No.")));
             Caption = 'Ship-to Code';
             Editable = false;
@@ -135,12 +152,14 @@ tableextension 60304 SalesLine extends "Sales Line"
         }
         field(60312; SBSISSOffInvRebateUnitRate; Text[50])
         {
+            Access = Internal;
             Caption = 'Off-Inv. Rebate Unit Rate';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60313; SBSISSOffInvoiceRebateAmount; Decimal)
         {
+            Access = Internal;
             CalcFormula = sum("OBF-Rebate Entry"."Rebate Amount" where("Source Type" = field("Document Type"),
                                                                          "Source No." = field("Document No."),
                                                                          "Source Line No." = field("Line No."),
@@ -149,10 +168,12 @@ tableextension 60304 SalesLine extends "Sales Line"
             Editable = false;
             FieldClass = FlowField;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1808 - Multi Entity Management Enhancements for Rebates
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1808 - Multi Entity Management Enhancements for Rebates
+        /// </summary>
         field(60314; SBSISSHeaderSubsidiaryCode; Code[20])
         {
+            Access = Internal;
             Caption = 'Header Subsidiary Code';
             DataClassification = CustomerContent;
         }
@@ -164,7 +185,7 @@ tableextension 60304 SalesLine extends "Sales Line"
         this.DeleteRebateEntries();
     end;
 
-    procedure SBSISSCheckItemCertification(ItemNo: Code[20]; CertificationCode: Code[20]): Boolean
+    internal procedure SBSISSCheckItemCertification(ItemNo: Code[20]; CertificationCode: Code[20]): Boolean
     var
         ItemCertification: Record "OBF-Item Certification";
     begin
@@ -175,8 +196,11 @@ tableextension 60304 SalesLine extends "Sales Line"
         exit(not ItemCertification.IsEmpty);
     end;
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1789 - EDI - Silver Bay
-    procedure SBSISSGetLotNoAndAllocatedQty(var SalesLine: Record "Sales Line")
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1789 - EDI - Silver Bay
+    /// </summary>
+    /// <param name="SalesLine"></param>
+    internal procedure SBSISSGetLotNoAndAllocatedQty(var SalesLine: Record "Sales Line")
     var
         ReservEntry: Record "Reservation Entry";
         TrackingSpecific: Record "Tracking Specification";
@@ -231,8 +255,13 @@ tableextension 60304 SalesLine extends "Sales Line"
         SalesLine.Modify();
     end;
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-    procedure SBSISSGetTrackingPercent(Qty: Decimal; var ItemTracking: Boolean): Decimal
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+    /// </summary>
+    /// <param name="Qty"></param>
+    /// <param name="ItemTracking"></param>
+    /// <returns></returns>
+    internal procedure SBSISSGetTrackingPercent(Qty: Decimal; var ItemTracking: Boolean): Decimal
     var
         Item: Record Item;
         ReservationEntry: Record "Reservation Entry";
@@ -312,8 +341,10 @@ tableextension 60304 SalesLine extends "Sales Line"
         exit(PctInReserv);
     end;
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications
-    procedure SBSISSSetCertificationFields()
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications
+    /// </summary>
+    internal procedure SBSISSSetCertificationFields()
     begin
         if Rec.Type <> Rec.Type::Item then
             exit;

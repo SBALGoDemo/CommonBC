@@ -16,9 +16,9 @@ using Microsoft.Inventory.Tracking;
 /// </summary>
 table 60300 DistinctItemLot
 {
+    Access = Internal;
     Caption = 'Lots';
     DataClassification = CustomerContent;
-    Access = Internal;
     Extensible = false;
 
     fields
@@ -39,7 +39,9 @@ table 60300 DistinctItemLot
         {
             Caption = 'Location Code';
         }
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue        
+        /// </summary>
         field(5; "Item Description"; Text[100])
         {
             Caption = 'Item Description';
@@ -48,7 +50,9 @@ table 60300 DistinctItemLot
         {
             Caption = 'Item Description 2';
         }
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue 
+        /// </summary>
         field(7; "Search Description"; Text[100])
         {
             Caption = 'Search Description';
@@ -81,7 +85,7 @@ table 60300 DistinctItemLot
         //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // field(14; "Alternate Lot No."; Code[20])
         // {
-        //     CaptionML = ENU = 'Alternate Lot No.';
+        //     Caption = 'Alternate Lot No.';
         //     CalcFormula = lookup("Lot No. Information"."OBF-Alternate Lot No." WHERE("Item No." = FIELD("Item No."),
         //                                                                             "Lot No." = FIELD("Lot No.")));
         //     FieldClass = FlowField;
@@ -226,16 +230,20 @@ table 60300 DistinctItemLot
             Caption = 'Sales Order Filter';
             FieldClass = FlowFilter;
         }
-        //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page 
+        /// </summary>
         field(42; "Expected Receipt Date"; Date)
         {
             Caption = 'Expected Receipt Date';
         }
         field(43; "Variant Code"; Code[10])
         {
-            CaptionML = ENU = 'Variant Code';
+            Caption = 'Variant Code';
         }
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
+        /// </summary>
         field(44; "On Order Quantity 2"; Decimal)
         {
             Caption = 'On Order Quantity';
@@ -248,17 +256,19 @@ table 60300 DistinctItemLot
             DecimalPlaces = 0 : 0;
             Editable = false;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/926 - Add Sustainability Cert to Inv. Status Summary Pages
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/926 - Add Sustainability Cert to Inv. Status Summary Pages
+        /// </summary>
         field(52; "Sustainability Certification"; Code[10])
         {
             Caption = 'Sustainability Certification';
             FieldClass = Normal;
             TableRelation = "OBF-Certification";
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/826 - Add Production and Expiration Dates to Misc. Pages
-        field(60; "OBF-Production Date"; Date)
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/826 - Add Production and Expiration Dates to Misc. Pages
+        /// </summary>
+        field(60; "Production Date"; Date)
         {
             Caption = 'Production Date';
         }
@@ -267,9 +277,11 @@ table 60300 DistinctItemLot
             Caption = 'Expiration Date';
         }
 
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1195 - Hold Functionality
-        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1195 - Hold Functionality
+        ///TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        /// </summary>
         field(70; "Qty. on Quality Hold"; Decimal)
         {
             // CalcFormula = Sum("OBF-Quality Ledger Entry"."Quantity (Base)" Where("Item No." = field("Item No."),
@@ -287,8 +299,9 @@ table 60300 DistinctItemLot
             DecimalPlaces = 0 : 5;
             Editable = false;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
+        /// </summary>
         field(75; "Qty. In Transit"; Decimal)
         {
             CalcFormula = - sum("Reservation Entry"."Qty. to Handle (Base)" where("Item No." = field("Item No."),
@@ -301,8 +314,9 @@ table 60300 DistinctItemLot
             Editable = false;
             FieldClass = FlowField;
         }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
+        /// </summary>
         field(96; "Container No."; Code[20])
         {
             Caption = 'Container No.';
@@ -317,9 +331,10 @@ table 60300 DistinctItemLot
         //                                                                 "Variant Code" = field("Variant Code")));
         //     FieldClass = FlowField;
         // }
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-        field(100; "OBF-Purchased For"; Code[20])
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
+        /// </summary>
+        field(100; "Purchased For"; Code[20])
         {
             Caption = 'Purchased For';
             TableRelation = "Salesperson/Purchaser";
@@ -333,7 +348,15 @@ table 60300 DistinctItemLot
     }
 
 
-    //https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
+    /// <summary>
+    ///https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
+    /// </summary>
+    /// <param name="ItemNo"></param>
+    /// <param name="VariantCode"></param>
+    /// <param name="LocationCode"></param>
+    /// <param name="LotNo"></param>
+    /// <param name="OrderNo"></param>
+    /// <returns></returns>
     procedure CalcAvailableQtyExcludingOrder(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]; LotNo: Code[10]; OrderNo: Code[20]): Decimal
     var
         TempDistinctItemLot: Record DistinctItemLot temporary;

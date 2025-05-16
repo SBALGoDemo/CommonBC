@@ -17,16 +17,18 @@ using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Customer;
 using Microsoft.Sales.Document;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-//  Note - This table is based on the Item Ledger Entry table.
-table 60301 "OBF-Item Availability Buffer"
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
+/// Note - This table is based on the Item Ledger Entry table.
+/// </summary>
+table 60301 ItemAvailabilityBuffer
 {
+    Access = Internal;
     Caption = 'Item Availability Buffer';
     DataClassification = CustomerContent;
-    DrillDownPageId = "OBF-Item Avail. Drilldown";
-    LookupPageId = "OBF-Item Avail. Drilldown";
+    DrillDownPageId = ItemAvailabilityDrilldown;
+    LookupPageId = ItemAvailabilityDrilldown;
 
     fields
     {
@@ -191,11 +193,13 @@ table 60301 "OBF-Item Availability Buffer"
             Caption = 'Order Line No.';
             Editable = false;
         }
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+        /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+        /// </summary>
         field(93; "Lot Is On Hand"; Boolean)
         {
             CalcFormula = exist("Item Ledger Entry" where("Item No." = field("Item No."), "Lot No." = field("Lot No.")));
-            CaptionML = ENU = 'Lot Is On Hand';
+            Caption = 'Lot Is On Hand';
             Editable = false;
             FieldClass = FlowField;
         }

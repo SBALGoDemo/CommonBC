@@ -3,13 +3,15 @@ namespace SilverBay.Inventory.StatusSummary;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
-query 60300 DistinctItemLotLocations
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
+/// </summary>
+query 60300 DistinctItemLotLocationILE
 {
-    Caption = 'Distinct Item Lot Locations';
+    Access = Internal;
+    Caption = 'Distinct Item Lot Location Item Ledger Entry';
     OrderBy = ascending(Item_No), ascending(Lot_No);
 
     elements
