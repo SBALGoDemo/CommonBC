@@ -30,6 +30,7 @@ query 60300 DistinctItemLotLocationILE
             dataitem(Item; Item)
             {
                 DataItemLink = "No." = Item_Ledger_Entry."Item No.";
+                DataItemTableFilter = "Item Tracking Code" = filter(<> '');
                 SqlJoinType = InnerJoin;
                 column(Item_Tracking_Code; "Item Tracking Code") { }
             }

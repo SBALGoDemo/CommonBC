@@ -29,6 +29,7 @@ table 60301 ItemAvailabilityBuffer
     DataClassification = CustomerContent;
     DrillDownPageId = ItemAvailabilityDrilldown;
     LookupPageId = ItemAvailabilityDrilldown;
+    TableType = Temporary;
 
     fields
     {

@@ -11,12 +11,12 @@
   "url": "https://www.silverbayseafoods.com/",
   "logo": "SilverBaySeafoods.png",
   "dependencies": [
-    {
-      "id": "e2254af4-4f3e-4bf0-9d62-f2f0073dc148",
-      "name": "SilverBay",
-      "publisher": "Silver Bay",
-      "version": "1.1.250402.1"
-    }    
+        {
+      "id": "127b2d32-672c-4fe1-b466-9dbe91f87642",
+      "name": "Common",
+      "publisher": "Silver Bay Seafoods",
+      "version": "25.0.0.0"
+    }
   ],
   "platform": "25.0.0.0",
   "application": "25.0.0.0",

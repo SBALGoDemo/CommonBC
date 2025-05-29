@@ -26,6 +26,7 @@ page 60303 "Item Factbox"
                 }
                 field(VariantCode; this.VariantCode)
                 {
+                    Caption = 'Variant Code';
                     ToolTip = 'Specifies a code that identifies an item variant.';
                 }
                 field(Description; Rec.Description)
@@ -34,6 +35,7 @@ page 60303 "Item Factbox"
                 }
                 field(AsOfDate; Format(this.AsOfDate))
                 {
+                    Caption = 'As Of Date';
                     ToolTip = 'Specifies the value of the As Of Date field.';
                 }
             }
@@ -255,7 +257,6 @@ page 60303 "Item Factbox"
     begin
         if this.AsOfDate <> 0D then
             Rec.SetFilter("Date Filter", '<=%1', this.AsOfDate);
-        // SetFilter("Inventory As Of Date Filter",'<=%1',AsOfDate);
 
         if not this.ShowAllVariants then
             Rec.SetRange("Variant Filter", this.VariantCode);
@@ -271,17 +272,17 @@ page 60303 "Item Factbox"
 
         this.OnOrderQty := Rec."Qty. on Purch. Order";
         this.OnOrderWeight := this.OnOrderQty * Rec."Net Weight";
-        this.OnOrderCommitted := this.InfoPaneMgmt.CalcOnOrderCommitted(Rec."No.", this.VariantCode, this.ShowAllVariants);
+        this.OnOrderCommitted := this.InfoPaneMgmt.CalcInventoryOnOrderTotalCommitted(Rec."No.", this.VariantCode, this.ShowAllVariants);
         this.OnOrderCommittedWeight := this.OnOrderCommitted * Rec."Net Weight";
-        this.OnHandCommitted := this.InfoPaneMgmt.CalcOnHandCommitted(Rec."No.", this.VariantCode, this.ShowAllVariants);
+        this.OnHandCommitted := this.InfoPaneMgmt.CalcInventoryOnHandTotalCommitted(Rec."No.", this.VariantCode, this.ShowAllVariants);
         this.OnHandCommittedWeight := this.OnHandCommitted * Rec."Net Weight";
         this.OnHandAvailable := Rec.Inventory - this.OnHandCommitted - Rec.SBSISSQtyonQualityHold;
         this.OnHandAvailableWeight := this.TotalOnHandWeight - this.OnHandCommittedWeight;
-        this.UnallocatedSOQty := this.InfoPaneMgmt.CalcUnallocatedSO(Rec."No.", this.VariantCode, this.ShowAllVariants);
+        this.UnallocatedSOQty := this.InfoPaneMgmt.CalcOnOrderTotalUnallocated(Rec."No.", this.VariantCode, this.ShowAllVariants);
         this.UnallocatedSOWeight := this.UnallocatedSOQty * Rec."Net Weight";
         this.TotalAvailableQuantity := Rec.Inventory + this.OnOrderQty - this.OnHandCommitted - this.OnOrderCommitted - Rec.SBSISSQtyonQualityHold;
         this.TotalAvailableWeight := this.TotalOnHandWeight + this.OnOrderWeight - this.OnHandCommittedWeight - this.OnOrderCommittedWeight;
-        this.TotalValueOfInventoryOnHand := this.InfoPaneMgmt.CalcInventoryValue(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
+        this.TotalValueOfInventoryOnHand := this.InfoPaneMgmt.CalcInventoryOnHandTotalValue(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
         if this.TotalOnHandWeight <> 0 then
             this.AverageCost := this.TotalValueOfInventoryOnHand / this.TotalOnHandWeight
         else

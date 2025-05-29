@@ -25,6 +25,7 @@ query 60301 DistinctItemLotLocResEntry
             dataitem(Item; Item)
             {
                 DataItemLink = "No." = Reservation_Entry."Item No.";
+                DataItemTableFilter = "Item Tracking Code" = filter(<> '');
                 SqlJoinType = InnerJoin;
                 column(Item_Tracking_Code; "Item Tracking Code") { }
             }

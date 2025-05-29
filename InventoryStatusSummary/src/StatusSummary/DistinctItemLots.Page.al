@@ -25,7 +25,6 @@ page 60305 InventoryStatusSummaryByDate
     ModifyAllowed = true;
     PageType = List;
     SourceTable = DistinctItemLot;
-    SourceTableTemporary = true;
     UsageCategory = Lists;
     layout
     {
@@ -42,7 +41,7 @@ page 60305 InventoryStatusSummaryByDate
                     begin
                         Rec.DeleteAll();
                         Rec.SetRange("Date Filter", 0D, this.DateFilter);
-                        this.SetPageData(this.DateFilter);
+                        this.SetPageData();
                         Rec.FindFirst();
                         CurrPage.Update();
                         CurrPage.ItemFactBox.Page.SetValues(this.DateFilter, '', true);
@@ -54,9 +53,7 @@ page 60305 InventoryStatusSummaryByDate
                 Caption = 'Group';
                 field(ItemNo; Rec."Item No.")
                 {
-                    Caption = 'Item No.';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Item No. field.';
                     Width = 10;
                     trigger OnDrillDown()
                     begin
@@ -65,76 +62,56 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field(VariantCode; Rec."Variant Code")
                 {
-                    Caption = 'Variant Code';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Variant Code field.';
                     Width = 10;
                 }
                 field("Item Description"; Rec."Item Description")
                 {
-                    Caption = 'Item Description';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Item Description field.';
                     Width = 30;
                 }
                 field("Item Description 2"; Rec."Item Description 2")
                 {
-                    Caption = 'Item Description 2';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Item Description 2 field.';
                     Width = 15;
                 }
                 field("Search Description"; Rec."Search Description")
                 {
-                    Caption = 'Search Description';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Search Description field.';
                     Width = 30;
                 }
                 field("Pack Size"; Rec."Pack Size")
                 {
-                    Caption = 'Pack Size';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Pack Size field.';
                     Visible = false;
                     Width = 10;
                 }
                 field("Method of Catch"; Rec."Method of Catch")
                 {
-                    Caption = 'Method of Catch';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Method of Catch field.';
                     Visible = false;
                     Width = 10;
                 }
                 field("Country of Origin"; Rec."Country of Origin")
                 {
-                    Caption = 'Country of Origin';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Country of Origin field.';
                     Width = 10;
                 }
                 field("Brand Code"; Rec."Brand Code")
                 {
-                    Caption = 'Brand Code';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Brand Code field.';
                     Visible = false;
                     Width = 10;
                 }
                 field("Item Category Code"; Rec."Item Category Code")
                 {
-                    Caption = 'Item Category Code';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Item Category Code field.';
                     Visible = true;
                     Width = 10;
                 }
                 field("Lot No."; Rec."Lot No.")
                 {
-                    Caption = 'Lot No.';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Lot No. field.';
                     Width = 10;
                 }
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
@@ -146,9 +123,7 @@ page 60305 InventoryStatusSummaryByDate
                 // }
                 field("PO Number"; Rec."PO Number")
                 {
-                    Caption = 'PO Number';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the PO Number field.';
                     Width = 10;
                     trigger OnDrillDown()
                     begin
@@ -157,9 +132,7 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("Location Code"; Rec."Location Code")
                 {
-                    Caption = 'Location Code';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Location Code field.';
                     Width = 5;
                     trigger OnDrillDown()
                     begin
@@ -168,9 +141,7 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("Vendor Name"; Rec."Vendor Name")
                 {
-                    Caption = 'Vendor Name';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Vendor Name field.';
                     Width = 10;
                     trigger OnDrillDown()
                     begin
@@ -179,46 +150,34 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("Receipt Date"; Rec."Receipt Date")
                 {
-                    Caption = 'Receipt Date';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Receipt Date field.';
                     Visible = false;
                 }
                 field("Expected Receipt Date"; Rec."Expected Receipt Date")
                 {
-                    Caption = 'Expected Receipt Date';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Expected Receipt Date field.';
                 }
                 /// <summary>
                 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
                 /// </summary>
                 field("OBF-Production Date"; Rec."Production Date")
                 {
-                    Caption = 'Production Date';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Production Date field.';
                     Visible = false;
                 }
                 field("Unit Cost"; Rec."Unit Cost")
                 {
-                    Caption = 'Unit Cost';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Unit Cost field.';
                     Width = 10;
                 }
                 field("On Hand Quantity"; Rec."On Hand Quantity")
                 {
-                    Caption = 'On Hand Quantity';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the On Hand Quantity field.';
                     Width = 5;
                 }
                 field("On Order Quantity 2"; Rec."On Order Quantity 2")
                 {
-                    Caption = '+On Order Quantity';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the On Order Quantity field.';
                     Width = 5;
                     trigger OnDrillDown()
                     begin
@@ -229,14 +188,12 @@ page 60305 InventoryStatusSummaryByDate
                 {
                     Caption = '-Qty. on Sales Orders';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Qty. on Sales Orders field.';
                     Width = 5;
                 }
                 field("Total Available Quantity"; Rec."Total Available Quantity")
                 {
                     Caption = 'Total Available Quantity';
                     Editable = false;
-                    ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
                     Width = 10;
                     trigger OnDrillDown()
                     begin
@@ -245,9 +202,7 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("On Hand Weight"; Rec."On Hand Weight")
                 {
-                    Caption = 'On Hand Weight';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the On Hand Weight field.';
                     Visible = false;
                     Width = 10;
                 }
@@ -255,7 +210,6 @@ page 60305 InventoryStatusSummaryByDate
                 {
                     Caption = '+On Order Weight';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the On Order Weight field.';
                     Visible = false;
                     Width = 10;
                 }
@@ -263,15 +217,12 @@ page 60305 InventoryStatusSummaryByDate
                 {
                     Caption = '-Net Weight on Sales Orders';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Net Weight on Sales Orders field.';
                     Visible = false;
                     Width = 10;
                 }
                 field("Available Net Weight"; Rec."Available Net Weight")
                 {
-                    Caption = 'Available Net Weight';
                     Editable = false;
-                    ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
                     Width = 10;
                     trigger OnDrillDown()
                     begin
@@ -280,9 +231,7 @@ page 60305 InventoryStatusSummaryByDate
                 }
                 field("Value of Inventory on Hand"; Rec."Value of Inventory on Hand")
                 {
-                    Caption = 'Value of Inventory on Hand.';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Value of Inventory on Hand. field.';
                     Width = 10;
                 }
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
@@ -294,9 +243,7 @@ page 60305 InventoryStatusSummaryByDate
                 // }
                 field("Buyer Code"; Rec."Buyer Code")
                 {
-                    Caption = 'Buyer Code';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Buyer Code field.';
                     Visible = false;
                     Width = 5;
                     trigger OnDrillDown()
@@ -307,10 +254,9 @@ page 60305 InventoryStatusSummaryByDate
                 /// <summary>
                 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
                 /// </summary>
-                field("OBF-Purchased For"; Rec."Purchased For")
+                field("Purchased For"; Rec."Purchased For")
                 {
-                    Caption = 'Purchased For';
-                    ToolTip = 'Specifies the value of the Purchased For field.';
+                    Editable = false;
                     Visible = false;
                 }
             }
@@ -341,7 +287,7 @@ page 60305 InventoryStatusSummaryByDate
                 ToolTip = 'Executes the Get Data action.';
                 trigger OnAction()
                 begin
-                    this.SetPageData(this.DateFilter);
+                    this.SetPageData();
                     Rec.FindFirst();
                     CurrPage.Update();
                 end;
@@ -369,16 +315,17 @@ page 60305 InventoryStatusSummaryByDate
         DateFormula: DateFormula;
     begin
         Evaluate(DateFormula, '1Y');
-        CurrPage.Editable(true);
         this.DateFilter := CalcDate(DateFormula, WorkDate());
 
-        Rec.SetRange("Date Filter", 0D, this.DateFilter);
         Rec.DeleteAll();
-        Rec."Item No." := ' ';
+        Rec.SetRange("Date Filter", 0D, this.DateFilter);
+        Rec."Item No." := '';
         Rec.Insert();
 
         Rec.SetCurrentKey("Item No.", "Variant Code", "Location Code", "Lot No.");
         Rec.FindFirst();
+
+        CurrPage.Editable(true);
         CurrPage.Update();
     end;
 
@@ -388,11 +335,10 @@ page 60305 InventoryStatusSummaryByDate
     end;
 
     var
-        InventorySetup: Record "Inventory Setup";
         InfoPaneMgmt: Codeunit InfoPaneMgmt;
         DateFilter: Date;
 
-    local procedure AddRecord(pItemNo: Code[20]; pVariantCode: Code[10]; pLotNo: Code[10]; pLocation: Code[10]; FromILE: Boolean; pDateFilter: Date; var pNextRowNo: Integer)
+    local procedure AddRecord(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[10]; NewLocation: Code[10]; FromILE: Boolean; var NewNextRowNo: Integer)
     var
         Item: Record Item;
         ItemLedgerEntry: Record "Item Ledger Entry";
@@ -400,24 +346,22 @@ page 60305 InventoryStatusSummaryByDate
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
         UnassignedPurchaseLineQty: Decimal;
-    //ItemVariantLotInfo: Record "OBF-Item Variant Lot Info";
     begin
-        Item.Get(pItemNo);
-        pNextRowNo += 1;
+        NewNextRowNo += 1;
+        Item.Get(NewItemNo);
+
         Rec.Init();
-        Rec."Entry No." := pNextRowNo;
-        Rec."Item No." := pItemNo;
-        Rec."Variant Code" := pVariantCode;
-        Rec."Lot No." := pLotNo;
-        Rec."Location Code" := pLocation;
-        UnassignedPurchaseLineQty := 0;
-        Rec.SetRange("Date Filter", 0D, pDateFilter);
+        Rec."Entry No." := NewNextRowNo;
+        Rec."Item No." := NewItemNo;
+        Rec."Variant Code" := NewVariantCode;
+        Rec."Lot No." := NewLotNo;
+        Rec."Location Code" := NewLocation;
+        Rec.SetRange("Date Filter", 0D, this.DateFilter);
         Rec.CalcFields("On Hand Quantity", "On Order Quantity", "Qty. on Sales Order",
                        "Total ILE Weight for Item Lot", "On Order Weight", "Net Weight on Sales Order");
-        if pLotNo = '' then begin
-            this.CalculateUnassigned(pItemNo, pVariantCode, pLocation, UnassignedPurchaseLineQty);
-            Rec.SetRange("Date Filter", 0D, pDateFilter);
-        end;
+
+        UnassignedPurchaseLineQty := this.CalcUnassignedPurchaseLineQty(NewItemNo, NewVariantCode, NewLotNo, NewLocation);
+
         Rec."On Order Quantity 2" := Rec."On Order Quantity" + UnassignedPurchaseLineQty;
         Rec."On Order Weight 2" := Rec."On Order Weight" + UnassignedPurchaseLineQty * Item."Net Weight";
         if Rec."On Order Quantity 2" < 0 then begin
@@ -447,11 +391,11 @@ page 60305 InventoryStatusSummaryByDate
             if FromILE then begin
                 ItemLedgerEntry.Reset();
                 ItemLedgerEntry.SetCurrentKey("Item No.", "Location Code", "Lot No.");
-                ItemLedgerEntry.SetRange("Item No.", pItemNo);
-                ItemLedgerEntry.SetRange("Variant Code", pVariantCode);
-                ItemLedgerEntry.SetRange("Location Code", pLocation);
-                ItemLedgerEntry.SetRange("Lot No.", pLotNo);
-                ItemLedgerEntry.SetRange("Posting Date", 0D, pDateFilter);
+                ItemLedgerEntry.SetRange("Item No.", NewItemNo);
+                ItemLedgerEntry.SetRange("Variant Code", NewVariantCode);
+                ItemLedgerEntry.SetRange("Location Code", NewLocation);
+                ItemLedgerEntry.SetRange("Lot No.", NewLotNo);
+                ItemLedgerEntry.SetRange("Posting Date", 0D, this.DateFilter);
                 Rec."Value of Inventory on Hand" := 0;
                 if ItemLedgerEntry.FindSet() then
                     repeat
@@ -481,8 +425,8 @@ page 60305 InventoryStatusSummaryByDate
                     until (ItemLedgerEntry.Next() = 0);
             end else begin
                 ReservationEntry.Reset();
-                ReservationEntry.SetRange("Item No.", pItemNo);
-                ReservationEntry.SetRange("Lot No.", pLotNo);
+                ReservationEntry.SetRange("Item No.", NewItemNo);
+                ReservationEntry.SetRange("Lot No.", NewLotNo);
                 ReservationEntry.SetRange("Source Type", 39);
                 ReservationEntry.SetRange("Source Subtype", ReservationEntry."Source Subtype"::"1");
                 if ReservationEntry.FindFirst() then begin
@@ -514,42 +458,42 @@ page 60305 InventoryStatusSummaryByDate
         end;
     end;
 
-    local procedure CalculateUnassigned(pItemNo: Code[20]; pVariantCode: Code[10]; pLocationCode: Code[20]; var UnassignedPurchaseLineQty: Decimal)
+    local procedure CalcUnassignedPurchaseLineQty(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[10]; NewLocationCode: Code[20]) UnassignedPurchaseLineQty: Decimal
     var
         PurchaseLine: Record "Purchase Line";
-        AssignedPurchaseLineQty: Decimal;
     begin
-        Rec.SetRange("Item No.", pItemNo);
-        Rec.SetRange("Variant Code", pVariantCode);
-        Rec.SetRange("Location Code", pLocationCode);
-        Rec.CalcSums("On Order Quantity 2", "On Order Weight 2");
-        AssignedPurchaseLineQty := Rec."On Order Quantity 2";
-        PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
-        PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
-        PurchaseLine.SetRange("No.", pItemNo);
-        PurchaseLine.SetRange("Variant Code", pVariantCode);
-        PurchaseLine.SetRange("Location Code", pLocationCode);
-        PurchaseLine.CalcSums("Outstanding Qty. (Base)");
-        UnassignedPurchaseLineQty := PurchaseLine."Outstanding Qty. (Base)" - AssignedPurchaseLineQty;
-        Rec.Reset();
+        if NewLotNo = '' then begin
+            Rec.SetRange("Item No.", NewItemNo);
+            Rec.SetRange("Variant Code", NewVariantCode);
+            Rec.SetRange("Location Code", NewLocationCode);
+            Rec.CalcSums("On Order Quantity 2", "On Order Weight 2");
+
+            PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
+            PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
+            PurchaseLine.SetRange("No.", NewItemNo);
+            PurchaseLine.SetRange("Variant Code", NewVariantCode);
+            PurchaseLine.SetRange("Location Code", NewLocationCode);
+            PurchaseLine.CalcSums("Outstanding Qty. (Base)");
+            UnassignedPurchaseLineQty := PurchaseLine."Outstanding Qty. (Base)" - Rec."On Order Quantity 2";
+
+            Rec.Reset();
+            Rec.SetRange("Date Filter", 0D, this.DateFilter);
+        end;
     end;
 
-    local procedure RecordExists(pItemNo: Code[20]; pVariantCode: Code[10]; pLotNo: Code[50]; pLocationCode: Code[10]): Boolean
-    var
-        result: Boolean;
+    local procedure RecordExists(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[50]; NewLocationCode: Code[10]) Result: Boolean
     begin
-        Rec.SetRange("Item No.", pItemNo);
-        Rec.SetRange("Lot No.", pLotNo);
-        Rec.SetRange("Variant Code", pVariantCode);
-        Rec.SetRange("Location Code", pLocationCode);
-        result := not Rec.IsEmpty;
+        Rec.SetRange("Item No.", NewItemNo);
+        Rec.SetRange("Lot No.", NewLotNo);
+        Rec.SetRange("Variant Code", NewVariantCode);
+        Rec.SetRange("Location Code", NewLocationCode);
+        Result := not Rec.IsEmpty;
         Rec.Reset();
-        exit(result);
+        exit(Result);
     end;
 
-    local procedure SetPageData(pDateFilter: Date)
+    local procedure SetPageData()
     var
-        ItemT: Record Item;
         DistinctItemLotLocResEntry: Query DistinctItemLotLocResEntry;
         DistinctItemLotLocationILE: Query DistinctItemLotLocationILE;
         DistinctItemLocationPurchLine: Query DistinctItemLocationPurchLine;
@@ -557,36 +501,28 @@ page 60305 InventoryStatusSummaryByDate
         NextRowNo: Integer;
     begin
         Rec.DeleteAll();
-        this.InventorySetup.Get();
-        DistinctItemLotLocationILE.SetRange(Posting_Date_Filter, 0D, pDateFilter);
+
+        DistinctItemLotLocationILE.SetRange(Posting_Date_Filter, 0D, this.DateFilter);
         DistinctItemLotLocationILE.Open();
         while DistinctItemLotLocationILE.Read() do
-            if DistinctItemLotLocationILE.Item_Tracking_Code <> '' then
-                if not this.RecordExists(DistinctItemLotLocationILE.Item_No, DistinctItemLotLocationILE.Variant_Code, DistinctItemLotLocationILE.Lot_No,
-                                    DistinctItemLotLocationILE.Location_Code) then
-                    this.AddRecord(DistinctItemLotLocationILE.Item_No, DistinctItemLotLocationILE.Variant_Code, DistinctItemLotLocationILE.Lot_No,
-                              DistinctItemLotLocationILE.Location_Code, true, pDateFilter, NextRowNo);
+            if not this.RecordExists(DistinctItemLotLocationILE.Item_No, DistinctItemLotLocationILE.Variant_Code, DistinctItemLotLocationILE.Lot_No, DistinctItemLotLocationILE.Location_Code) then
+                this.AddRecord(DistinctItemLotLocationILE.Item_No, DistinctItemLotLocationILE.Variant_Code, DistinctItemLotLocationILE.Lot_No, DistinctItemLotLocationILE.Location_Code, true, NextRowNo);
 
         DistinctItemLotLocResEntry.Open();
         while DistinctItemLotLocResEntry.Read() do
-            if DistinctItemLotLocResEntry.Item_Tracking_Code <> '' then
-                if not this.RecordExists(DistinctItemLotLocResEntry.Item_No, DistinctItemLotLocResEntry.Variant_Code, DistinctItemLotLocResEntry.Lot_No,
-                                    DistinctItemLotLocResEntry.Location_Code) then
-                    this.AddRecord(DistinctItemLotLocResEntry.Item_No, DistinctItemLotLocResEntry.Variant_Code, DistinctItemLotLocResEntry.Lot_No,
-                              DistinctItemLotLocResEntry.Location_Code, false, pDateFilter, NextRowNo);
+            if not this.RecordExists(DistinctItemLotLocResEntry.Item_No, DistinctItemLotLocResEntry.Variant_Code, DistinctItemLotLocResEntry.Lot_No, DistinctItemLotLocResEntry.Location_Code) then
+                this.AddRecord(DistinctItemLotLocResEntry.Item_No, DistinctItemLotLocResEntry.Variant_Code, DistinctItemLotLocResEntry.Lot_No, DistinctItemLotLocResEntry.Location_Code, false, NextRowNo);
 
         DistinctItemLocationResEntry.Open();
         while DistinctItemLocationResEntry.Read() do
-            if this.InfoPaneMgmt.CheckItemTrackingCodeNotBlank(DistinctItemLocationResEntry.Item_No, ItemT) then
+            if this.InfoPaneMgmt.CheckItemTrackingCodeNotBlank(DistinctItemLocationResEntry.Item_No) then
                 if not this.RecordExists(DistinctItemLocationResEntry.Item_No, DistinctItemLocationResEntry.Variant_Code, '', DistinctItemLocationResEntry.Location_Code) then
-                    this.AddRecord(DistinctItemLocationResEntry.Item_No, DistinctItemLocationResEntry.Variant_Code, '',
-                              DistinctItemLocationResEntry.Location_Code, false, pDateFilter, NextRowNo);
+                    this.AddRecord(DistinctItemLocationResEntry.Item_No, DistinctItemLocationResEntry.Variant_Code, '', DistinctItemLocationResEntry.Location_Code, false, NextRowNo);
 
         DistinctItemLocationPurchLine.Open();
         while DistinctItemLocationPurchLine.Read() do
-            if this.InfoPaneMgmt.CheckItemTrackingCodeNotBlank(DistinctItemLocationPurchLine.Item_No, ItemT) then
+            if this.InfoPaneMgmt.CheckItemTrackingCodeNotBlank(DistinctItemLocationPurchLine.Item_No) then
                 if not this.RecordExists(DistinctItemLocationPurchLine.Item_No, DistinctItemLocationPurchLine.Variant_Code, '', DistinctItemLocationPurchLine.Location_Code) then
-                    this.AddRecord(DistinctItemLocationPurchLine.Item_No, DistinctItemLocationPurchLine.Variant_Code, '',
-                              DistinctItemLocationPurchLine.Location_Code, false, pDateFilter, NextRowNo);
+                    this.AddRecord(DistinctItemLocationPurchLine.Item_No, DistinctItemLocationPurchLine.Variant_Code, '', DistinctItemLocationPurchLine.Location_Code, false, NextRowNo);
     end;
 }

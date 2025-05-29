@@ -20,6 +20,7 @@ table 60300 DistinctItemLot
     Caption = 'Lots';
     DataClassification = CustomerContent;
     Extensible = false;
+    TableType = Temporary;
 
     fields
     {
@@ -30,14 +31,17 @@ table 60300 DistinctItemLot
         field(2; "Item No."; Code[20])
         {
             Caption = 'Item No.';
+            ToolTip = 'Specifies the value of the Item No. field.';
         }
         field(3; "Lot No."; Code[10])
         {
             Caption = 'Lot No.';
+            ToolTip = 'Specifies the value of the Lot No. field.';
         }
         field(4; "Location Code"; Code[10])
         {
             Caption = 'Location Code';
+            ToolTip = 'Specifies the value of the Location Code field.';
         }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue        
@@ -45,10 +49,12 @@ table 60300 DistinctItemLot
         field(5; "Item Description"; Text[100])
         {
             Caption = 'Item Description';
+            ToolTip = 'Specifies the value of the Item Description field.';
         }
         field(6; "Item Description 2"; Text[50])
         {
             Caption = 'Item Description 2';
+            ToolTip = 'Specifies the value of the Item Description 2 field.';
         }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1532 - Inv. Status Overflow Issue 
@@ -56,31 +62,38 @@ table 60300 DistinctItemLot
         field(7; "Search Description"; Text[100])
         {
             Caption = 'Search Description';
+            ToolTip = 'Specifies the value of the Search Description field.';
         }
         field(8; "Pack Size"; Text[30])
         {
             Caption = 'Pack Size';
+            ToolTip = 'Specifies the value of the Pack Size field.';
         }
         field(9; "Method of Catch"; Text[50])
         {
             Caption = 'Method of Catch';
+            ToolTip = 'Specifies the value of the Method of Catch field.';
         }
         field(10; "Country of Origin"; Text[30])
         {
             Caption = 'Country of Origin';
+            ToolTip = 'Specifies the value of the Country of Origin field.';
         }
         field(11; "Brand Code"; Code[20])
         {
             Caption = 'Brand Code';
+            ToolTip = 'Specifies the value of the Brand Code field.';
         }
         field(12; "Item Category Code"; Code[20])
         {
             Caption = 'Item Category Code';
             TableRelation = "Item Category";
+            ToolTip = 'Specifies the value of the Item Category Code field.';
         }
         field(13; "PO Number"; Code[20])
         {
             Caption = 'PO Number';
+            ToolTip = 'Specifies the value of the PO Number field.';
         }
         //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // field(14; "Alternate Lot No."; Code[20])
@@ -105,6 +118,7 @@ table 60300 DistinctItemLot
         {
             Caption = 'Buyer Code';
             TableRelation = "Salesperson/Purchaser";
+            ToolTip = 'Specifies the value of the Buyer Code field.';
         }
         field(18; "Vendor No."; Code[20])
         {
@@ -117,15 +131,18 @@ table 60300 DistinctItemLot
             Caption = 'Vendor Name';
             Editable = false;
             FieldClass = FlowField;
+            ToolTip = 'Specifies the value of the Vendor Name field.';
         }
         field(21; "Unit Cost"; Decimal)
         {
             Caption = 'Unit Cost';
             DecimalPlaces = 2 : 5;
+            ToolTip = 'Specifies the value of the Unit Cost field.';
         }
         field(22; "Receipt Date"; Date)
         {
             Caption = 'Receipt Date';
+            ToolTip = 'Specifies the value of the Receipt Date field.';
         }
         field(30; "On Hand Quantity"; Decimal)
         {
@@ -136,6 +153,7 @@ table 60300 DistinctItemLot
             DecimalPlaces = 0 : 0;
             Editable = false;
             FieldClass = FlowField;
+            ToolTip = 'Specifies the value of the On Hand Quantity field.';
         }
         field(31; "Total Quantity for Item Lot"; Decimal)
         {
@@ -171,11 +189,13 @@ table 60300 DistinctItemLot
             DecimalPlaces = 0 : 0;
             Editable = false;
             FieldClass = FlowField;
+            ToolTip = 'Specifies the value of the Qty. on Sales Orders field.';
         }
         field(34; "Total Available Quantity"; Decimal)
         {
             Caption = 'Available Qty.';
             DecimalPlaces = 0 : 0;
+            ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
         }
         field(35; "Total ILE Weight for Item Lot"; Decimal)
         {
@@ -208,22 +228,26 @@ table 60300 DistinctItemLot
             DecimalPlaces = 0 : 0;
             Editable = false;
             FieldClass = FlowField;
+            ToolTip = 'Specifies the value of the Net Weight on Sales Orders field.';
         }
         field(38; "Available Net Weight"; Decimal)
         {
             Caption = 'Available Weight';
             DecimalPlaces = 0 : 0;
+            ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
         }
         field(39; "On Hand Weight"; Decimal)
         {
             Caption = 'On Hand Weight';
             DecimalPlaces = 0 : 0;
             Editable = false;
+            ToolTip = 'Specifies the value of the On Hand Weight field.';
         }
         field(40; "Value of Inventory on Hand"; Decimal)
         {
             Caption = 'Value of Inventory on Hand.';
             DecimalPlaces = 2 : 2;
+            ToolTip = 'Specifies the value of the Value of Inventory on Hand. field.';
         }
         field(41; "Sales Order Filter"; Code[250])
         {
@@ -236,10 +260,12 @@ table 60300 DistinctItemLot
         field(42; "Expected Receipt Date"; Date)
         {
             Caption = 'Expected Receipt Date';
+            ToolTip = 'Specifies the value of the Expected Receipt Date field.';
         }
         field(43; "Variant Code"; Code[10])
         {
             Caption = 'Variant Code';
+            ToolTip = 'Specifies the value of the Variant Code field.';
         }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
@@ -249,12 +275,14 @@ table 60300 DistinctItemLot
             Caption = 'On Order Quantity';
             DecimalPlaces = 0 : 0;
             Editable = false;
+            ToolTip = 'Specifies the value of the On Order Quantity field.';
         }
         field(45; "On Order Weight 2"; Decimal)
         {
             Caption = 'On Order Weight';
             DecimalPlaces = 0 : 0;
             Editable = false;
+            ToolTip = 'Specifies the value of the On Order Weight field.';
         }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/926 - Add Sustainability Cert to Inv. Status Summary Pages
@@ -264,6 +292,7 @@ table 60300 DistinctItemLot
             Caption = 'Sustainability Certification';
             FieldClass = Normal;
             TableRelation = "OBF-Certification";
+            ToolTip = 'Specifies the value of the Sustainability Certification field.';
         }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/826 - Add Production and Expiration Dates to Misc. Pages
@@ -271,10 +300,12 @@ table 60300 DistinctItemLot
         field(60; "Production Date"; Date)
         {
             Caption = 'Production Date';
+            ToolTip = 'Specifies the value of the Production Date field.';
         }
         field(61; "Expiration Date"; Date)
         {
             Caption = 'Expiration Date';
+            ToolTip = 'Specifies the value of the Expiration Date field.';
         }
 
         /// <summary>
@@ -298,6 +329,7 @@ table 60300 DistinctItemLot
             Caption = 'On Hand Quantity';
             DecimalPlaces = 0 : 5;
             Editable = false;
+            ToolTip = 'Specifies the value of the On Hand Quantity field.';
         }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
@@ -313,6 +345,7 @@ table 60300 DistinctItemLot
             DecimalPlaces = 0 : 0;
             Editable = false;
             FieldClass = FlowField;
+            ToolTip = 'Specifies the value of the Qty. in Transit field.';
         }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
@@ -320,6 +353,7 @@ table 60300 DistinctItemLot
         field(96; "Container No."; Code[20])
         {
             Caption = 'Container No.';
+            ToolTip = 'Specifies the value of the Container No. field.';
         }
         //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // field(93; "Label Text"; Text[50])
@@ -338,6 +372,7 @@ table 60300 DistinctItemLot
         {
             Caption = 'Purchased For';
             TableRelation = "Salesperson/Purchaser";
+            ToolTip = 'Specifies the value of the Purchased For field.';
         }
     }
 
@@ -348,8 +383,9 @@ table 60300 DistinctItemLot
     }
 
 
+
     /// <summary>
-    ///https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
     /// </summary>
     /// <param name="ItemNo"></param>
     /// <param name="VariantCode"></param>
@@ -357,10 +393,9 @@ table 60300 DistinctItemLot
     /// <param name="LotNo"></param>
     /// <param name="OrderNo"></param>
     /// <returns></returns>
-    procedure CalcAvailableQtyExcludingOrder(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]; LotNo: Code[10]; OrderNo: Code[20]): Decimal
+    procedure CalcAvailableQtyExcludingOrder(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]; LotNo: Code[10]; OrderNo: Code[20]) AvailableQuantity: Decimal
     var
         TempDistinctItemLot: Record DistinctItemLot temporary;
-        AvailableQty: Decimal;
     begin
         TempDistinctItemLot."Entry No." := 1;
         TempDistinctItemLot."Item No." := ItemNo;
@@ -371,8 +406,6 @@ table 60300 DistinctItemLot
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
         //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         TempDistinctItemLot.CalcFields(TempDistinctItemLot."On Hand Quantity", TempDistinctItemLot."On Order Quantity", TempDistinctItemLot."Qty. on Sales Order"); // , DistinctItemLot."Qty. on Quality Hold"
-        AvailableQty := TempDistinctItemLot."On Hand Quantity" + TempDistinctItemLot."On Order Quantity" - TempDistinctItemLot."Qty. on Sales Order"; // - DistinctItemLot."Qty. on Quality Hold";
-
-        exit(AvailableQty);
+        AvailableQuantity := TempDistinctItemLot."On Hand Quantity" + TempDistinctItemLot."On Order Quantity" - TempDistinctItemLot."Qty. on Sales Order"; // - DistinctItemLot."Qty. on Quality Hold";
     end;
 }

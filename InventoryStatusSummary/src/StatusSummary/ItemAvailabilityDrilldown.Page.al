@@ -20,7 +20,6 @@ page 60302 ItemAvailabilityDrilldown
     Editable = false;
     PageType = List;
     SourceTable = ItemAvailabilityBuffer;
-    SourceTableTemporary = true;
     SourceTableView = sorting("Entry No.")
                       order(descending);
 
@@ -167,9 +166,13 @@ page 60302 ItemAvailabilityDrilldown
         }
     }
 
+    trigger OnOpenPage()
+    begin
+        Rec.SetAutoCalcFields("Lot Is On Hand");
+    end;
+
     trigger OnAfterGetRecord()
     begin
-        Rec.CalcFields("Lot Is On Hand");
         if Rec."Lot No." = '' then
             this.LotOnHandText := ''
         else

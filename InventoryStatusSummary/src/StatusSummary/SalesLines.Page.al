@@ -115,11 +115,11 @@ page 60304 SalesLines
                 /// <summary>
                 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1477 - Add Weight column to Sales Lines Page
                 /// </summary>
-                field("OBF-Line Net Weight"; Rec.SBSISSLineNetWeight)
-                {
-                    Caption = 'Line Net Weight';
-                    ToolTip = 'Specifies the value of the Line Net Weight field.';
-                }
+                // field("OBF-Line Net Weight"; Rec.SBSISSLineNetWeight)
+                // {
+                //     Caption = 'Line Net Weight';
+                //     ToolTip = 'Specifies the value of the Line Net Weight field.';
+                // }
                 field("Qty. to Ship"; Rec."Qty. to Ship")
                 {
                     ApplicationArea = Basic, Suite;

@@ -3,7 +3,6 @@ namespace SilverBay.Inventory.StatusSummary;
 using Microsoft.CRM.Team;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
-using Microsoft.Purchases.Document;
 using Microsoft.Inventory.Item;
 
 /// <summary>
@@ -151,17 +150,4 @@ tableextension 60302 ReservationEntry extends "Reservation Entry"
         //     TableRelation = "Salesperson/Purchaser";
         // }
     }
-
-    /// <summary>
-    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
-    /// </summary>
-    internal procedure SBSISSSetPurchResEntryIsNegative()
-    begin
-        if (Rec."Source Type" = Database::"Purchase Line") and
-            (Rec."Source Subtype" = 1) and // Orders
-            (Rec."Qty. to Handle (Base)" < 0) then
-            Rec.SBSISSPurResEntryisNeg := true
-        else
-            Rec.SBSISSPurResEntryisNeg := false;
-    end;
 }

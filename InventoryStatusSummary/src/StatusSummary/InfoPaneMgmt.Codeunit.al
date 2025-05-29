@@ -28,79 +28,67 @@ codeunit 60300 InfoPaneMgmt
         PurchaserCard.RunModal();
     end;
 
-    procedure CalcInventoryValue(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date): Decimal
+    procedure CalcInventoryOnHandTotalValue(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date) InventoryOnHandTotalValue: Decimal
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
-        TotalValueOfInventoryOnHand: Decimal;
     begin
         ItemLedgerEntry.Reset();
         ItemLedgerEntry.SetCurrentKey("Item No.", "Location Code", "Lot No.", "Serial No.");
         ItemLedgerEntry.SetRange("Item No.", ItemNo);
         ItemLedgerEntry.SetFilter("Lot No.", '<>%1', '');
+
         if not IncludeAllVariants then
             ItemLedgerEntry.SetRange("Variant Code", VariantCode);
         if AsOfDate <> 0D then
             ItemLedgerEntry.SetRange("Posting Date", 0D, AsOfDate);
-        TotalValueOfInventoryOnHand := 0;
-        if ItemLedgerEntry.FindSet() then
-            repeat
-                ItemLedgerEntry.CalcFields("Cost Amount (Actual)", "Cost Amount (Expected)");
-                TotalValueOfInventoryOnHand += ItemLedgerEntry."Cost Amount (Actual)" + ItemLedgerEntry."Cost Amount (Expected)";
-            until ItemLedgerEntry.Next() = 0;
-        exit(TotalValueOfInventoryOnHand);
+
+        ItemLedgerEntry.CalcFields("Cost Amount (Actual)", "Cost Amount (Expected)");
+
+        InventoryOnHandTotalValue := ItemLedgerEntry."Cost Amount (Actual)" + ItemLedgerEntry."Cost Amount (Expected)";
     end;
 
-    procedure CalcOnHandCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean): Decimal
-    var
-        ReservEntry: Record "Reservation Entry";
-        TotalOnHandCommitted: Decimal;
-
-    begin
-        ReservEntry.Reset();
-        ReservEntry.SetRange("Item No.", ItemNo);
-        ReservEntry.SetRange(Positive, false);
-        ReservEntry.SetFilter("Lot No.", '<>%1', '');
-        ReservEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservEntry.SetRange(SBSISSLotIsOnHand, true);
-        if not IncludeAllVariants then
-            ReservEntry.SetRange("Variant Code", VariantCode);
-        TotalOnHandCommitted := 0;
-        if ReservEntry.FindSet() then
-            repeat
-                TotalOnHandCommitted += Abs(ReservEntry."Quantity (Base)");
-            until ReservEntry.Next() = 0;
-        exit(TotalOnHandCommitted);
-    end;
-
-
-    procedure CalcOnOrderCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean): Decimal
+    procedure CalcInventoryOnHandTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnHandTotalCommitted: Decimal
     var
         ReservationEntry: Record "Reservation Entry";
-        TotalSOReservation: Decimal;
     begin
-        TotalSOReservation := 0;
+        ReservationEntry.Reset();
+        ReservationEntry.SetRange("Item No.", ItemNo);
+        ReservationEntry.SetRange(Positive, false);
+        ReservationEntry.SetFilter("Lot No.", '<>%1', '');
+        ReservationEntry.SetRange("Source Type", Database::"Sales Line");
+        ReservationEntry.SetRange(SBSISSLotIsOnHand, true);
+
+        if not IncludeAllVariants then
+            ReservationEntry.SetRange("Variant Code", VariantCode);
+
+        ReservationEntry.CalcSums("Quantity (Base)");
+
+        InventoryOnHandTotalCommitted := Abs(ReservationEntry."Quantity (Base)");
+    end;
+
+    procedure CalcInventoryOnOrderTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnOrderTotalCommitted: Decimal
+    var
+        ReservationEntry: Record "Reservation Entry";
+    begin
         ReservationEntry.Reset();
         ReservationEntry.SetRange("Source Type", Database::"Sales Line");
         ReservationEntry.SetRange("Item No.", ItemNo);
         ReservationEntry.SetFilter("Lot No.", '<>%1', '');
+
         if not IncludeAllVariants then
             ReservationEntry.SetRange("Variant Code", VariantCode);
-        ReservationEntry.SetRange(SBSISSLotIsOnHand, false);
-        if ReservationEntry.FindSet() then
-            repeat
-                TotalSOReservation += Abs(ReservationEntry."Quantity (Base)");
-            until ReservationEntry.Next() = 0;
 
-        exit(TotalSOReservation);
+        ReservationEntry.SetRange(SBSISSLotIsOnHand, false);
+
+        ReservationEntry.CalcSums("Quantity (Base)");
+
+        InventoryOnOrderTotalCommitted := Abs(ReservationEntry."Quantity (Base)");
     end;
 
-    procedure CalcUnallocatedSO(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean): Decimal
+    procedure CalcOnOrderTotalUnallocated(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) OnOrderTotalUnallocated: Decimal
     var
         SalesLine: Record "Sales Line";
-        TempSalesLine2: Record "Sales Line" temporary;
         ItemTracking: Boolean;
-        lTotalUnallocatedSO: Decimal;
-        TrackingPercent: Decimal;
     begin
         SalesLine.SetRange("No.", ItemNo);
         SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
@@ -110,33 +98,22 @@ codeunit 60300 InfoPaneMgmt
             SalesLine.SetRange("Variant Code", VariantCode);
         if SalesLine.FindSet() then begin
             repeat
-                TrackingPercent := Round(SalesLine.SBSISSGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
-                if TrackingPercent <> 100 then begin
-                    TempSalesLine2.Init();
-                    TempSalesLine2.TransferFields(SalesLine);
-                    TempSalesLine2.Insert();
-                end;
+                if Round(SalesLine.SBSISSGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking)) <> 100 then
+                    SalesLine.Mark(true);
             until SalesLine.Next() = 0;
-            if TempSalesLine2.FindSet() then
-                repeat
-                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page - Original Code
-                    // SalesLineTemp2.CalcFields("OBF-Reserved Qty. (Base)");
-                    // lTotalUnallocatedSO += SalesLineTemp2.Quantity - SalesLineTemp2."OBF-Reserved Qty. (Base)";
-                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - End Original Code
 
-                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page
-                    lTotalUnallocatedSO += TempSalesLine2.Quantity - TempSalesLine2.SBSISSAllocatedQuantity;
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - End
-                until TempSalesLine2.Next() = 0;
+            SalesLine.MarkedOnly(true);
+            SalesLine.CalcSums(Quantity, SBSISSAllocatedQuantity);
+            OnOrderTotalUnallocated += SalesLine.Quantity - SalesLine.SBSISSAllocatedQuantity;
         end;
-        exit(lTotalUnallocatedSO);
     end;
 
-    procedure CheckItemTrackingCodeNotBlank(ItemNo: Code[20]; var Item: Record Item): Boolean
+    procedure CheckItemTrackingCodeNotBlank(ItemNo: Code[20]) ItemTrackingCodeNotBlank: Boolean
+    var
+        Item: Record Item;
     begin
-        if Item."No." <> ItemNo then
-            Item.Get(ItemNo);
-        exit(Item."Item Tracking Code" <> '');
+        Item.Get(ItemNo);
+        ItemTrackingCodeNotBlank := Item."Item Tracking Code" <> '';
     end;
 
     /// <summary>
@@ -204,6 +181,7 @@ codeunit 60300 InfoPaneMgmt
             ItemLedgerEntry.SetRange("Posting Date", 0D, AsOfDate);
         if (AsOfDate >= Today) or (AsOfDate = 0D) then
             ItemLedgerEntry.SetFilter("Remaining Quantity", '>%1', 0);
+
         ItemLedgerEntries.SetTableView(ItemLedgerEntry);
         ItemLedgerEntries.Run();
     end;
@@ -225,6 +203,7 @@ codeunit 60300 InfoPaneMgmt
         ItemLedgerEntry.SetRange("Variant Code", VariantCode);
         ItemLedgerEntry.SetRange("Lot No.", LotNo);
         ItemLedgerEntry.SetRange("Location Code", LocationCode);
+
         ItemLedgerEntries.SetTableView(ItemLedgerEntry);
         ItemLedgerEntries.Run();
     end;
@@ -240,6 +219,7 @@ codeunit 60300 InfoPaneMgmt
         if not IncludeAllVariants then
             PurchaseLine.SetRange("Variant Code", VariantCode);
         PurchaseLine.SetFilter("Outstanding Quantity", '<>%1', 0);
+
         if not PurchaseLine.IsEmpty then begin
             PurchaseLines.SetTableView(PurchaseLine);
             PurchaseLines.RunModal();
@@ -260,6 +240,7 @@ codeunit 60300 InfoPaneMgmt
             PurchaseLine.SetRange("No.", ItemNo);
             PurchaseLine.SetRange("Variant Code", VariantCode);
             PurchaseLine.SetRange("Location Code", LocationCode);
+
             PurchaseLines.SetTableView(PurchaseLine);
             PurchaseLines.RunModal();
         end else begin
@@ -269,6 +250,7 @@ codeunit 60300 InfoPaneMgmt
             ReservationEntry.SetRange("Variant Code", VariantCode);
             ReservationEntry.SetRange("Location Code", LocationCode);
             ReservationEntry.SetRange("Lot No.", LotNo);
+
             ReservationEntries.SetTableView(ReservationEntry);
             ReservationEntries.RunModal();
         end;
