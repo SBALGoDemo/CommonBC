@@ -1,3 +1,4 @@
 {
-    "CRS.NamespacePrefixToIgnore": "SilverBay.Integration"
+    "CRS.NamespacePrefixToIgnore": "SilverBay.Integration",
+    "CRS.ObjectNamePrefix": "SBSINT"
 }

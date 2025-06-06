@@ -22,7 +22,7 @@
     }
   ],
   "settings": {
-    "al.codeAnalyzers": [                
+    "al.codeAnalyzers": [    
       "${AppSourceCop}",
       "${CodeCop}",
       "${UICop}"
@@ -39,14 +39,14 @@
     "ALTB.CheckCommentTranslations": true,
     "CRS.DependencyGraph.IncludeTestApps": true,
     "CRS.DisableDefaultAlSnippets": true,
-    "CRS.ObjectNamePrefix": "",
+    "CRS.RemovePrefixFromFilename": true,
     "CRS.ExtensionObjectNamePattern": "<Prefix><BaseNameShort>",
     "CRS.FileNamePattern": "<ObjectNameShort>.<ObjectTypeShortPascalCase>.al",
     "CRS.FileNamePatternExtensions": "<ObjectNameShort>.<ObjectTypeShortPascalCase>.al",
     "CRS.FileNamePatternPageCustomizations": "<ObjectNameShort>.<ObjectTypeShortPascalCase>.al",
     "CRS.OnSaveAlFileAction": "Reorganize",
     "CRS.ReorganizeByNamespace": true,
-    "CRS.RenameWithGit": true,
+    "CRS.RenameWithGit": true,    
     "alOutline.addDataItemToReportColumnName": true,
     "alOutline.codeActionsOnSave": [
       "SortTableFields",
@@ -137,6 +137,7 @@
       "APIV",
       "asserterror",
       "codeunit",
+      "Coupa",
       "Debuggable",
       "fieldgroup",
       "fieldgroups",
@@ -144,6 +145,7 @@
       "pageextension",
       "Propertyto",
       "SBSCO",
+      "SBSINT",
       "silverbay",
       "Tmpl"
     ],
@@ -152,8 +154,6 @@
       "green": 196,
       "blue": 0,
       "alpha": 0.3
-    },
-    "CRS.NamespacePrefixToIgnore": "SilverBay.Common",
-    "al.compilationOptions": {}
+    }
   }
 }

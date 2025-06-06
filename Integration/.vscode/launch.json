@@ -41,7 +41,7 @@
             "server": "http://closest25sandbox/",
             "serverInstance": "BC",
             "authentication": "UserPassword",
-            "startupObjectId": 22,
+            "startupObjectId": 27,
             "breakOnError": "All",
             "breakOnRecordWrite": "None",
             "launchBrowser": true,

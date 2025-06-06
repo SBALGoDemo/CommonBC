@@ -8,7 +8,7 @@ using Microsoft.Integration.Graph;
 using Microsoft.API.V2;
 
 /// <summary>
-/// Created as a clone of MS standard page 30010 "APIV2 - Vendors"
+/// Created as a clone of MS standard page 30010 "SBSINTAPIV2 - Vendors"
 /// from https://github.com/microsoft/ALAppExtensions/tree/main/Apps/W1/APIV2 
 /// as of this commit: https://github.com/microsoft/ALAppExtensions/commit/11c183f667a5ac717823ae7774368847efb65a8c
 /// </summary>
@@ -285,27 +285,33 @@ page 60400 APIV2Vendors
                 }
 
 #if not CLEANEXCLUDEAPIV2
-                #region Add additional base app fields for Silver Bay / Orca Bay requirements here
+                #region Additional Base Application fields for Silver Bay / Orca Bay requirements here
 
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2656
+                /// </summary>
                 field(ourAccountNo; Rec."Our Account No.")
                 {
                     Caption = 'Our Account No.';
-                    Description = 'https://odydev.visualstudio.com/ThePlan/_workitems/edit/2656';
 
                     trigger OnValidate()
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Our Account No."));
+                        this.RegisterFieldSet(Rec.FieldNo("Our Account No."));
                     end;
                 }
 
-                #endregion
+                #endregion Additional Base Application fields
 
-                #region Add custom Silver Bay / Orca Bay fields here                
+                #region Custom fields for Silver Bay / Orca Bay requirements here                
 
+                #region Sample
+
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/SOMEWORKITEM#
+                /// </summary>
                 // field(oBFSBSSomeCustomField; Rec."OBF/SBS Some Custom Field")
                 // {
                 // Caption = 'OBF/SBS Some Custom Field';
-                // Description = 'https://odydev.visualstudio.com/ThePlan/_workitems/edit/SOMEWORKITEM#';
 
                 // trigger OnValidate()
                 // begin
@@ -313,7 +319,18 @@ page 60400 APIV2Vendors
                 // end;                
                 // }
 
-                #endregion
+                #endregion Sample
+
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2798
+                /// </summary>                
+                field(isCoupaVendor; Rec.SBSINTIsCoupaVendor)
+                {
+                    Caption = 'Is Coupa Vendor';
+                    Editable = false;
+                }
+
+                #endregion Custom fields for Silver Bay / Orca Bay requirements here
 #endif
 
                 part(picture; "APIV2 - Pictures")
