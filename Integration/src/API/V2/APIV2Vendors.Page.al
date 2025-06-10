@@ -286,7 +286,6 @@ page 60400 APIV2Vendors
 
 #if not CLEANEXCLUDEAPIV2
                 #region Additional Base Application fields for Silver Bay / Orca Bay requirements here
-
                 /// <summary>
                 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2656
                 /// </summary>
@@ -299,37 +298,21 @@ page 60400 APIV2Vendors
                         this.RegisterFieldSet(Rec.FieldNo("Our Account No."));
                     end;
                 }
-
                 #endregion Additional Base Application fields
 
-                #region Custom fields for Silver Bay / Orca Bay requirements here                
-
-                #region Sample
-
-                /// <summary>
-                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/SOMEWORKITEM#
-                /// </summary>
-                // field(oBFSBSSomeCustomField; Rec."OBF/SBS Some Custom Field")
-                // {
-                // Caption = 'OBF/SBS Some Custom Field';
-
-                // trigger OnValidate()
-                // begin
-                //     RegisterFieldSet(Rec.FieldNo("OBF/SBS Some Custom Field"));
-                // end;                
-                // }
-
-                #endregion Sample
-
+                #region Custom fields for Silver Bay / Orca Bay requirements here
                 /// <summary>
                 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2798
                 /// </summary>                
                 field(isCoupaVendor; Rec.SBSINTIsCoupaVendor)
                 {
                     Caption = 'Is Coupa Vendor';
-                    Editable = false;
-                }
 
+                    trigger OnValidate()
+                    begin
+                        this.RegisterFieldSet(Rec.FieldNo(SBSINTIsCoupaVendor));
+                    end;
+                }
                 #endregion Custom fields for Silver Bay / Orca Bay requirements here
 #endif
 

@@ -39,7 +39,7 @@
     "ALTB.CheckCommentTranslations": true,
     "CRS.DependencyGraph.IncludeTestApps": true,
     "CRS.DisableDefaultAlSnippets": true,
-    "CRS.RemovePrefixFromFilename": true,
+    "CRS.RemovePrefixFromFilename": true,    
     "CRS.ExtensionObjectNamePattern": "<Prefix><BaseNameShort>",
     "CRS.FileNamePattern": "<ObjectNameShort>.<ObjectTypeShortPascalCase>.al",
     "CRS.FileNamePatternExtensions": "<ObjectNameShort>.<ObjectTypeShortPascalCase>.al",

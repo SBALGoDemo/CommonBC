@@ -2,6 +2,7 @@ namespace SilverBay.Integration.TestTools.Configuration;
 
 using System.TestTools.TestRunner;
 using SilverBay.Integration.API.V2;
+using SilverBay.Integration.Purchases.Vendor;
 
 codeunit 80402 APITestSuiteInstall
 {
@@ -19,7 +20,7 @@ codeunit 80402 APITestSuiteInstall
         TestSuiteMgt: Codeunit "Test Suite Mgt.";
         SuiteName: Code[10];
     begin
-        SuiteName := 'API.V2';
+        SuiteName := 'SBSINT';
 
         if ALTestSuite.Get(SuiteName) then
             ALTestSuite.Delete(true);
@@ -27,7 +28,7 @@ codeunit 80402 APITestSuiteInstall
         TestSuiteMgt.CreateTestSuite(SuiteName);
         ALTestSuite.Get(SuiteName);
 
-        TestSuiteMgt.SelectTestMethodsByRange(ALTestSuite, StrSubstNo('%1', Codeunit::APIV2VendorsE2E));
+        TestSuiteMgt.SelectTestMethodsByRange(ALTestSuite, StrSubstNo('%1|%2', Codeunit::APIV2VendorsE2E, Codeunit::IsCoupaVendorUTVendor));
         TestSuiteMgt.ChangeTestRunner(ALTestSuite, Codeunit::"Test Runner - Isol. Disabled");
     end;
 }

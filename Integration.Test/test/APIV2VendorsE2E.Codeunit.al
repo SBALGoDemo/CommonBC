@@ -7,9 +7,10 @@ using Microsoft.Bank.BankAccount;
 using Microsoft.Foundation.PaymentTerms;
 using Microsoft.API.V2;
 #endif
+using SilverBay.Integration.Purchases.Vendor;
 
 /// <summary>
-/// Created as a clone of MS standard codeunit 139803 "APIV2 - Vendors E2E"
+/// Created as a clone of MS standard codeunit 139803 "SBSINTAPIV2 - Vendors E2E"
 /// from https://github.com/microsoft/ALAppExtensions/tree/main/Apps/W1/APIV2 
 /// as of this commit: https://github.com/microsoft/ALAppExtensions/commit/2be607112452c135c5a61a9681f03a524b8ed04d
 /// </summary>
@@ -114,8 +115,13 @@ codeunit 80400 APIV2VendorsE2E
 #endif
     end;
 
+#if CLEANEXCLUDEAPIV2
     [Test]
-    procedure TestCreateVendorWithTemplate()
+    procedure TestCreateVendorWithTemplate()    
+#else
+    [Test]
+    procedure TestCreateVendorWithOurAccountNoFromTemplate()
+#endif    
     var
         ConfigTmplSelectionRules: Record "Config. Tmpl. Selection Rules";
         TempVendor: Record "Vendor" temporary;
@@ -189,6 +195,57 @@ codeunit 80400 APIV2VendorsE2E
         ConfigTmplSelectionRules.DELETE(true);
     end;
 
+#if not CLEANEXCLUDEAPIV2
+    [Test]
+    procedure TestCreateVendorWithIsCoupaVendorFromTemplate()
+    var
+        ConfigTmplSelectionRules: Record "Config. Tmpl. Selection Rules";
+        TempVendor: Record "Vendor" temporary;
+        Vendor: Record "Vendor";
+        PaymentMethod: Record "Payment Method";
+        RequestBody: Text;
+        ResponseText: Text;
+        TargetURL: Text;
+        TemplateIsCoupaVendor: Boolean;
+    begin
+        // [FEATURE] [Template]
+        // [SCENARIO 201343] User can create a new vendor and have the system apply a template.
+        Initialize();
+        this.LibraryInventory.CreatePaymentMethod(PaymentMethod);
+        TemplateIsCoupaVendor := true;
+
+        // [GIVEN] A template selection rule exists to set the payment terms based on the payment method.
+        with Vendor do
+            LibraryGraphMgt.CreateSimpleTemplateSelectionRule(ConfigTmplSelectionRules, Page::APIV2Vendors, Database::Vendor,
+            FieldNo("Payment Method Code"), PaymentMethod.Code,
+                  FieldNo(SBSINTIsCoupaVendor), Format(TemplateIsCoupaVendor));
+
+        // [GIVEN] The user has constructed a vendor object containing a templated payment method code.
+        CreateSimpleVendor(TempVendor);
+        TempVendor."Payment Method Code" := PaymentMethod.Code;
+
+        RequestBody := GetSimpleVendorJSON(TempVendor);
+        RequestBody := LibraryGraphMgt.AddPropertytoJSON(RequestBody, 'paymentMethodId', PaymentMethod.SystemId);
+
+        // [WHEN] The user sends the request to the endpoint in a POST request.
+        TargetURL := LibraryGraphMgt.CreateTargetURL('', Page::APIV2Vendors, ServiceNameTxt);
+        LibraryGraphMgt.PostToWebService(TargetURL, RequestBody, ResponseText);
+
+        // [THEN] The response contains the sent vendor values and also the updated Payment Terms
+        TempVendor.SBSINTIsCoupaVendor := TemplateIsCoupaVendor;
+        this.VerifyVendorSimpleProperties(ResponseText, TempVendor, true);
+        VerifyVendorAddress(ResponseText, Vendor);
+
+        // [THEN] The vendor is created in the database with the payment terms set from the template.
+        Vendor.Get(TempVendor."No.");
+        this.VerifyVendorSimpleProperties(ResponseText, Vendor, true);
+        VerifyVendorAddress(ResponseText, Vendor);
+
+        // Cleanup
+        ConfigTmplSelectionRules.DELETE(true);
+    end;
+#endif
+
     [Test]
     procedure TestModifyVendor()
     var
@@ -209,6 +266,7 @@ codeunit 80400 APIV2VendorsE2E
         RequestBody := GetSimpleVendorJSON(TempVendor);
 #else
         TempVendor."Our Account No." := CopyStr(this.LibraryUtility.GenerateRandomText(MaxStrLen(Vendor."Our Account No.")), 1, MaxStrLen(Vendor."Our Account No."));
+        TempVendor.SBSINTIsCoupaVendor := true;
         RequestBody := this.GetSimpleVendorJSON(TempVendor, true);
 #endif        
 
@@ -276,6 +334,7 @@ codeunit 80400 APIV2VendorsE2E
 
         if IncludeCustomAPIFields then begin
             Vendor."Our Account No." := CopyStr(this.LibraryUtility.GenerateRandomText(MaxStrLen(Vendor."Our Account No.")), 1, MaxStrLen(Vendor."Our Account No."));
+            Vendor.SBSINTIsCoupaVendor := true;
             Vendor.Modify(true);
 
             Commit();
@@ -325,13 +384,17 @@ codeunit 80400 APIV2VendorsE2E
     begin
         CustomerJson := this.GetSimpleVendorJSON(Vendor);
 
-        if IncludeCustomAPIFields and (Vendor."Our Account No." = '') then
-            Vendor."Our Account No." := CopyStr(this.LibraryUtility.GenerateRandomText(MaxStrLen(Vendor."Our Account No.")), 1, MaxStrLen(Vendor."Our Account No."));
+        if IncludeCustomAPIFields then begin
+            if Vendor."Our Account No." = '' then
+                Vendor."Our Account No." := CopyStr(this.LibraryUtility.GenerateRandomText(MaxStrLen(Vendor."Our Account No.")), 1, MaxStrLen(Vendor."Our Account No."));
 
-        if IncludeCustomAPIFields then
             CustomerJson := this.LibraryGraphMgt.AddPropertytoJSON(CustomerJson, 'ourAccountNo', Vendor."Our Account No.");
 
-        SimpleVendorJSON := CustomerJson;
+            Vendor.SBSINTIsCoupaVendor := true;
+            CustomerJson := this.LibraryGraphMgt.AddPropertytoJSON(CustomerJson, 'isCoupaVendor', Vendor.SBSINTIsCoupaVendor);
+
+            SimpleVendorJSON := CustomerJson;
+        end;
     end;
 #endif
 
@@ -355,9 +418,21 @@ codeunit 80400 APIV2VendorsE2E
         this.VerifyVendorSimpleProperties(VendorJSON, Vendor);
 
         #region SBSINT - Add additional base app & custom fields for Silver Bay / Orca Bay requirements here
-        if IncludeCustomAPIFields then
+
+        if IncludeCustomAPIFields then begin
             this.VerifyPropertyInJSON(VendorJSON, 'ourAccountNo', Vendor."Our Account No.");
+            this.VerifyPropertyInJSON(VendorJSON, 'isCoupaVendor', GetBooleanAsJSONPropertyValueFormat(Vendor.SBSINTIsCoupaVendor));
+        end;
+
         #endregion SBSINT
+    end;
+
+    local procedure GetBooleanAsJSONPropertyValueFormat(BooleanField: Boolean) BooleanAsJSONPropertyValueFormat: Text
+    begin
+        if BooleanField then
+            BooleanAsJSONPropertyValueFormat := 'True'
+        else
+            BooleanAsJSONPropertyValueFormat := 'False';
     end;
 #endif
 
