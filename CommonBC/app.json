@@ -9,7 +9,7 @@
   "EULA": "https://www.silverbayseafoods.com/",
   "help": "https://www.silverbayseafoods.com/",
   "url": "https://www.silverbayseafoods.com/",
-  "logo": "SilverBaySeafoods.png",
+  "logo": "..\\SilverBaySeafoods.png",
   "platform": "25.0.0.0",
   "application": "25.0.0.0",
   "runtime": "14.0",  

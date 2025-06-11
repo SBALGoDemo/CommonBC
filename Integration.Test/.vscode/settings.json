@@ -1,13 +1,4 @@
 {
     "CRS.NamespacePrefixToIgnore": "SilverBay.Integration",
-    "cSpell.words": [
-        "APIV",
-        "CLEANSBSINT",
-        "EXCLUDEAPIV",
-        "GRAPHVENDOR",
-        "Propertyto",
-        "Responsetext",
-        "SBSINT",
-        "Tmpl"
-    ]
+    "CRS.ObjectNamePrefix": ""
 }
