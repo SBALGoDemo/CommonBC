@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Common.Inventory.Item;
 
 using Microsoft.CRM.Team;
 using Microsoft.Inventory.Item;
@@ -9,30 +9,36 @@ using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Document;
+using SilverBay.Common.Sales.Document;
+using SilverBay.Common.Inventory.Availability;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+/// Migrated from codeunit 50056 "OBF-Info Pane Mgmt"
 /// </summary>
-codeunit 60300 InfoPaneMgmt
+codeunit 60106 InfoPaneMgmt
 {
     Access = Internal;
 
-    procedure BuyerOnDrillDown(BuyerCode: Code[20])
-    var
-        Purchaser: Record "Salesperson/Purchaser";
-        PurchaserCard: Page "Salesperson/Purchaser Card";
-    begin
-        Purchaser.SetRange(Code, BuyerCode);
-        PurchaserCard.SetTableView(Purchaser);
-        PurchaserCard.RunModal();
-    end;
+    // [Obsolete('Migrated to procedure in table as part of https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay', '25.0')]
+    // procedure BuyerOnDrillDown(BuyerCode: Code[20])
+    // var
+    //     Purchaser: Record "Salesperson/Purchaser";
+    //     PurchaserCard: Page "Salesperson/Purchaser Card";
+    // begin
+    //     Purchaser.SetRange(Code, BuyerCode);
+    //     PurchaserCard.SetTableView(Purchaser);
+    //     PurchaserCard.RunModal();
+    // end;
 
     procedure CalcInventoryOnHandTotalValue(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date) InventoryOnHandTotalValue: Decimal
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
     begin
         ItemLedgerEntry.Reset();
+        ItemLedgerEntry.SetLoadFields("Cost Amount (Actual)", "Cost Amount (Expected)");
+        ItemLedgerEntry.SetAutoCalcFields("Cost Amount (Actual)", "Cost Amount (Expected)");
         ItemLedgerEntry.SetCurrentKey("Item No.", "Location Code", "Lot No.", "Serial No.");
         ItemLedgerEntry.SetRange("Item No.", ItemNo);
         ItemLedgerEntry.SetFilter("Lot No.", '<>%1', '');
@@ -42,9 +48,10 @@ codeunit 60300 InfoPaneMgmt
         if AsOfDate <> 0D then
             ItemLedgerEntry.SetRange("Posting Date", 0D, AsOfDate);
 
-        ItemLedgerEntry.CalcFields("Cost Amount (Actual)", "Cost Amount (Expected)");
-
-        InventoryOnHandTotalValue := ItemLedgerEntry."Cost Amount (Actual)" + ItemLedgerEntry."Cost Amount (Expected)";
+        if ItemLedgerEntry.FindSet(false) then
+            repeat
+                InventoryOnHandTotalValue += ItemLedgerEntry."Cost Amount (Actual)" + ItemLedgerEntry."Cost Amount (Expected)";
+            until ItemLedgerEntry.Next() = 0;
     end;
 
     procedure CalcInventoryOnHandTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnHandTotalCommitted: Decimal
@@ -56,7 +63,7 @@ codeunit 60300 InfoPaneMgmt
         ReservationEntry.SetRange(Positive, false);
         ReservationEntry.SetFilter("Lot No.", '<>%1', '');
         ReservationEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservationEntry.SetRange(SBSISSLotIsOnHand, true);
+        ReservationEntry.SetRange(SBSCOMLotIsOnHand, true);
 
         if not IncludeAllVariants then
             ReservationEntry.SetRange("Variant Code", VariantCode);
@@ -78,7 +85,7 @@ codeunit 60300 InfoPaneMgmt
         if not IncludeAllVariants then
             ReservationEntry.SetRange("Variant Code", VariantCode);
 
-        ReservationEntry.SetRange(SBSISSLotIsOnHand, false);
+        ReservationEntry.SetRange(SBSCOMLotIsOnHand, false);
 
         ReservationEntry.CalcSums("Quantity (Base)");
 
@@ -98,13 +105,13 @@ codeunit 60300 InfoPaneMgmt
             SalesLine.SetRange("Variant Code", VariantCode);
         if SalesLine.FindSet() then begin
             repeat
-                if Round(SalesLine.SBSISSGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking)) <> 100 then
+                if Round(SalesLine.SBSCOMGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking)) <> 100 then
                     SalesLine.Mark(true);
             until SalesLine.Next() = 0;
 
             SalesLine.MarkedOnly(true);
-            SalesLine.CalcSums(Quantity, SBSISSAllocatedQuantity);
-            OnOrderTotalUnallocated += SalesLine.Quantity - SalesLine.SBSISSAllocatedQuantity;
+            SalesLine.CalcSums(Quantity, SBSCOMAllocatedQuantity);
+            OnOrderTotalUnallocated += SalesLine.Quantity - SalesLine.SBSCOMAllocatedQuantity;
         end;
     end;
 
@@ -139,7 +146,7 @@ codeunit 60300 InfoPaneMgmt
     /// <param name="VariantCode"></param>
     /// <param name="LotNo"></param>
     /// <param name="LocationCode"></param>
-    procedure InTransitDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; LocationCode: Code[10])
+    procedure InTransitDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; LocationCode: Code[10])
     var
         ReservationEntry: Record "Reservation Entry";
         ReservationEntries: Page "Reservation Entries";
@@ -153,7 +160,7 @@ codeunit 60300 InfoPaneMgmt
         ReservationEntry.SetRange("Variant Code", VariantCode);
         ReservationEntry.SetRange("Location Code", LocationCode);
         ReservationEntry.SetRange("Lot No.", LotNo);
-        ReservationEntry.SetRange(SBSISSPurResEntryisNeg, true);
+        ReservationEntry.SetRange(SBSCOMPurResEntryisNeg, true);
         ReservationEntries.SetTableView(ReservationEntry);
         ReservationEntries.RunModal();
     end;
@@ -193,7 +200,7 @@ codeunit 60300 InfoPaneMgmt
     /// <param name="VariantCode"></param>
     /// <param name="LotNo"></param>
     /// <param name="LocationCode"></param>
-    procedure OnHandDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; LocationCode: Code[10])
+    procedure OnHandDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; LocationCode: Code[10])
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
         ItemLedgerEntries: Page "Item Ledger Entries";
@@ -226,7 +233,7 @@ codeunit 60300 InfoPaneMgmt
         end;
     end;
 
-    procedure OnOrderDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; LocationCode: Code[10])
+    procedure OnOrderDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; LocationCode: Code[10])
     var
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
@@ -295,36 +302,37 @@ codeunit 60300 InfoPaneMgmt
         end;
     end;
 
-    procedure SalesOrderAllocateToPO_Drilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
-    var
-        POReservationEntry: Record "Reservation Entry";
-        ReservationEntry: Record "Reservation Entry";
-        TempReservationEntry: Record "Reservation Entry" temporary;
-        AvailItemTrackLines: Page "Avail. - Item Tracking Lines";
-    begin
-        ReservationEntry.Reset();
-        ReservationEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservationEntry.SetRange("Item No.", ItemNo);
-        ReservationEntry.SetFilter("Lot No.", '<>%1', '');
-        POReservationEntry.Reset();
-        POReservationEntry.SetRange("Source Type", Database::"Sales Line");
-        POReservationEntry.SetRange("Item No.", ItemNo);
-        if not IncludeAllVariants then
-            ReservationEntry.SetRange("Variant Code", VariantCode);
-        if ReservationEntry.FindSet() then
-            repeat
-                POReservationEntry.SetRange("Lot No.", ReservationEntry."Lot No.");
-                if not POReservationEntry.IsEmpty then begin
-                    TempReservationEntry := TempReservationEntry;
-                    TempReservationEntry.Insert();
-                end;
-            until ReservationEntry.Next() = 0;
-        if not TempReservationEntry.IsEmpty then begin
-            AvailItemTrackLines.SetTableView(TempReservationEntry);
-            AvailItemTrackLines.RunModal();
-            ;
-        end;
-    end;
+    //TODO: Review later. O references currently
+    // procedure SalesOrderAllocateToPO_Drilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
+    // var
+    //     POReservationEntry: Record "Reservation Entry";
+    //     ReservationEntry: Record "Reservation Entry";
+    //     TempReservationEntry: Record "Reservation Entry" temporary;
+    //     AvailItemTrackLines: Page "Avail. - Item Tracking Lines";
+    // begin
+    //     ReservationEntry.Reset();
+    //     ReservationEntry.SetRange("Source Type", Database::"Sales Line");
+    //     ReservationEntry.SetRange("Item No.", ItemNo);
+    //     ReservationEntry.SetFilter("Lot No.", '<>%1', '');
+    //     POReservationEntry.Reset();
+    //     POReservationEntry.SetRange("Source Type", Database::"Sales Line");
+    //     POReservationEntry.SetRange("Item No.", ItemNo);
+    //     if not IncludeAllVariants then
+    //         ReservationEntry.SetRange("Variant Code", VariantCode);
+    //     if ReservationEntry.FindSet() then
+    //         repeat
+    //             POReservationEntry.SetRange("Lot No.", ReservationEntry."Lot No.");
+    //             if not POReservationEntry.IsEmpty then begin
+    //                 TempReservationEntry := TempReservationEntry;
+    //                 TempReservationEntry.Insert();
+    //             end;
+    //         until ReservationEntry.Next() = 0;
+    //     if not TempReservationEntry.IsEmpty then begin
+    //         AvailItemTrackLines.SetTableView(TempReservationEntry);
+    //         AvailItemTrackLines.RunModal();
+    //         ;
+    //     end;
+    // end;
 
     procedure ShowItem(ItemNo: Code[20])
     var
@@ -346,7 +354,7 @@ codeunit 60300 InfoPaneMgmt
         ItemAvailabilityDrilldown.RunModal();
     end;
 
-    procedure TotalAvailQtyDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; DateFilter: Date)
+    procedure TotalAvailQtyDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; DateFilter: Date)
     var
         ItemAvailabilityDrilldown: Page ItemAvailabilityDrilldown;
     begin

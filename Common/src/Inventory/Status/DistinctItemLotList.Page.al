@@ -1,11 +1,12 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Common.Inventory.Status;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
-using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
+using SilverBay.Common.Inventory.Item;
+using SilverBay.Common.Inventory.Tracking;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
@@ -18,8 +19,9 @@ using Microsoft.Purchases.History;
 /// Drilldowns moved to Info Pane Management codeunit
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1195 - Hold Functionality
 /// Replaced "Quantity on Quality Hold" with "Qty on Quality Hold"
+/// Migrated from page 50054 "OBF-Distinct Item Lots"
 /// </summary>
-page 60300 "Distinct Item Lot List"
+page 60104 DistinctItemLotList
 {
     ApplicationArea = All;
     Caption = 'Distinct Item Lots';
@@ -101,7 +103,8 @@ page 60300 "Distinct Item Lot List"
                     Editable = false;
                     Width = 10;
                 }
-                // TODO: REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: 20250617 Confirmed Don't need
+                // TODO: 20250617 REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Alternate Lot No."; "Alternate Lot No.")
                 // {
                 //     Editable = false;
@@ -126,7 +129,8 @@ page 60300 "Distinct Item Lot List"
                         this.InfoPaneMgmt.VendorOnDrillDown(Rec."Vendor No.");
                     end;
                 }
-                // TODO: REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: 20250617 Confirmed Don't need                
+                // TODO: 20250617 REVIEW LATER // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Label Text"; "Label Text")
                 // {
                 //     Editable = false;
@@ -172,7 +176,9 @@ page 60300 "Distinct Item Lot List"
                     Editable = false;
                     Width = 5;
                 }
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: 20250617 Confirmed Don't need
+
+                //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Qty. on Quality Hold"; "Qty. on Quality Hold")
                 // {
                 //     Editable = false;
@@ -280,7 +286,7 @@ page 60300 "Distinct Item Lot List"
                 {
                     trigger OnDrillDown()
                     begin
-                        this.InfoPaneMgmt.BuyerOnDrillDown(Rec."Buyer Code");
+                        Rec.BuyerOnDrillDown();
                     end;
                 }
                 /// <summary>
@@ -347,7 +353,7 @@ page 60300 "Distinct Item Lot List"
         Rec.SetFilter("On Hand Quantity", '<>%1', 0);
     end;
 
-    local procedure AddRecord(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[10]; NewLocation: Code[10]; FromILE: Boolean; var NewNextRowNo: Integer)
+    local procedure AddRecord(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[50]; NewLocation: Code[10]; FromILE: Boolean; var NewNextRowNo: Integer)
     var
         Item: Record Item;
         ItemLedgerEntry: Record "Item Ledger Entry";
@@ -372,16 +378,20 @@ page 60300 "Distinct Item Lot List"
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
         Rec.CalcFields("On Hand Quantity", "On Order Quantity", "Qty. on Sales Order", "On Hand Quantity", "Total ILE Weight for Item Lot", "On Order Weight", "Net Weight on Sales Order", "Qty. In Transit");
 
-        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        //TODO: 20250617 Confirmed Don't need
+        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // Rec.CalcFields("Qty. on Quality Hold");
 
         Rec."On Hand Quantity 2" := Rec."On Hand Quantity" - Rec."Qty. on Quality Hold";
 
         Rec."On Order Quantity 2" := Rec."On Order Quantity" + this.CalculateUnassigned(NewItemNo, NewVariantCode, NewLotNo, NewLocation);
 
-        //"On Order Weight 2" := "On Order Weight" + UnassignedPurchaseLineQty * Item."Net Weight";
+        //TODO: 20250617 Confirmed Don't need
+        //"On Order Weight 2" := "On Order Weight" + UnassignedPurchaseLineQty * Item."Net Weight"; //TODO: 20250617 Review this in the current code, remove if it is also commented in OrcaBay...
         Rec."On Order Weight 2" := Rec."On Order Quantity 2" * Item."Net Weight";
 
+        //TODO: 20250617 Confirmed Don't need
+        //TODO: 20250617 Review this in the current code, remove if it is also commented in OrcaBay...
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1079 - Inv. Status Page Improvements - commented out
         // if "On Order Quantity 2" < 0 then begin
         //     "On Order Quantity 2" := 0;
@@ -395,7 +405,8 @@ page 60300 "Distinct Item Lot List"
             Rec."Item Description 2" := Item."Description 2";
             Rec."Search Description" := Item."Search Description";
 
-            //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+            //TODO: 20250617 Confirmed Don't need
+            //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
             // Rec."Pack Size" := Item."OBF-Pack Size";
             // IF MethodofCatch.get(Item."OBF-Method of Catch") then
             //     Rec."Method of Catch" := MethodofCatch.Description;
@@ -417,7 +428,8 @@ page 60300 "Distinct Item Lot List"
             else
                 Rec."On Hand Weight" := 0;
 
-            //"Available Net Weight" := "On Hand Weight" + "On Order Weight 2" - "Net Weight on Sales Order";
+            //TODO: 20250617 Confirmed Don't need
+            //"Available Net Weight" := "On Hand Weight" + "On Order Weight 2" - "Net Weight on Sales Order"; //TODO: 20250617 Review this in the current code, remove if it is also commented in OrcaBay...
             Rec."Available Net Weight" := Rec."Total Available Quantity" * Item."Net Weight";
 
             if FromILE then begin
@@ -433,7 +445,8 @@ page 60300 "Distinct Item Lot List"
                         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/826 - Add Production and Expiration Dates to Misc. Pages
                         if ItemLedgerEntry.Quantity > 0 then
                             Rec."Expiration Date" := ItemLedgerEntry."Expiration Date";
-                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                        //TODO: 20250617 Confirmed Don't need
+                        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // Rec."OBF-Production Date" := ItemLedgerEntry."OBF-Production Date";
                         // // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1040 - Set Receipt Date on Item Ledger Entries
                         // Rec."Receipt Date" := ItemLedgerEntry."OBF-Receipt Date";
@@ -442,10 +455,13 @@ page 60300 "Distinct Item Lot List"
                         // // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
                         // Rec."Container No." := ItemLedgerEntry."OBF-Container No.";
 
-                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                        //TODO: 20250617 Confirmed Don't need
+                        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // if ItemVariantLotInfo.Get(pItemNo, pVariantCode, pLotNo, pLocation) then
                         //     Rec."Value of Inventory on Hand" := ItemVariantLotInfo."Value Of Inventory On Hand";
                         if ItemLedgerEntry."Document Type" = ItemLedgerEntry."Document Type"::"Purchase Receipt" then begin
+                            //TODO: 20250617 Confirmed Don't need
+                            //TODO: 20250617 Review this in the current code, remove if it is also commented in OrcaBay...
                             // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
                             // if ItemLedgerEntry."OBF-Purchase Order No." <> '' then
                             //     Rec."PO Number" := ItemLedgerEntry."OBF-Purchase Order No."
@@ -472,10 +488,10 @@ page 60300 "Distinct Item Lot List"
                     Rec."PO Number" := ReservationEntry."Source ID";
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
-                    Rec."Production Date" := ReservationEntry.SBSISSProductionDate;
+                    Rec."Production Date" := ReservationEntry.SBSCOMProductionDate;
                     Rec."Expiration Date" := ReservationEntry."Expiration Date";
-                    if ReservationEntry.SBSISSPurchaserCode <> '' then
-                        Rec."Buyer Code" := ReservationEntry.SBSISSPurchaserCode;
+                    if ReservationEntry.SBSCOMPurchaserCode <> '' then
+                        Rec."Buyer Code" := ReservationEntry.SBSCOMPurchaserCode;
 
                     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
                     if PurchaseLine.Get(PurchaseLine."Document Type"::Order, Rec."PO Number", ReservationEntry."Source Ref. No.") then begin
@@ -484,12 +500,14 @@ page 60300 "Distinct Item Lot List"
                         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
                         Rec."Vendor No." := PurchaseLine."Buy-from Vendor No.";
 
-                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                        //TODO: 20250617 Confirmed Don't need 
+                        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // Rec."Sustainability Certification" := PurchaseLine."OBF-Sustainability Cert.";
 
                         // // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
                         // Rec."Container No." := PurchaseLine."OBF-Container No.";
 
+                        //TODO: 20250617 Confirmed Don't need 
                         // // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1079 - Inv. Status Page Improvements
                         // // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1200 - Add "Purchase Unit Cost" field and related functionality
                         // PurchaseUnitCost := PurchaseLine."OBF-Purchase Unit Cost";
@@ -501,7 +519,6 @@ page 60300 "Distinct Item Lot List"
             if Rec."On Hand Weight" <> 0 then
                 Rec."Unit Cost" := Rec."Value of Inventory on Hand" / Rec."On Hand Weight"
             else
-
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1079 - Inv. Status Page Improvements
                 Rec."Unit Cost" := PurchaseUnitCost;
 
@@ -509,7 +526,7 @@ page 60300 "Distinct Item Lot List"
         end;
     end;
 
-    local procedure CalculateUnassigned(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[10]; NewLocationCode: Code[20]) UnassignedPurchaseLineQty: Decimal
+    local procedure CalculateUnassigned(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[50]; NewLocationCode: Code[20]) UnassignedPurchaseLineQty: Decimal
     var
         PurchaseLine: Record "Purchase Line";
     begin
@@ -532,7 +549,7 @@ page 60300 "Distinct Item Lot List"
         end;
     end;
 
-    local procedure RecordExists(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[10]) Result: Boolean
+    local procedure RecordExists(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[50]) Result: Boolean
     begin
         Rec.SetRange("Item No.", NewItemNo);
         Rec.SetRange("Lot No.", NewLotNo);

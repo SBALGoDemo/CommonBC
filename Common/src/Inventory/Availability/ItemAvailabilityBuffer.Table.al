@@ -1,4 +1,6 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Common.Inventory.Availability;
+
+// namespace Microsoft.Inventory.Availability;
 
 using Microsoft.Finance.Dimension;
 using Microsoft.Foundation.Address;
@@ -21,8 +23,9 @@ using Microsoft.Sales.Document;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 /// Note - This table is based on the Item Ledger Entry table.
+/// Migrated from table 50019 "OBF-Item Availability Buffer"
 /// </summary>
-table 60301 ItemAvailabilityBuffer
+table 60102 ItemAvailabilityBuffer
 {
     Access = Internal;
     Caption = 'Item Availability Buffer';
@@ -36,21 +39,25 @@ table 60301 ItemAvailabilityBuffer
         field(1; "Entry No."; Integer)
         {
             Caption = 'Entry No.';
+            ToolTip = 'Specifies the entry number for the entry.';
         }
         field(2; "Item No."; Code[20])
         {
             Caption = 'Item No.';
             TableRelation = Item;
+            ToolTip = 'Specifies the number of the item in the entry.';
         }
         field(3; "Posting Date"; Date)
         {
             Caption = 'Posting/Receipt /Shipment Date';
+            ToolTip = 'Specifies the posting date for the entry.';
         }
         field(4; "Entry Type"; Option)
         {
             Caption = 'Entry Type';
             OptionCaption = 'Purchase,Sale,Positive Adjmt.,Negative Adjmt.,Transfer,Consumption,Output, ,Assembly Consumption,Assembly Output';
             OptionMembers = Purchase,Sale,"Positive Adjmt.","Negative Adjmt.",Transfer,Consumption,Output," ","Assembly Consumption","Assembly Output";
+            ToolTip = 'Specifies which type of transaction that the entry is created from.';
         }
         field(5; "Source No."; Code[20])
         {
@@ -64,25 +71,30 @@ table 60301 ItemAvailabilityBuffer
         field(6; "Document No."; Code[20])
         {
             Caption = 'Document No.';
+            ToolTip = 'Specifies the document number on the entry. The document is the voucher that the entry was based on, for example, a receipt.';
         }
         field(7; Description; Text[100])
         {
             Caption = 'Description';
+            ToolTip = 'Specifies a description of the entry.';
         }
         field(8; "Location Code"; Code[10])
         {
             Caption = 'Location Code';
             TableRelation = Location;
+            ToolTip = 'Specifies the code for the location that the entry is linked to.';
         }
         field(12; Quantity; Decimal)
         {
             Caption = 'Quantity';
             DecimalPlaces = 0 : 5;
+            ToolTip = 'Specifies the value of the Quantity field.';
         }
         field(13; "Remaining Quantity"; Decimal)
         {
             Caption = 'Remaining Quantity';
             DecimalPlaces = 0 : 5;
+            ToolTip = 'Specifies the quantity in the Quantity field that remains to be processed or the quantity that is reserved on sales or purchase orders.';
         }
         field(14; "Invoiced Quantity"; Decimal)
         {
@@ -172,10 +184,12 @@ table 60301 ItemAvailabilityBuffer
             Caption = 'Document Type';
             OptionCaption = '" ,Sales Shipment,Sales Invoice,Sales Return Receipt,Sales Credit Memo,Purchase Receipt,Purchase Invoice,Purchase Return Shipment,Purchase Credit Memo,Transfer Shipment,Transfer Receipt,Service Shipment,Service Invoice,Service Credit Memo,Posted Assembly,,,,Direct Transfer,,,,,,,,,,Sales Order,Purchase Order"';
             OptionMembers = " ","Sales Shipment","Sales Invoice","Sales Return Receipt","Sales Credit Memo","Purchase Receipt","Purchase Invoice","Purchase Return Shipment","Purchase Credit Memo","Transfer Shipment","Transfer Receipt","Service Shipment","Service Invoice","Service Credit Memo","Posted Assembly",,,,"Direct Transfer",,,,,,,,,,"Sales Order","Purchase Order";
+            ToolTip = 'Specifies what type of document was posted to create the item ledger entry.';
         }
         field(80; "Document Line No."; Integer)
         {
             Caption = 'Document Line No.';
+            ToolTip = 'Specifies the number of the line on the posted document that corresponds to the item ledger entry.';
         }
         field(90; "Order Type"; Option)
         {
@@ -233,6 +247,7 @@ table 60301 ItemAvailabilityBuffer
         {
             Caption = 'Variant Code';
             TableRelation = "Item Variant".Code where("Item No." = field("Item No."));
+            ToolTip = 'Specifies the variant of the item on the line.';
         }
         field(5404; "Qty. per Unit of Measure"; Decimal)
         {
@@ -272,6 +287,7 @@ table 60301 ItemAvailabilityBuffer
         {
             Caption = 'Item Category Code';
             TableRelation = "Item Category";
+            ToolTip = 'Specifies the value of the Item Category Code field.';
         }
         field(5705; Nonstock; Boolean)
         {
@@ -397,6 +413,7 @@ table 60301 ItemAvailabilityBuffer
         field(6501; "Lot No."; Code[250])
         {
             Caption = 'Lot No.';
+            ToolTip = 'Specifies a lot number if the posted item carries such a number.';
         }
         field(6502; "Warranty Date"; Date)
         {
@@ -405,6 +422,7 @@ table 60301 ItemAvailabilityBuffer
         field(6503; "Expiration Date"; Date)
         {
             Caption = 'Expiration Date';
+            ToolTip = 'Specifies the last date that the item on the line can be used.';
         }
         field(6510; "Item Tracking"; Option)
         {
@@ -421,6 +439,7 @@ table 60301 ItemAvailabilityBuffer
         field(60300; "Entry No. 2"; Integer)
         {
             Caption = 'Entry No.';
+            ToolTip = 'Specifies the entry number for the entry.';
         }
         field(60301; "Date Filter"; Date)
         {

@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Common.Inventory.Availability;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
@@ -11,8 +11,9 @@ using Microsoft.Sales.Document;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+/// Migrated from page 50058 "OBF-Item Avail. Drilldown"
 /// </summary>
-page 60302 ItemAvailabilityDrilldown
+page 60105 ItemAvailabilityDrilldown
 {
     ApplicationArea = All;
     Caption = 'Item Availability Drilldown';
@@ -33,55 +34,45 @@ page 60302 ItemAvailabilityDrilldown
                 field("Posting Date"; Rec."Posting Date")
                 {
                     Caption = 'Posting/Receipt /Shipment Date';
-                    ToolTip = 'Specifies the posting date for the entry.';
                 }
                 field("Entry Type"; Rec."Entry Type")
                 {
                     Caption = 'Entry Type';
-                    ToolTip = 'Specifies which type of transaction that the entry is created from.';
                 }
                 field("Document Type"; Rec."Document Type")
                 {
                     Caption = 'Document Type';
-                    ToolTip = 'Specifies what type of document was posted to create the item ledger entry.';
                 }
                 field("Document No."; Rec."Document No.")
                 {
                     Caption = 'Document No.';
-                    ToolTip = 'Specifies the document number on the entry. The document is the voucher that the entry was based on, for example, a receipt.';
                 }
                 field("Document Line No."; Rec."Document Line No.")
                 {
                     BlankZero = true;
                     Caption = 'Document Line No.';
-                    ToolTip = 'Specifies the number of the line on the posted document that corresponds to the item ledger entry.';
                     Visible = false;
                 }
                 field("Item No."; Rec."Item No.")
                 {
                     Caption = 'Item No.';
-                    ToolTip = 'Specifies the number of the item in the entry.';
                 }
                 field("Variant Code"; Rec."Variant Code")
                 {
                     Caption = 'Variant Code';
-                    ToolTip = 'Specifies the variant of the item on the line.';
                 }
                 field(Description; Rec.Description)
                 {
                     Caption = 'Description';
-                    ToolTip = 'Specifies a description of the entry.';
                     Width = 30;
                 }
                 field("Expiration Date"; Rec."Expiration Date")
                 {
                     Caption = 'Expiration Date';
-                    ToolTip = 'Specifies the last date that the item on the line can be used.';
                 }
                 field("Lot No."; Rec."Lot No.")
                 {
                     Caption = 'Lot No.';
-                    ToolTip = 'Specifies a lot number if the posted item carries such a number.';
                 }
                 field(LotOnHandText; this.LotOnHandText)
                 {
@@ -91,7 +82,6 @@ page 60302 ItemAvailabilityDrilldown
                 field("Location Code"; Rec."Location Code")
                 {
                     Caption = 'Location Code';
-                    ToolTip = 'Specifies the code for the location that the entry is linked to.';
                     Width = 10;
                 }
                 field(Quantity; Rec.Quantity)
@@ -99,31 +89,26 @@ page 60302 ItemAvailabilityDrilldown
                     ApplicationArea = Basic, Suite;
                     BlankZero = true;
                     Caption = 'Quantity';
-                    ToolTip = 'Specifies the value of the Quantity field.';
                     Visible = false;
                 }
                 field("Remaining Quantity"; Rec."Remaining Quantity")
                 {
                     BlankZero = true;
                     Caption = 'Remaining / Reserved Qty.';
-                    ToolTip = 'Specifies the quantity in the Quantity field that remains to be processed or the quantity that is reserved on sales or purchase orders.';
                 }
                 field("Entry No."; Rec."Entry No.")
                 {
                     Caption = 'Entry No.';
-                    ToolTip = 'Specifies the entry number for the entry.';
                     Visible = false;
                 }
                 field("Entry No. 2"; Rec."Entry No. 2")
                 {
                     BlankZero = true;
                     Caption = 'Entry No.';
-                    ToolTip = 'Specifies the entry number for the entry.';
                 }
                 field("Item Category Code"; Rec."Item Category Code")
                 {
                     Caption = 'Item Category Code';
-                    ToolTip = 'Specifies the value of the Item Category Code field.';
                 }
             }
         }
@@ -201,7 +186,7 @@ page 60302 ItemAvailabilityDrilldown
         Rec.FindLast();
     end;
 
-    internal procedure SetItemLotData(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; AsOfDate: Date)
+    internal procedure SetItemLotData(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; AsOfDate: Date)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
         NextEntryNo: Integer;
@@ -218,7 +203,7 @@ page 60302 ItemAvailabilityDrilldown
         Rec.FindLast();
     end;
 
-    local procedure AddILERemainingQtyToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
+    local procedure AddILERemainingQtyToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; ShowAllVariants: Boolean; AsOfDate: Date; var NextEntryNo: Integer)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
     begin
@@ -274,14 +259,15 @@ page 60302 ItemAvailabilityDrilldown
                 Rec."Item Category Code" := Item."Item Category Code";
                 Rec."Location Code" := PurchaseLine."Location Code";
 
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: 20250617 - would like to migrate this field now to be able to uncomment this code if feasible. Spend a few minutes examining PurchaseLine."OBF-Lot No." to ensure we could bring it into the solution w/o creating issues   
+                //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 //Rec."Lot No." := PurchaseLine."OBF-Lot No.";
 
                 Rec.Insert();
             until PurchaseLine.Next() = 0;
     end;
 
-    local procedure AddPurchaseReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
+    local procedure AddPurchaseReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
     var
         Item: Record Item;
         PurchaseHeader: Record "Purchase Header";
@@ -324,7 +310,7 @@ page 60302 ItemAvailabilityDrilldown
             until ReservEntry.Next() = 0;
     end;
 
-    local procedure AddSalesReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[10]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
+    local procedure AddSalesReservToBuffer(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; ShowAllVariants: Boolean; var NextEntryNo: Integer)
     var
         Item: Record Item;
         ReservEntry: Record "Reservation Entry";

@@ -1,13 +1,15 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Common.Inventory.Item;
 
 using Microsoft.Inventory.Item;
+using SilverBay.Common.Inventory.Status;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
+/// Migrated from page 50057 "OBF-Item Factbox"
 /// </summary>
-page 60303 "Item Factbox"
+page 60103 "Item Factbox"
 {
     ApplicationArea = All;
     Caption = 'Item Details - Summary';
@@ -57,7 +59,8 @@ page 60303 "Item Factbox"
                         this.InfoPaneMgmt.OnHandDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
                     end;
                 }
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: 20250617 Confirmed Don't need
+                //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Qty on Quality Hold"; QtyOnQualityHold)
                 // {
                 //     Caption = 'Quality Hold';
@@ -124,7 +127,7 @@ page 60303 "Item Factbox"
                     ToolTip = 'Specifies the value of the On-Hand Available field.';
                     trigger OnDrillDown()
                     var
-                        DistinctItemLotList: Page "Distinct Item Lot List";
+                        DistinctItemLotList: Page DistinctItemLotList;
                     begin
                         Message('This drilldown is not fully implemented yet. Please contact support.');
                         if this.ShowAllVariants then
@@ -142,7 +145,7 @@ page 60303 "Item Factbox"
                     ToolTip = 'Specifies the value of the On-Hand Available (Weight) field.';
                     trigger OnDrillDown()
                     var
-                        DistinctItemLotList: Page "Distinct Item Lot List";
+                        DistinctItemLotList: Page DistinctItemLotList;
                     begin
                         Message('This drilldown is not fully implemented yet. Please contact support.');
                         if this.ShowAllVariants then
@@ -264,11 +267,12 @@ page 60303 "Item Factbox"
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
         Rec.CalcFields(Inventory, "Qty. on Purch. Order");
-        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        //TODO: 20250617 Confirmed Don't need
+        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // Rec.CalcFields("OBF-Qty on Quality Hold");
-        this.TotalQty := Rec.Inventory - Rec.SBSISSQtyonQualityHold;
-        // this.QtyOnQualityHold := Rec.SBSISSQtyonQualityHold;//TODO: Review Later
-        this.TotalOnHandWeight := (Rec.Inventory - Rec.SBSISSQtyonQualityHold) * Rec."Net Weight";
+        this.TotalQty := Rec.Inventory - Rec.SBSCOMQtyonQualityHold; //TODO: 20250617 Confirmed Don't need
+        // this.QtyOnQualityHold := Rec.SBSCOMQtyonQualityHold; //TODO: 20250617 Confirmed Don't need //TODO: 20250617 Review this in the current code, remove if it is also commented in OrcaBay...
+        this.TotalOnHandWeight := (Rec.Inventory - Rec.SBSCOMQtyonQualityHold) * Rec."Net Weight"; //TODO: 20250617 Confirmed Don't need
 
         this.OnOrderQty := Rec."Qty. on Purch. Order";
         this.OnOrderWeight := this.OnOrderQty * Rec."Net Weight";
@@ -276,11 +280,11 @@ page 60303 "Item Factbox"
         this.OnOrderCommittedWeight := this.OnOrderCommitted * Rec."Net Weight";
         this.OnHandCommitted := this.InfoPaneMgmt.CalcInventoryOnHandTotalCommitted(Rec."No.", this.VariantCode, this.ShowAllVariants);
         this.OnHandCommittedWeight := this.OnHandCommitted * Rec."Net Weight";
-        this.OnHandAvailable := Rec.Inventory - this.OnHandCommitted - Rec.SBSISSQtyonQualityHold;
+        this.OnHandAvailable := Rec.Inventory - this.OnHandCommitted - Rec.SBSCOMQtyonQualityHold;
         this.OnHandAvailableWeight := this.TotalOnHandWeight - this.OnHandCommittedWeight;
         this.UnallocatedSOQty := this.InfoPaneMgmt.CalcOnOrderTotalUnallocated(Rec."No.", this.VariantCode, this.ShowAllVariants);
         this.UnallocatedSOWeight := this.UnallocatedSOQty * Rec."Net Weight";
-        this.TotalAvailableQuantity := Rec.Inventory + this.OnOrderQty - this.OnHandCommitted - this.OnOrderCommitted - Rec.SBSISSQtyonQualityHold;
+        this.TotalAvailableQuantity := Rec.Inventory + this.OnOrderQty - this.OnHandCommitted - this.OnOrderCommitted - Rec.SBSCOMQtyonQualityHold;
         this.TotalAvailableWeight := this.TotalOnHandWeight + this.OnOrderWeight - this.OnHandCommittedWeight - this.OnOrderCommittedWeight;
         this.TotalValueOfInventoryOnHand := this.InfoPaneMgmt.CalcInventoryOnHandTotalValue(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
         if this.TotalOnHandWeight <> 0 then
@@ -303,7 +307,7 @@ page 60303 "Item Factbox"
         OnOrderCommittedWeight: Decimal;
         OnOrderQty: Decimal;
         OnOrderWeight: Decimal;
-        // QtyOnQualityHold: Decimal;//TODO: Review Later
+        // QtyOnQualityHold: Decimal;//TODO: 20250617 Confirmed Don't need //TODO: 20250617 Review Later
         TotalAvailableQuantity: Decimal;
         TotalAvailableWeight: Decimal;
         TotalOnHandWeight: Decimal;

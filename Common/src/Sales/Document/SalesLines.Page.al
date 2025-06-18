@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Common.Sales.Document;
 
 using Microsoft.Finance.Dimension;
 using Microsoft.Inventory.Tracking;
@@ -9,8 +9,9 @@ using Microsoft.Utilities;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
 /// This is a copy of the standard "Sales Lines" page with SourceTableTemporary set to true 
+/// Migrated from page 50071 "OBF-Sales Lines"
 /// </summary>
-page 60304 SalesLines
+page 60102 SalesLines
 {
     ApplicationArea = All;
     Caption = 'Sales Lines';
@@ -52,6 +53,7 @@ page 60304 SalesLines
                 {
                     ToolTip = 'Specifies the value of the Salesperson Code field.';
                 }
+                //TODO: 20250617 Confirmed Don't need
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-Sell-to Customer Name"; "OBF-Sell-to Customer Name")
                 // {
@@ -112,10 +114,12 @@ page 60304 SalesLines
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies how many units are being sold.';
                 }
+                //TODO: 20250617 Confirmed Don't need
+                //TODO: Review Later. 0 References 
                 /// <summary>
                 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1477 - Add Weight column to Sales Lines Page
                 /// </summary>
-                // field("OBF-Line Net Weight"; Rec.SBSISSLineNetWeight)
+                // field("OBF-Line Net Weight"; Rec.SBSCOMLineNetWeight)
                 // {
                 //     Caption = 'Line Net Weight';
                 //     ToolTip = 'Specifies the value of the Line Net Weight field.';
@@ -126,6 +130,8 @@ page 60304 SalesLines
                     ToolTip = 'Specifies the quantity of items that remain to be shipped.';
                     Visible = false;
                 }
+                //TODO: 20250617 Confirmed Don't need
+                //TODO: Review Later. 0 References 
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page - Commented Out
                 // field("OBF-Reserved Qty. (Base)";"OBF-Reserved Qty. (Base)")
                 // {
@@ -133,16 +139,16 @@ page 60304 SalesLines
                 //     ToolTip = 'Specifies the Reserved Quantity for lots.';
                 // }
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page
-                field("OBF-Allocated Quantity"; Rec.SBSISSAllocatedQuantity)
+                field("OBF-Allocated Quantity"; Rec.SBSCOMAllocatedQuantity)
                 {
                     Caption = 'Allocated Quantity';
-                    ToolTip = 'This is the quantity that is allocated to lots in Item Tracking.';
                 }
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies how each unit of the item or resource is measured, such as in pieces or hours. By default, the value in the Base Unit of Measure field on the item or resource card is inserted.';
                 }
+                //TODO: 20250617 Confirmed Don't need
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1017 - Add the columns “OBF-Unit Price (Sales Price UOM)” and “External Document No.” to Sales Lines page
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1199 - Add "Sales Unit Price" field and related functionality
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
@@ -242,6 +248,7 @@ page 60304 SalesLines
                 }
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1493- Change "Sales Lines" drilldown to show the "Shipment Date" from the "Sales Header"
+                //TODO: 20250617 Confirmed Don't need
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-Order Shipment Date 2"; "OBF-Order Shipment Date 2")
                 // {
@@ -256,6 +263,7 @@ page 60304 SalesLines
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies how many units on the order line have not yet been shipped.';
                 }
+                //TODO: 20250617 Confirmed Don't need
                 // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-On-Hand Reserved Qty."; "OBF-On-Hand Reserved Qty.")
@@ -264,6 +272,7 @@ page 60304 SalesLines
                 //     Visible = ShowReserved;
                 //     ApplicationArea = All;
                 // }
+                //TODO: 20250617 Confirmed Don't need
                 //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("OBF-Committed Reserved Qty."; "OBF-Committed Reserved Qty.")
                 // {
@@ -322,7 +331,7 @@ page 60304 SalesLines
 
     var
         SalesHeader: Record "Sales Header";
-        // ShowReserved: Boolean; //TODO: Review Later
+        // ShowReserved: Boolean; //TODO: Review Later //TODO: 20250617 Confirmed Don't need
         ShortcutDimCode: array[8] of Code[20];
 
     /// <summary>
@@ -342,7 +351,7 @@ page 60304 SalesLines
         ReservEntry.SetRange(Positive, false);
         ReservEntry.SetFilter("Lot No.", '<>%1', '');
         ReservEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservEntry.SetRange(SBSISSLotIsOnHand, LotIsOnHand);
+        ReservEntry.SetRange(SBSCOMLotIsOnHand, LotIsOnHand);
         if not IncludeAllVariants then
             ReservEntry.SetRange("Variant Code", VariantCode);
         if ReservEntry.FindSet() then
@@ -354,6 +363,7 @@ page 60304 SalesLines
                         //      Replace "OBF-Reserved Qty. (Base)" flowfield with "OBF-Allocated Quantity" normal field in following block of code
 
                         //Rec.CalcFields("OBF-Reserved Qty. (Base)");
+                        //TODO: 20250617 Confirmed Don't need
                         //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // if LotIsOnHand then begin
                         //     Rec."OBF-On-Hand Reserved Qty." -= ReservEntry."Qty. to Handle (Base)";
@@ -370,6 +380,7 @@ page 60304 SalesLines
                         Rec.TransferFields(SalesLine);
                         //Rec.CalcFields("OBF-Reserved Qty. (Base)");
 
+                        //TODO: 20250617 Confirmed Don't need
                         //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // if LotIsOnHand then begin
                         //     Rec."OBF-On-Hand Reserved Qty." := -ReservEntry."Qty. to Handle (Base)";
@@ -409,12 +420,13 @@ page 60304 SalesLines
             SalesLine.SetRange("Variant Code", VariantCode);
         if SalesLine.FindSet() then
             repeat
-                TrackingPercent := Round(SalesLine.SBSISSGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
+                TrackingPercent := Round(SalesLine.SBSCOMGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
                 if TrackingPercent <> 100 then begin
                     Rec.Init();
                     Rec.TransferFields(SalesLine);
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
+                    //TODO: 20250617 Confirmed Don't need
                     //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                     // Rec.CalcFields("OBF-Order Shipment Date");
                     // Rec."OBF-Order Shipment Date 2" := Rec."OBF-Order Shipment Date";

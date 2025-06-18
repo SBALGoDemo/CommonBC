@@ -12,7 +12,7 @@
   "logo": "SilverBaySeafoods.png",
   "platform": "25.0.0.0",
   "application": "25.0.0.0",
-  "runtime": "14.0",  
+  "runtime": "14.0",
   "idRanges": [
     {
       "from": 60100,
@@ -29,6 +29,6 @@
   },
   "preprocessorSymbols": [],
   "source": {
-    "repositoryUrl": "https://odydev.visualstudio.com/Business%20Central/_git/CommonBC"    
+    "repositoryUrl": "https://odydev.visualstudio.com/Business%20Central/_git/CommonBC"
   }
 }

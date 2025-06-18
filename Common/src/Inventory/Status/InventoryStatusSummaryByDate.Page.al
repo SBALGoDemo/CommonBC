@@ -1,11 +1,12 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Common.Inventory.Status;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
-using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
+using SilverBay.Common.Inventory.Tracking;
+using SilverBay.Common.Inventory.Item;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
@@ -14,8 +15,9 @@ using Microsoft.Purchases.History;
 /// Note: This page was copied from and is similar to Page 50054 "Distinct Item Lots"
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
 /// Drilldowns moved to Info Pane Management codeunit
+/// Migrated from page 50053 "OBF-Inv. Stat. Summary by Date"
 /// </summary>
-page 60305 InventoryStatusSummaryByDate
+page 60106 InventoryStatusSummaryByDate
 {
     ApplicationArea = All;
     Caption = 'Inventory Status Summary by Date';
@@ -114,7 +116,8 @@ page 60305 InventoryStatusSummaryByDate
                     Editable = false;
                     Width = 10;
                 }
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: 20250617 Confirmed Don't need
+                //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Alternate Lot No."; Rec."Alternate Lot No.")
                 // {
                 //     Editable = false;
@@ -234,7 +237,8 @@ page 60305 InventoryStatusSummaryByDate
                     Editable = false;
                     Width = 10;
                 }
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                //TODO: 20250617 Confirmed Don't need
+                //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                 // field("Label Text"; Rec."Label Text")
                 // {
                 //     Editable = false;
@@ -248,7 +252,7 @@ page 60305 InventoryStatusSummaryByDate
                     Width = 5;
                     trigger OnDrillDown()
                     begin
-                        this.InfoPaneMgmt.BuyerOnDrillDown(Rec."Buyer Code");
+                        Rec.BuyerOnDrillDown();
                     end;
                 }
                 /// <summary>
@@ -338,7 +342,7 @@ page 60305 InventoryStatusSummaryByDate
         InfoPaneMgmt: Codeunit InfoPaneMgmt;
         DateFilter: Date;
 
-    local procedure AddRecord(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[10]; NewLocation: Code[10]; FromILE: Boolean; var NewNextRowNo: Integer)
+    local procedure AddRecord(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[50]; NewLocation: Code[10]; FromILE: Boolean; var NewNextRowNo: Integer)
     var
         Item: Record Item;
         ItemLedgerEntry: Record "Item Ledger Entry";
@@ -375,7 +379,8 @@ page 60305 InventoryStatusSummaryByDate
         Rec."Item Description 2" := Item."Description 2";
         Rec."Search Description" := Item."Search Description";
 
-        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        //TODO: 20250617 Confirmed Don't need
+        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         // Rec."Pack Size" := Item."OBF-Pack Size";
         // if MethodofCatch.Get(Item."OBF-Method of Catch") then
         //     Rec."Method of Catch" := MethodofCatch.Description;
@@ -405,7 +410,8 @@ page 60305 InventoryStatusSummaryByDate
 
                         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1040 - Set Receipt Date on Item Ledger Entries
                         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
-                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+                        //TODO: 20250617 Confirmed Don't need
+                        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
                         // if ItemLedgerEntry.Quantity > 0 then begin
                         //     Rec."Receipt Date" := ItemLedgerEntry."OBF-Receipt Date";
                         //     Rec."OBF-Production Date" := ItemLedgerEntry."OBF-Production Date";
@@ -437,11 +443,11 @@ page 60305 InventoryStatusSummaryByDate
                     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - END
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
-                    Rec."Production Date" := ReservationEntry.SBSISSProductionDate;
+                    Rec."Production Date" := ReservationEntry.SBSCOMProductionDate;
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1653 - Wrong Purchaser for Work Order Lots on ISS by Date
-                    if ReservationEntry.SBSISSPurchaserCode <> '' then
-                        Rec."Buyer Code" := ReservationEntry.SBSISSPurchaserCode;
+                    if ReservationEntry.SBSCOMPurchaserCode <> '' then
+                        Rec."Buyer Code" := ReservationEntry.SBSCOMPurchaserCode;
                 end;
             end;
             if Rec."On Hand Weight" <> 0 then
@@ -449,8 +455,9 @@ page 60305 InventoryStatusSummaryByDate
             else
                 Rec."Unit Cost" := 0;
 
+            //TODO: 20250617 Confirmed Don't need
             // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-            //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+            //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
             // if ItemVariantLotInfo.Get(pItemNo, pVariantCode, pLotNo, pLocation) then
             //     Rec."OBF-Purchased For" := ItemVariantLotInfo."Purchased For";
 
@@ -458,7 +465,7 @@ page 60305 InventoryStatusSummaryByDate
         end;
     end;
 
-    local procedure CalcUnassignedPurchaseLineQty(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[10]; NewLocationCode: Code[20]) UnassignedPurchaseLineQty: Decimal
+    local procedure CalcUnassignedPurchaseLineQty(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[50]; NewLocationCode: Code[20]) UnassignedPurchaseLineQty: Decimal
     var
         PurchaseLine: Record "Purchase Line";
     begin

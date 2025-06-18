@@ -1,8 +1,11 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Common.Inventory.Tracking;
 
 using Microsoft.Inventory.Tracking;
 
-query 60302 DistinctItemLocationResEntry
+/// <summary>
+/// Migrated from query 50061 "OBF-Distinct Item Loc On Order"
+/// </summary>
+query 60102 DistinctItemLocationResEntry
 {
     Access = Internal;
     Caption = 'Distinct Item Location Reservation Entry';

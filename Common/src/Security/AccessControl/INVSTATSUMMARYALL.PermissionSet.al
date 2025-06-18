@@ -1,6 +1,12 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Common.Security.AccessControl;
 
-permissionset 60300 INVSTATSUMMARYALL
+using SilverBay.Common.Inventory.Item;
+using SilverBay.Common.Sales.Document;
+using SilverBay.Common.Inventory.Tracking;
+using SilverBay.Common.Inventory.Availability;
+using SilverBay.Common.Inventory.Status;
+
+permissionset 60100 INVSTATSUMMARYALL
 {
     Assignable = true;
     Caption = 'Inventory Status Summary - All';
@@ -9,7 +15,7 @@ permissionset 60300 INVSTATSUMMARYALL
         table DistinctItemLot = X,
         table ItemAvailabilityBuffer = X,
         codeunit InfoPaneMgmt = X,
-        page "Distinct Item Lot List" = X,
+        page DistinctItemLotList = X,
         page InventoryStatusSummaryByDate = X,
         page "Item Factbox" = X,
         page ItemAvailabilityDrilldown = X,
