@@ -21,6 +21,7 @@ page 60300 InventoryStatusSummaryByDate
 {
     ApplicationArea = All;
     Caption = 'Inventory Status Summary by Date';
+    AdditionalSearchTerms = 'ISS,Silver,Bay,Inventory';
     DeleteAllowed = false;
     Editable = true;
     InsertAllowed = false;
