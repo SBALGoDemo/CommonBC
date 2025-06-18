@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Sales.Document;
+namespace SilverBay.Inventory.StatusSummary.Sales;
 
 using Microsoft.Finance.Dimension;
 using Microsoft.Inventory.Tracking;
@@ -11,7 +11,7 @@ using Microsoft.Utilities;
 /// This is a copy of the standard "Sales Lines" page with SourceTableTemporary set to true 
 /// Migrated from page 50071 "OBF-Sales Lines"
 /// </summary>
-page 60102 SalesLines
+page 60300 SalesLines
 {
     ApplicationArea = All;
     Caption = 'Sales Lines';
@@ -115,7 +115,7 @@ page 60102 SalesLines
                     ToolTip = 'Specifies the quantity of items that remain to be shipped.';
                     Visible = false;
                 }
-                field(SBSCOMAllocatedQuantity; Rec.SBSCOMAllocatedQuantity)
+                field(SBSCOMAllocatedQuantity; Rec.SBSINVAllocatedQuantity)
                 {
                     Caption = 'Allocated Quantity';
                 }
@@ -323,7 +323,7 @@ page 60102 SalesLines
             SalesLine.SetRange("Variant Code", VariantCode);
         if SalesLine.FindSet() then
             repeat
-                TrackingPercent := Round(SalesLine.SBSCOMGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
+                TrackingPercent := Round(SalesLine.SBSINVGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking));
                 if TrackingPercent <> 100 then begin
                     Rec.Init();
                     Rec.TransferFields(SalesLine);

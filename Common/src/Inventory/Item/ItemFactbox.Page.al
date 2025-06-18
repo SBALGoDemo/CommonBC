@@ -1,7 +1,6 @@
 namespace SilverBay.Common.Inventory.Item;
 
 using Microsoft.Inventory.Item;
-using SilverBay.Common.Inventory.Status;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
@@ -85,70 +84,46 @@ page 60103 "Item Factbox"
                     ToolTip = 'Specifies the value of the Average Cost per Pound field.';
                 }
             }
-            group(OnHandCommittedGroup)
-            {
-                Caption = 'On Hand (Committed)';
-                field(OnHandCommitted; this.OnHandCommitted)
-                {
-                    Caption = 'On Hand (Committed)';
-                    DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the On Hand (Committed) field.';
-                    trigger OnDrillDown()
-                    begin
-                        this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
-                    end;
-                }
-                field(OnHandCommittedWeight; this.OnHandCommittedWeight)
-                {
-                    Caption = 'On Hand (Committed) Weight';
-                    DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the On Hand (Committed) Weight field.';
-                    trigger OnDrillDown()
-                    begin
-                        this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
-                    end;
-                }
-            }
             group(OnHandAvailableGroup)
             {
                 Caption = 'On Hand (Available)';
-                field(OnHandAvailable; this.OnHandAvailable)
-                {
-                    //TODO: Migrate this to page extension in dependent app
-                    Caption = 'On-Hand Available';
-                    DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the On-Hand Available field.';
-                    trigger OnDrillDown()
-                    var
-                        DistinctItemLotList: Page DistinctItemLotList;
-                    begin
-                        Message('This drilldown is not fully implemented yet. Please contact support.');
-                        if this.ShowAllVariants then
-                            DistinctItemLotList.SetItem(Rec."No.", '', this.AsOfDate)
-                        else
-                            DistinctItemLotList.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
-                        DistinctItemLotList.SetOnHandQtyFilter();
-                        DistinctItemLotList.RunModal();
-                    end;
-                }
-                field(OnHandAvailableWeight; this.OnHandAvailableWeight)
-                {
-                    Caption = 'On-Hand Available (Weight)';
-                    DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the On-Hand Available (Weight) field.';
-                    trigger OnDrillDown()
-                    var
-                        DistinctItemLotList: Page DistinctItemLotList;
-                    begin
-                        Message('This drilldown is not fully implemented yet. Please contact support.');
-                        if this.ShowAllVariants then
-                            DistinctItemLotList.SetItem(Rec."No.", '', this.AsOfDate)
-                        else
-                            DistinctItemLotList.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
-                        DistinctItemLotList.SetOnHandQtyFilter();
-                        DistinctItemLotList.RunModal();
-                    end;
-                }
+                // field(OnHandAvailable; this.OnHandAvailable)
+                // {
+                //     //TODO: Migrate this to page extension in dependent app
+                //     Caption = 'On-Hand Available';
+                //     DecimalPlaces = 0 : 3;
+                //     ToolTip = 'Specifies the value of the On-Hand Available field.';
+                //     trigger OnDrillDown()
+                //     var
+                //         DistinctItemLotList: Page DistinctItemLotList;
+                //     begin
+                //         Message('This drilldown is not fully implemented yet. Please contact support.');
+                //         if this.ShowAllVariants then
+                //             DistinctItemLotList.SetItem(Rec."No.", '', this.AsOfDate)
+                //         else
+                //             DistinctItemLotList.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
+                //         DistinctItemLotList.SetOnHandQtyFilter();
+                //         DistinctItemLotList.RunModal();
+                //     end;
+                // }
+                // field(OnHandAvailableWeight; this.OnHandAvailableWeight)
+                // {
+                //     Caption = 'On-Hand Available (Weight)';
+                //     DecimalPlaces = 0 : 3;
+                //     ToolTip = 'Specifies the value of the On-Hand Available (Weight) field.';
+                //     trigger OnDrillDown()
+                //     var
+                //         DistinctItemLotList: Page DistinctItemLotList;
+                //     begin
+                //         Message('This drilldown is not fully implemented yet. Please contact support.');
+                //         if this.ShowAllVariants then
+                //             DistinctItemLotList.SetItem(Rec."No.", '', this.AsOfDate)
+                //         else
+                //             DistinctItemLotList.SetItem(Rec."No.", this.VariantCode, this.AsOfDate);
+                //         DistinctItemLotList.SetOnHandQtyFilter();
+                //         DistinctItemLotList.RunModal();
+                //     end;
+                // }
             }
             group(OnOrder)
             {
@@ -171,54 +146,6 @@ page 60103 "Item Factbox"
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.OnOrderDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
-                    end;
-                }
-            }
-            group(OnOrderCommittedGroup)
-            {
-                Caption = 'On Order Committed';
-                field(OnOrderCommitted; this.OnOrderCommitted)
-                {
-                    Caption = 'On Order Committed';
-                    DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the On Order Committed field.';
-                    trigger OnDrillDown()
-                    begin
-                        this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
-                    end;
-                }
-                field(OnOrderCommittedWeight; this.OnOrderCommittedWeight)
-                {
-                    Caption = 'On Order Committed Weight';
-                    DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the On Order Committed Weight field.';
-                    trigger OnDrillDown()
-                    begin
-                        this.InfoPaneMgmt.CommittedDrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
-                    end;
-                }
-            }
-            group(UnallocatedSO)
-            {
-                Caption = 'Unallocated Sales Orders';
-                field(UnallocatedSOQty; this.UnallocatedSOQty)
-                {
-                    Caption = 'Unallocated SO Qty.';
-                    DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the Unallocated SO Qty. field.';
-                    trigger OnDrillDown()
-                    begin
-                        this.InfoPaneMgmt.UnallocatedSODrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
-                    end;
-                }
-                field(UnallocatedSOWeight; this.UnallocatedSOWeight)
-                {
-                    Caption = 'Unallocated SO Weight';
-                    DecimalPlaces = 0 : 3;
-                    ToolTip = 'Specifies the value of the Unallocated SO Weight field.';
-                    trigger OnDrillDown()
-                    begin
-                        this.InfoPaneMgmt.UnallocatedSODrilldown(Rec."No.", this.VariantCode, this.ShowAllVariants);
                     end;
                 }
             }
@@ -268,8 +195,6 @@ page 60103 "Item Factbox"
         this.OnHandCommittedWeight := this.OnHandCommitted * Rec."Net Weight";
         this.OnHandAvailable := Rec.Inventory - this.OnHandCommitted; // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         this.OnHandAvailableWeight := this.TotalOnHandWeight - this.OnHandCommittedWeight;
-        this.UnallocatedSOQty := this.InfoPaneMgmt.CalcOnOrderTotalUnallocated(Rec."No.", this.VariantCode, this.ShowAllVariants);
-        this.UnallocatedSOWeight := this.UnallocatedSOQty * Rec."Net Weight";
         this.TotalAvailableQuantity := Rec.Inventory + this.OnOrderQty - this.OnHandCommitted - this.OnOrderCommitted; // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         this.TotalAvailableWeight := this.TotalOnHandWeight + this.OnOrderWeight - this.OnHandCommittedWeight - this.OnOrderCommittedWeight;
         this.TotalValueOfInventoryOnHand := this.InfoPaneMgmt.CalcInventoryOnHandTotalValue(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
@@ -281,16 +206,10 @@ page 60103 "Item Factbox"
 
     var
         InfoPaneMgmt: Codeunit InfoPaneMgmt;
-        ShowAllVariants: Boolean;
-        VariantCode: Code[10];
         AsOfDate: Date;
         AverageCost: Decimal;
         OnHandAvailable: Decimal;
         OnHandAvailableWeight: Decimal;
-        OnHandCommitted: Decimal;
-        OnHandCommittedWeight: Decimal;
-        OnOrderCommitted: Decimal;
-        OnOrderCommittedWeight: Decimal;
         OnOrderQty: Decimal;
         OnOrderWeight: Decimal;
         TotalAvailableQuantity: Decimal;
@@ -298,10 +217,16 @@ page 60103 "Item Factbox"
         TotalOnHandWeight: Decimal;
         TotalQty: Decimal;
         TotalValueOfInventoryOnHand: Decimal;
-        UnallocatedSOQty: Decimal;
-        UnallocatedSOWeight: Decimal;
 
-    internal procedure SetValues(NewAsOfDate: Date; NewVariantCode: Code[10]; NewShowAllVariants: Boolean)
+    protected var
+        OnHandCommitted: Decimal;
+        OnHandCommittedWeight: Decimal;
+        OnOrderCommitted: Decimal;
+        OnOrderCommittedWeight: Decimal;
+        ShowAllVariants: Boolean;
+        VariantCode: Code[10];
+
+    procedure SetValues(NewAsOfDate: Date; NewVariantCode: Code[10]; NewShowAllVariants: Boolean)
     begin
         this.AsOfDate := NewAsOfDate;
         this.ShowAllVariants := NewShowAllVariants;

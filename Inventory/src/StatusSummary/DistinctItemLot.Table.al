@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Inventory.Tracking;
+namespace SilverBay.Inventory.StatusSummary;
 
 using Microsoft.CRM.Team;
 using Microsoft.Inventory.Item;
@@ -15,7 +15,7 @@ using Microsoft.Inventory.Tracking;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
 /// Migrated from table 50018 "OBF-Distinct Item Lot"
 /// </summary>
-table 60100 DistinctItemLot
+table 60303 DistinctItemLot
 {
     Access = Internal;
     Caption = 'Lots';
@@ -175,7 +175,7 @@ table 60100 DistinctItemLot
         }
         field(35; "Total ILE Weight for Item Lot"; Decimal)
         {
-            CalcFormula = sum("Item Ledger Entry".SBSCOMNetWeight where("Item No." = field("Item No."),
+            CalcFormula = sum("Item Ledger Entry".SBSINVNetWeight where("Item No." = field("Item No."),
                                                                             "Variant Code" = field("Variant Code"),
                                                                             "Location Code" = field("Location Code"),
                                                                             "Lot No." = field("Lot No."),

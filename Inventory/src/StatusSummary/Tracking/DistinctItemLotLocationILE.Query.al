@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Inventory.Tracking;
+namespace SilverBay.Inventory.StatusSummary.Tracking;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
@@ -9,7 +9,7 @@ using Microsoft.Inventory.Ledger;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
 /// Migrated from query 50051 "Distinct Item Lot Locations"
 /// </summary>
-query 60103 DistinctItemLotLocationILE
+query 60308 DistinctItemLotLocationILE
 {
     Access = Internal;
     Caption = 'Distinct Item Lot Location Item Ledger Entry';

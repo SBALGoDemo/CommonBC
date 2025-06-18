@@ -1,11 +1,11 @@
-namespace SilverBay.Common.Inventory.Tracking;
+namespace SilverBay.Inventory.StatusSummary.Purchases;
 
 using Microsoft.Purchases.Document;
 
 /// <summary>
 /// Migrated from query 50060 "OBF-Dist. Items On Purch. Line"
 /// </summary>
-query 60101 DistinctItemLocationPurchLine
+query 60300 DistinctItemLocationPurchLine
 {
     Access = Internal;
     Caption = 'Distinct Item Location Purchase Line';

@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Sales.Document;
+namespace SilverBay.Inventory.StatusSummary.Sales;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Tracking;
@@ -8,11 +8,11 @@ using Microsoft.Sales.Document;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1663 - Create Site Dimension Lookup based on Subsidiary
 /// Migrated from tableextension 50006 "SalesLine" extends "Sales Line"
 /// </summary>
-tableextension 60100 SalesLine extends "Sales Line"
+tableextension 60300 SalesLine extends "Sales Line"
 {
     fields
     {
-        field(60107; SBSCOMAllocatedQuantity; Decimal)
+        field(60300; SBSINVAllocatedQuantity; Decimal)
         {
             Caption = 'Allocated Quantity';
             DataClassification = CustomerContent;
@@ -28,7 +28,7 @@ tableextension 60100 SalesLine extends "Sales Line"
     /// <param name="Qty"></param>
     /// <param name="ItemTracking"></param>
     /// <returns></returns>
-    internal procedure SBSCOMGetTrackingPercent(Qty: Decimal; var ItemTracking: Boolean): Decimal
+    internal procedure SBSINVGetTrackingPercent(Qty: Decimal; var ItemTracking: Boolean): Decimal
     var
         Item: Record Item;
         ReservationEntry: Record "Reservation Entry";
@@ -106,5 +106,28 @@ tableextension 60100 SalesLine extends "Sales Line"
             PctInReserv := PctInReserv / Qty * 100;
 
         exit(PctInReserv);
+    end;
+
+    internal procedure SBSINVCalcOnOrderTotalUnallocated(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) OnOrderTotalUnallocated: Decimal
+    var
+        SalesLine: Record "Sales Line";
+        ItemTracking: Boolean;
+    begin
+        SalesLine.SetRange("No.", ItemNo);
+        SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+        SalesLine.SetRange(Type, SalesLine.Type::Item);
+        SalesLine.SetFilter("Quantity (Base)", '<>%1', 0);
+        if not IncludeAllVariants then
+            SalesLine.SetRange("Variant Code", VariantCode);
+        if SalesLine.FindSet() then begin
+            repeat
+                if Round(SBSINVGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking)) <> 100 then
+                    SalesLine.Mark(true);
+            until SalesLine.Next() = 0;
+
+            SalesLine.MarkedOnly(true);
+            SalesLine.CalcSums(Quantity, SBSINVAllocatedQuantity);
+            OnOrderTotalUnallocated += SalesLine.Quantity - SalesLine.SBSINVAllocatedQuantity;
+        end;
     end;
 }

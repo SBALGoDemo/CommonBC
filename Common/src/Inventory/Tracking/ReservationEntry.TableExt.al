@@ -18,21 +18,18 @@ tableextension 60102 ReservationEntry extends "Reservation Entry"
         /// </summary>
         field(60100; SBSCOMPurResEntryisNeg; Boolean)
         {
-            Access = Internal;
             Caption = 'Purchase Reservation Entry is Negative';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60101; SBSCOMLotIsOnHand2; Boolean)
         {
-            Access = Internal;
             Caption = 'Lot Is On Hand';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60102; SBSCOMLotIsOnHand; Boolean)
         {
-            Access = Internal;
             CalcFormula = exist("Item Ledger Entry" where("Item No." = field("Item No."), "Lot No." = field("Lot No.")));
             Caption = 'Lot Is On Hand';
             Editable = false;
@@ -43,27 +40,23 @@ tableextension 60102 ReservationEntry extends "Reservation Entry"
         /// </summary>
         field(60107; SBSCOMPurchaserCode; Code[20])
         {
-            Access = Internal;
             Caption = 'Purchaser Code';
             DataClassification = CustomerContent;
             TableRelation = "Salesperson/Purchaser";
         }
         field(60110; SBSCOMProductionDate; Date)
         {
-            Access = Internal;
             Caption = 'Production Date';
             DataClassification = CustomerContent;
         }
         field(60112; SBSCOMNetWeight; Decimal)
         {
-            Access = Internal;
             Caption = 'Net Weight';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(60113; SBSCOMNetWeighttoHandle; Decimal)
         {
-            Access = Internal;
             Caption = 'Net Weight to Handle';
             DataClassification = CustomerContent;
             Editable = false;

@@ -8,7 +8,6 @@ using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Document;
-using SilverBay.Common.Sales.Document;
 using SilverBay.Common.Inventory.Availability;
 
 /// <summary>
@@ -18,9 +17,7 @@ using SilverBay.Common.Inventory.Availability;
 /// </summary>
 codeunit 60106 InfoPaneMgmt
 {
-    Access = Internal;
-
-    procedure CalcInventoryOnHandTotalValue(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date) InventoryOnHandTotalValue: Decimal
+    internal procedure CalcInventoryOnHandTotalValue(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date) InventoryOnHandTotalValue: Decimal
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
     begin
@@ -42,7 +39,7 @@ codeunit 60106 InfoPaneMgmt
             until ItemLedgerEntry.Next() = 0;
     end;
 
-    procedure CalcInventoryOnHandTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnHandTotalCommitted: Decimal
+    internal procedure CalcInventoryOnHandTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnHandTotalCommitted: Decimal
     var
         ReservationEntry: Record "Reservation Entry";
     begin
@@ -61,7 +58,7 @@ codeunit 60106 InfoPaneMgmt
         InventoryOnHandTotalCommitted := Abs(ReservationEntry."Quantity (Base)");
     end;
 
-    procedure CalcInventoryOnOrderTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnOrderTotalCommitted: Decimal
+    internal procedure CalcInventoryOnOrderTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnOrderTotalCommitted: Decimal
     var
         ReservationEntry: Record "Reservation Entry";
     begin
@@ -80,29 +77,6 @@ codeunit 60106 InfoPaneMgmt
         InventoryOnOrderTotalCommitted := Abs(ReservationEntry."Quantity (Base)");
     end;
 
-    procedure CalcOnOrderTotalUnallocated(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) OnOrderTotalUnallocated: Decimal
-    var
-        SalesLine: Record "Sales Line";
-        ItemTracking: Boolean;
-    begin
-        SalesLine.SetRange("No.", ItemNo);
-        SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
-        SalesLine.SetRange(Type, SalesLine.Type::Item);
-        SalesLine.SetFilter("Quantity (Base)", '<>%1', 0);
-        if not IncludeAllVariants then
-            SalesLine.SetRange("Variant Code", VariantCode);
-        if SalesLine.FindSet() then begin
-            repeat
-                if Round(SalesLine.SBSCOMGetTrackingPercent(SalesLine."Quantity (Base)", ItemTracking)) <> 100 then
-                    SalesLine.Mark(true);
-            until SalesLine.Next() = 0;
-
-            SalesLine.MarkedOnly(true);
-            SalesLine.CalcSums(Quantity, SBSCOMAllocatedQuantity);
-            OnOrderTotalUnallocated += SalesLine.Quantity - SalesLine.SBSCOMAllocatedQuantity;
-        end;
-    end;
-
     procedure CheckItemTrackingCodeNotBlank(ItemNo: Code[20]) ItemTrackingCodeNotBlank: Boolean
     var
         Item: Record Item;
@@ -112,28 +86,13 @@ codeunit 60106 InfoPaneMgmt
     end;
 
     /// <summary>
-    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
-    /// </summary>
-    /// <param name="ItemNo"></param>
-    /// <param name="VariantCode"></param>
-    /// <param name="IncludeAllVariants"></param>
-    /// <param name="LotIsOnHand"></param>
-    procedure CommittedDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; LotIsOnHand: Boolean)
-    var
-        SalesLines: Page SalesLines;
-    begin
-        SalesLines.SetOnOrderCommittedSalesLines(ItemNo, VariantCode, IncludeAllVariants, LotIsOnHand);
-        SalesLines.RunModal();
-    end;
-
-    /// <summary>
     /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1425 -Inv. Status Summary Issue with In Transit Purchase Orders
     /// </summary>
     /// <param name="ItemNo"></param>
     /// <param name="VariantCode"></param>
     /// <param name="LotNo"></param>
     /// <param name="LocationCode"></param>
-    procedure InTransitDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; LocationCode: Code[10])
+    internal procedure InTransitDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; LocationCode: Code[10])
     var
         ReservationEntry: Record "Reservation Entry";
         ReservationEntries: Page "Reservation Entries";
@@ -162,7 +121,7 @@ codeunit 60106 InfoPaneMgmt
         LocationCard.RunModal();
     end;
 
-    procedure OnHandDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date)
+    internal procedure OnHandDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
         ItemLedgerEntries: Page "Item Ledger Entries";
@@ -202,7 +161,7 @@ codeunit 60106 InfoPaneMgmt
         ItemLedgerEntries.Run();
     end;
 
-    procedure OnOrderDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
+    internal procedure OnOrderDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
     var
         PurchaseLine: Record "Purchase Line";
         PurchaseLines: Page "Purchase Lines";
@@ -301,7 +260,7 @@ codeunit 60106 InfoPaneMgmt
         if ItemCard.RunModal() = Action::LookupOK then;
     end;
 
-    procedure TotalAvailQtyDrillDown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; DateFilter: Date)
+    internal procedure TotalAvailQtyDrillDown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; DateFilter: Date)
     var
         ItemAvailabilityDrilldown: Page ItemAvailabilityDrilldown;
     begin
@@ -315,14 +274,6 @@ codeunit 60106 InfoPaneMgmt
     begin
         ItemAvailabilityDrilldown.SetItemLotData(ItemNo, VariantCode, LotNo, DateFilter);
         ItemAvailabilityDrilldown.RunModal();
-    end;
-
-    procedure UnallocatedSODrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
-    var
-        SalesLines: Page SalesLines;
-    begin
-        SalesLines.SetUnallocatedSalesLines(ItemNo, VariantCode, IncludeAllVariants);
-        SalesLines.RunModal();
     end;
 
     procedure VendorOnDrillDown(VendorNo: Code[20])

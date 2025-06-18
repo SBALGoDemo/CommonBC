@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Sales.Document;
+namespace SilverBay.Inventory.StatusSummary.Sales;
 
 using Microsoft.Sales.Document;
 
@@ -6,7 +6,7 @@ using Microsoft.Sales.Document;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620
 /// Migrated from codeunit 50050 "OBF-Sales Events"
 /// </summary>
-codeunit 60107 SalesHeaderSubscribers
+codeunit 60300 SalesHeaderSubscribers
 {
     Access = Internal;
     SingleInstance = true;
@@ -17,9 +17,9 @@ codeunit 60107 SalesHeaderSubscribers
     /// <param name="SalesLine"></param>
     /// <param name="TempSalesLine"></param>
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterCreateSalesLine', '', false, false)]
-    local procedure OnAfterCreateSalesLine(var SalesLine: Record "Sales Line"; var TempSalesLine: Record "Sales Line" temporary);
+    local procedure SetAllocatedQuantityOnAfterCreateSalesLine(var SalesLine: Record "Sales Line"; var TempSalesLine: Record "Sales Line" temporary);
     begin
-        SalesLine.SBSCOMAllocatedQuantity := TempSalesLine.SBSCOMAllocatedQuantity;
+        SalesLine.SBSINVAllocatedQuantity := TempSalesLine.SBSINVAllocatedQuantity;
         SalesLine.Modify();
     end;
 }

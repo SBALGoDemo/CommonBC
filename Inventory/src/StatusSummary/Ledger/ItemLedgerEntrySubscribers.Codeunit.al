@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Inventory.Ledger;
+namespace SilverBay.Inventory.StatusSummary.Ledger;
 
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Item;
@@ -7,7 +7,7 @@ using Microsoft.Inventory.Item;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620
 /// Migrated from codeunit 50051 "OBF-Purchasing Events"
 /// </summary>
-codeunit 60108 ItemLedgerEntrySubscribers
+codeunit 60302 ItemLedgerEntrySubscribers
 {
     Access = Internal;
     SingleInstance = true;
@@ -27,6 +27,6 @@ codeunit 60108 ItemLedgerEntrySubscribers
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1319 - Missing Net Weight on Item Ledger and Reservation Entry 
         Item.Get(Rec."Item No.");
-        Rec.SBSCOMNetWeight := Rec.Quantity * Item."Net Weight";
+        Rec.SBSINVNetWeight := Rec.Quantity * Item."Net Weight";
     end;
 }

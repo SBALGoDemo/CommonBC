@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Inventory.Ledger;
+namespace SilverBay.Inventory.StatusSummary.Ledger;
 
 using Microsoft.Inventory.Ledger;
 
@@ -6,7 +6,7 @@ using Microsoft.Inventory.Ledger;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Extract and Package Orca Bay Inv. Status by Date page for Deployment to Silver Bay
 /// Migrated from tableextension 50067 "ItemLedgerEntry" extends "Item Ledger Entry"
 /// </summary>
-tableextension 60105 ItemLedgerEntry extends "Item Ledger Entry"
+tableextension 60306 ItemLedgerEntry extends "Item Ledger Entry"
 {
     fields
     {
@@ -14,7 +14,7 @@ tableextension 60105 ItemLedgerEntry extends "Item Ledger Entry"
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1319 - Missing Net Weight on Item Ledger and Reservation Entry 
         /// Migrated from field(51001; "OBF-Net Weight"; Decimal)
         /// </summary>
-        field(60100; SBSCOMNetWeight; Decimal)
+        field(60300; SBSINVNetWeight; Decimal)
         {
             Caption = 'Net Weight';
             DataClassification = CustomerContent;

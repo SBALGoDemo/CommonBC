@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Inventory.Tracking;
+namespace SilverBay.Inventory.StatusSummary.Tracking;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Tracking;
@@ -6,7 +6,7 @@ using Microsoft.Inventory.Tracking;
 /// <summary>
 /// Migrated from query 50052 "Distinct Item Lot (Res. Entry)"
 /// </summary>
-query 60100 DistinctItemLotLocResEntry
+query 60309 DistinctItemLotLocResEntry
 {
     Access = Internal;
     Caption = 'Distinct Item Lot Location Reservation Entry';
