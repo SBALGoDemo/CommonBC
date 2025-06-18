@@ -1,10 +1,10 @@
 {
   "id": "2301e2cd-d475-4ced-a7e3-b666ea2ea658",
-  "name": "Inventory Status Summary.Test",
+  "name": "Inventory.Test",
   "publisher": "Silver Bay Seafoods",
   "version": "25.0.0.0",
-  "brief": "Inventory Status Summary.Test",
-  "description": "Silver Bay Seafoods' Inventory Status Summary.Test app contains code used to test the Common app.",
+  "brief": "Inventory.Test",
+  "description": "Silver Bay Seafoods' Inventory.Test app contains code used to test the Inventory app.",
   "privacyStatement": "https://www.silverbayseafoods.com/",
   "EULA": "https://www.silverbayseafoods.com/",
   "help": "https://www.silverbayseafoods.com/",
@@ -37,7 +37,7 @@
     },
     {
       "publisher": "Silver Bay Seafoods",
-      "name": "Inventory Status Summary",
+      "name": "Inventory",
       "id": "4aa5f0f3-e4be-4584-b1e5-21b2721c2346",
       "version": "25.0.0.0"
     }

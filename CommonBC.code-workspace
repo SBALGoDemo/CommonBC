@@ -9,12 +9,12 @@
       "path": "Common.Test"
     },
     {
-      "name": "InventoryStatusSummary",
-      "path": "InventoryStatusSummary"
+      "name": "Inventory",
+      "path": "Inventory"
     },
     {
-      "name": "InventoryStatusSummary.Test",
-      "path": "InventoryStatusSummary.Test"
+      "name": "Inventory.Test",
+      "path": "Inventory.Test"
     },
     {
       "name": "Integration",
