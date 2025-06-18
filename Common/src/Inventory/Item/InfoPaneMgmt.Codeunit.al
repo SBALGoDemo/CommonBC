@@ -1,6 +1,5 @@
 namespace SilverBay.Common.Inventory.Item;
 
-using Microsoft.CRM.Team;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -20,17 +19,6 @@ using SilverBay.Common.Inventory.Availability;
 codeunit 60106 InfoPaneMgmt
 {
     Access = Internal;
-
-    // [Obsolete('Migrated to procedure in table as part of https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay', '25.0')]
-    // procedure BuyerOnDrillDown(BuyerCode: Code[20])
-    // var
-    //     Purchaser: Record "Salesperson/Purchaser";
-    //     PurchaserCard: Page "Salesperson/Purchaser Card";
-    // begin
-    //     Purchaser.SetRange(Code, BuyerCode);
-    //     PurchaserCard.SetTableView(Purchaser);
-    //     PurchaserCard.RunModal();
-    // end;
 
     procedure CalcInventoryOnHandTotalValue(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date) InventoryOnHandTotalValue: Decimal
     var
@@ -135,7 +123,6 @@ codeunit 60106 InfoPaneMgmt
         SalesLines: Page SalesLines;
     begin
         SalesLines.SetOnOrderCommittedSalesLines(ItemNo, VariantCode, IncludeAllVariants, LotIsOnHand);
-        SalesLines.SetShowReserved(true);
         SalesLines.RunModal();
     end;
 
@@ -301,38 +288,6 @@ codeunit 60106 InfoPaneMgmt
             end;
         end;
     end;
-
-    //TODO: Review later. O references currently
-    // procedure SalesOrderAllocateToPO_Drilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
-    // var
-    //     POReservationEntry: Record "Reservation Entry";
-    //     ReservationEntry: Record "Reservation Entry";
-    //     TempReservationEntry: Record "Reservation Entry" temporary;
-    //     AvailItemTrackLines: Page "Avail. - Item Tracking Lines";
-    // begin
-    //     ReservationEntry.Reset();
-    //     ReservationEntry.SetRange("Source Type", Database::"Sales Line");
-    //     ReservationEntry.SetRange("Item No.", ItemNo);
-    //     ReservationEntry.SetFilter("Lot No.", '<>%1', '');
-    //     POReservationEntry.Reset();
-    //     POReservationEntry.SetRange("Source Type", Database::"Sales Line");
-    //     POReservationEntry.SetRange("Item No.", ItemNo);
-    //     if not IncludeAllVariants then
-    //         ReservationEntry.SetRange("Variant Code", VariantCode);
-    //     if ReservationEntry.FindSet() then
-    //         repeat
-    //             POReservationEntry.SetRange("Lot No.", ReservationEntry."Lot No.");
-    //             if not POReservationEntry.IsEmpty then begin
-    //                 TempReservationEntry := TempReservationEntry;
-    //                 TempReservationEntry.Insert();
-    //             end;
-    //         until ReservationEntry.Next() = 0;
-    //     if not TempReservationEntry.IsEmpty then begin
-    //         AvailItemTrackLines.SetTableView(TempReservationEntry);
-    //         AvailItemTrackLines.RunModal();
-    //         ;
-    //     end;
-    // end;
 
     procedure ShowItem(ItemNo: Code[20])
     var

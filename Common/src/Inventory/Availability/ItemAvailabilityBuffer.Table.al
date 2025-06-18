@@ -1,7 +1,5 @@
 namespace SilverBay.Common.Inventory.Availability;
 
-// namespace Microsoft.Inventory.Availability;
-
 using Microsoft.Finance.Dimension;
 using Microsoft.Foundation.Address;
 using Microsoft.Foundation.AuditCodes;

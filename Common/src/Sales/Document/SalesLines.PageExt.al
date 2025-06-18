@@ -22,4 +22,3 @@ pageextension 60101 SalesLines extends "Sales Lines"
         }
     }
 }
-

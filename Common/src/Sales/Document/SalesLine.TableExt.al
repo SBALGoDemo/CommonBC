@@ -107,37 +107,4 @@ tableextension 60100 SalesLine extends "Sales Line"
 
         exit(PctInReserv);
     end;
-
-    //TODO: 20250617 Confirmed Don't need
-    //TODO:20250617 Review Later. 0 References 
-    // /// <summary>
-    // /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1669 - Sustainability Certifications
-    // /// </summary>
-    // internal procedure SBSCOMSetCertificationFields()
-    // begin
-    //     if Rec.Type <> Rec.Type::Item then
-    //         exit;
-    //     if Rec."No." = '' then
-    //         exit;
-    //     Rec.SBSCOMMSCCertification := this.SBSCOMCheckItemCertification(Rec."No.", 'MSC');
-    //     Rec.SBSCOMRFMCertification := this.SBSCOMCheckItemCertification(Rec."No.", 'RFM');
-    // end;
-
-    // local procedure DeleteRebateEntries()
-    // var
-    //     RebateEntry: Record "OBF-Rebate Entry";
-    // begin
-    //     case "Document Type" of
-    //         "Document Type"::Order:
-    //             RebateEntry.SetRange("Source Type", RebateEntry."Source Type"::Order);
-    //         "Document Type"::Invoice:
-    //             RebateEntry.SetRange("Source Type", RebateEntry."Source Type"::Invoice);
-    //         "Document Type"::"Credit Memo":
-    //             RebateEntry.SetRange("Source Type", RebateEntry."Source Type"::"Credit Memo");
-    //     end;
-
-    //     RebateEntry.SetRange("Source No.", "Document No.");
-    //     RebateEntry.SetRange("Source Line No.", "Line No.");
-    //     RebateEntry.DeleteAll(true);
-    // end;
 }

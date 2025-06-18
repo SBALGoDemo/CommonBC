@@ -5,7 +5,6 @@ using Microsoft.Inventory.Item;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
-using SilverBay.Common.Sustainability.Certification;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
@@ -97,27 +96,10 @@ table 60100 DistinctItemLot
             Caption = 'PO Number';
             ToolTip = 'Specifies the value of the PO Number field.';
         }
-        //TODO: 20250617 Confirmed Don't need
-        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-        // field(14; "Alternate Lot No."; Code[20])
-        // {
-        //     Caption = 'Alternate Lot No.';
-        //     CalcFormula = lookup("Lot No. Information"."OBF-Alternate Lot No." WHERE("Item No." = FIELD("Item No."),
-        //                                                                             "Lot No." = FIELD("Lot No.")));
-        //     FieldClass = FlowField;
-        //     Editable = false;
-        // }
         field(15; "Date Filter"; Date)
         {
             Caption = 'Date Filter';
             FieldClass = FlowFilter;
-        }
-        //TODO: 20250617 Confirmed Don't need
-        //TODO: 20250617 Review Later. 0 References // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-        field(16; "Label Value"; Text[50])
-        {
-            Caption = 'Label';
-            Editable = false;
         }
         field(17; "Buyer Code"; Code[20])
         {
@@ -160,19 +142,6 @@ table 60100 DistinctItemLot
             FieldClass = FlowField;
             ToolTip = 'Specifies the value of the On Hand Quantity field.';
         }
-        //TODO: 20250617 Confirmed Don't need
-        //TODO: 20250617 Review Later. 0 References // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-        // field(31; "Total Quantity for Item Lot"; Decimal)
-        // {
-        //     CalcFormula = sum("Item Ledger Entry".Quantity where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
-        //                                                                       "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
-        //                                                                       "Posting Date" = field("Date Filter")));
-        //     Caption = 'Total Quantity for Item Lot';
-        //     DecimalPlaces = 0 : 0;
-        //     Editable = false;
-        //     Enabled = false;
-        //     FieldClass = FlowField;
-        // }
         field(32; "On Order Quantity"; Decimal)
         {
             CalcFormula = sum("Reservation Entry"."Qty. to Handle (Base)" where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
@@ -293,17 +262,6 @@ table 60100 DistinctItemLot
             Editable = false;
             ToolTip = 'Specifies the value of the On Order Weight field.';
         }
-        // /// <summary>
-        // /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/926 - Add Sustainability Cert to Inv. Status Summary Pages
-        // /// </summary>
-        //TODO: 20250617 Confirmed Don't need
-        // field(52; "Sustainability Certification"; Code[10])
-        // {
-        //     Caption = 'Sustainability Certification';
-        //     FieldClass = Normal;
-        //     TableRelation = Certification;
-        //     ToolTip = 'Specifies the value of the Sustainability Certification field.';
-        // }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/826 - Add Production and Expiration Dates to Misc. Pages
         /// </summary>
@@ -316,23 +274,6 @@ table 60100 DistinctItemLot
         {
             Caption = 'Expiration Date';
             ToolTip = 'Specifies the value of the Expiration Date field.';
-        }
-        /// <summary>
-        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
-        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1195 - Hold Functionality
-        ///TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-        /// </summary>
-        //TODO: 20250617 Confirmed Don't need
-        field(70; "Qty. on Quality Hold"; Decimal)
-        {
-            // CalcFormula = Sum("OBF-Quality Ledger Entry"."Quantity (Base)" Where("Item No." = field("Item No."),
-            //                                                     "Variant Code" = field("Variant Code"),
-            //                                                     "Location Code" = field("Location Code"),
-            //                                                     "Lot No." = field("Lot No.")));
-            Caption = 'Quantity on Quality Hold';
-            DecimalPlaces = 0 : 0;
-            Editable = false;
-            // FieldClass = FlowField;            
         }
         field(71; "On Hand Quantity 2"; Decimal)
         {
@@ -365,17 +306,6 @@ table 60100 DistinctItemLot
             Caption = 'Container No.';
             ToolTip = 'Specifies the value of the Container No. field.';
         }
-        //TODO: 20250617 Confirmed Don't need
-        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-        // field(93; "Label Text"; Text[50])
-        // {
-        //     Caption = 'Label';
-        //     Editable = false;
-        //     CalcFormula = Lookup("Lot No. Information"."OBF-Label" WHERE("Item No." = FIELD("Item No."),
-        //                                                                 "Lot No." = FIELD("Lot No."),
-        //                                                                 "Variant Code" = field("Variant Code")));
-        //     FieldClass = FlowField;
-        // }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
         /// </summary>
@@ -402,8 +332,6 @@ table 60100 DistinctItemLot
     /// <param name="LotNo"></param>
     /// <param name="OrderNo"></param>
     /// <returns></returns>
-    //TODO: 20250617 Confirmed keep minus the commented out quality field references in the procedure
-    //TODO: 20250617 Review Later. 0 References // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
     procedure CalcAvailableQtyExcludingOrder(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]; LotNo: Code[10]; OrderNo: Code[20]) AvailableQuantity: Decimal
     var
         TempDistinctItemLot: Record DistinctItemLot temporary;
@@ -414,14 +342,13 @@ table 60100 DistinctItemLot
         TempDistinctItemLot."Location Code" := LocationCode;
         TempDistinctItemLot."Lot No." := LotNo;
         TempDistinctItemLot.SetFilter(TempDistinctItemLot."Sales Order Filter", '<>%1', OrderNo);
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/906 - Add column for "Quantity on Hold" to Inv. Status Summary pages
-        //TODO: 20250617 Confirmed keep minus the commented out quality field references in the procedure
-        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-        TempDistinctItemLot.CalcFields(TempDistinctItemLot."On Hand Quantity", TempDistinctItemLot."On Order Quantity", TempDistinctItemLot."Qty. on Sales Order"); // , DistinctItemLot."Qty. on Quality Hold"
-        AvailableQuantity := TempDistinctItemLot."On Hand Quantity" + TempDistinctItemLot."On Order Quantity" - TempDistinctItemLot."Qty. on Sales Order"; // - DistinctItemLot."Qty. on Quality Hold";
+        TempDistinctItemLot.CalcFields(TempDistinctItemLot."On Hand Quantity", TempDistinctItemLot."On Order Quantity", TempDistinctItemLot."Qty. on Sales Order"); // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        AvailableQuantity := TempDistinctItemLot."On Hand Quantity" + TempDistinctItemLot."On Order Quantity" - TempDistinctItemLot."Qty. on Sales Order"; // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
     end;
 
-    // procedure BuyerOnDrillDown(BuyerCode: Code[20])
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+    /// </summary>
     procedure BuyerOnDrillDown()
     var
         SalespersonPurchaser: Record "Salesperson/Purchaser";

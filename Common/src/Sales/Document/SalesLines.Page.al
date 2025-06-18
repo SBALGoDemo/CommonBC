@@ -53,14 +53,9 @@ page 60102 SalesLines
                 {
                     ToolTip = 'Specifies the value of the Salesperson Code field.';
                 }
-                //TODO: 20250617 Confirmed Don't need
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                // field("OBF-Sell-to Customer Name"; "OBF-Sell-to Customer Name")
-                // {
-                //     Editable = false;
-                //     ApplicationArea = All;
-                // }
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1017 - Add the columns “OBF-Unit Price (Sales Price UOM)” and “External Document No.” to Sales Lines page
+                /// <summary>
+                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1017 - Add the columns “OBF-Unit Price (Sales Price UOM)” and “External Document No.” to Sales Lines page                 
+                /// </summary>
                 field(ExternalDocumentNo; this.SalesHeader."External Document No.")
                 {
                     Caption = 'Customer PO';
@@ -114,32 +109,13 @@ page 60102 SalesLines
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies how many units are being sold.';
                 }
-                //TODO: 20250617 Confirmed Don't need
-                //TODO: Review Later. 0 References 
-                /// <summary>
-                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1477 - Add Weight column to Sales Lines Page
-                /// </summary>
-                // field("OBF-Line Net Weight"; Rec.SBSCOMLineNetWeight)
-                // {
-                //     Caption = 'Line Net Weight';
-                //     ToolTip = 'Specifies the value of the Line Net Weight field.';
-                // }
                 field("Qty. to Ship"; Rec."Qty. to Ship")
                 {
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies the quantity of items that remain to be shipped.';
                     Visible = false;
                 }
-                //TODO: 20250617 Confirmed Don't need
-                //TODO: Review Later. 0 References 
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page - Commented Out
-                // field("OBF-Reserved Qty. (Base)";"OBF-Reserved Qty. (Base)")
-                // {
-                //     ApplicationArea = Basic,Suite;
-                //     ToolTip = 'Specifies the Reserved Quantity for lots.';
-                // }
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page
-                field("OBF-Allocated Quantity"; Rec.SBSCOMAllocatedQuantity)
+                field(SBSCOMAllocatedQuantity; Rec.SBSCOMAllocatedQuantity)
                 {
                     Caption = 'Allocated Quantity';
                 }
@@ -148,14 +124,6 @@ page 60102 SalesLines
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies how each unit of the item or resource is measured, such as in pieces or hours. By default, the value in the Base Unit of Measure field on the item or resource card is inserted.';
                 }
-                //TODO: 20250617 Confirmed Don't need
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1017 - Add the columns “OBF-Unit Price (Sales Price UOM)” and “External Document No.” to Sales Lines page
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1199 - Add "Sales Unit Price" field and related functionality
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                // field("OBF-Sales Unit Price"; "OBF-Sales Unit Price")
-                // {
-                //     ApplicationArea = All;
-                // }
                 field("Line Amount"; Rec."Line Amount")
                 {
                     ApplicationArea = Basic, Suite;
@@ -246,14 +214,6 @@ page 60102 SalesLines
                     ToolTip = 'Specifies the value of the ShortcutDimCode[8] field.';
                     Visible = false;
                 }
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1493- Change "Sales Lines" drilldown to show the "Shipment Date" from the "Sales Header"
-                //TODO: 20250617 Confirmed Don't need
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                // field("OBF-Order Shipment Date 2"; "OBF-Order Shipment Date 2")
-                // {
-                //     ApplicationArea = All;
-                // }
                 field(OrderDate; this.SalesHeader."Order Date")
                 {
                     ToolTip = 'Specifies the value of the Order Date field.';
@@ -263,23 +223,6 @@ page 60102 SalesLines
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies how many units on the order line have not yet been shipped.';
                 }
-                //TODO: 20250617 Confirmed Don't need
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/758 - Create new On Order Committed Drilldown
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                // field("OBF-On-Hand Reserved Qty."; "OBF-On-Hand Reserved Qty.")
-                // {
-                //     ToolTip = 'Specifies how many units on the order line are reserved from On-Hand Qty.';
-                //     Visible = ShowReserved;
-                //     ApplicationArea = All;
-                // }
-                //TODO: 20250617 Confirmed Don't need
-                //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                // field("OBF-Committed Reserved Qty."; "OBF-Committed Reserved Qty.")
-                // {
-                //     ToolTip = 'Specifies how many units on the order line are reserved from Purchase Orders.';
-                //     Visible = ShowReserved;
-                //     ApplicationArea = All;
-                // }
             }
         }
     }
@@ -331,7 +274,6 @@ page 60102 SalesLines
 
     var
         SalesHeader: Record "Sales Header";
-        // ShowReserved: Boolean; //TODO: Review Later //TODO: 20250617 Confirmed Don't need
         ShortcutDimCode: array[8] of Code[20];
 
     /// <summary>
@@ -358,52 +300,13 @@ page 60102 SalesLines
             repeat
                 if SalesLine.Get(ReservEntry."Source Subtype", ReservEntry."Source ID", ReservEntry."Source Ref. No.") then
                     if Rec.Get(ReservEntry."Source Subtype", ReservEntry."Source ID", ReservEntry."Source Ref. No.") then
-
-                        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page -
-                        //      Replace "OBF-Reserved Qty. (Base)" flowfield with "OBF-Allocated Quantity" normal field in following block of code
-
-                        //Rec.CalcFields("OBF-Reserved Qty. (Base)");
-                        //TODO: 20250617 Confirmed Don't need
-                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                        // if LotIsOnHand then begin
-                        //     Rec."OBF-On-Hand Reserved Qty." -= ReservEntry."Qty. to Handle (Base)";
-                        //     //Rec."OBF-Committed Reserved Qty." := Rec."OBF-Reserved Qty. (Base)" - Rec."OBF-On-Hand Reserved Qty.";
-                        //     Rec."OBF-Committed Reserved Qty." := Rec."OBF-Allocated Quantity" - Rec."OBF-On-Hand Reserved Qty.";
-                        // end else begin
-                        //     Rec."OBF-Committed Reserved Qty." -= ReservEntry."Qty. to Handle (Base)";
-                        //     //Rec."OBF-On-Hand Reserved Qty." := Rec."OBF-Reserved Qty. (Base)" - "OBF-Committed Reserved Qty.";
-                        //     Rec."OBF-On-Hand Reserved Qty." := Rec."OBF-Allocated Quantity" - "OBF-Committed Reserved Qty.";
-                        // end;
                         Rec.Modify()
                     else begin
                         Rec.Init();
                         Rec.TransferFields(SalesLine);
-                        //Rec.CalcFields("OBF-Reserved Qty. (Base)");
-
-                        //TODO: 20250617 Confirmed Don't need
-                        //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                        // if LotIsOnHand then begin
-                        //     Rec."OBF-On-Hand Reserved Qty." := -ReservEntry."Qty. to Handle (Base)";
-                        //     //Rec."OBF-Committed Reserved Qty." := Rec."OBF-Reserved Qty. (Base)" - Rec."OBF-On-Hand Reserved Qty.";
-                        //     Rec."OBF-Committed Reserved Qty." := Rec."OBF-Allocated Quantity" - Rec."OBF-On-Hand Reserved Qty.";
-                        // end else begin
-                        //     Rec."OBF-Committed Reserved Qty." := -ReservEntry."Qty. to Handle (Base)";
-                        //     //Rec."OBF-On-Hand Reserved Qty." := Rec."OBF-Reserved Qty. (Base)" - "OBF-Committed Reserved Qty.";
-                        //     Rec."OBF-On-Hand Reserved Qty." := Rec."OBF-Allocated Quantity" - "OBF-Committed Reserved Qty.";
-                        // end;
-
-                        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
-                        // Rec.CalcFields("OBF-Order Shipment Date");
-                        // Rec."OBF-Order Shipment Date 2" := Rec."OBF-Order Shipment Date";
-
                         Rec.Insert();
                     end;
             until (ReservEntry.Next() = 0);
-    end;
-
-    internal procedure SetShowReserved(pShowReserved: Boolean)
-    begin
-        // this.ShowReserved := pShowReserved; //TODO: Review Later
     end;
 
     internal procedure SetUnallocatedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
@@ -424,13 +327,6 @@ page 60102 SalesLines
                 if TrackingPercent <> 100 then begin
                     Rec.Init();
                     Rec.TransferFields(SalesLine);
-
-                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1552-Allow Sorting "OBF-Sales Lines" page by Shipment Date
-                    //TODO: 20250617 Confirmed Don't need
-                    //TODO: Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                    // Rec.CalcFields("OBF-Order Shipment Date");
-                    // Rec."OBF-Order Shipment Date 2" := Rec."OBF-Order Shipment Date";
-
                     Rec.Insert();
                 end;
             until SalesLine.Next() = 0;

@@ -252,16 +252,11 @@ page 60105 ItemAvailabilityDrilldown
                 Rec."Posting Date" := PurchaseLine."Expected Receipt Date";
                 Rec.Quantity := PurchaseLine."Quantity (Base)";
                 Rec."Remaining Quantity" := PurchaseLine."Outstanding Qty. (Base)";
-                //Rec."OBF-Quantity (Source UOM)" := ReservEntry."Quantity (Base)" * PurchaseLine."Qty. per Unit of Measure";
                 Rec."Entry Type" := Rec."Entry Type"::Purchase;
                 Rec."Document Type" := Rec."Document Type"::"Purchase Order";
                 Rec.Description := PurchaseLine.Description;
                 Rec."Item Category Code" := Item."Item Category Code";
                 Rec."Location Code" := PurchaseLine."Location Code";
-
-                //TODO: 20250617 - would like to migrate this field now to be able to uncomment this code if feasible. Spend a few minutes examining PurchaseLine."OBF-Lot No." to ensure we could bring it into the solution w/o creating issues   
-                //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                //Rec."Lot No." := PurchaseLine."OBF-Lot No.";
 
                 Rec.Insert();
             until PurchaseLine.Next() = 0;

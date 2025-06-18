@@ -116,14 +116,6 @@ page 60106 InventoryStatusSummaryByDate
                     Editable = false;
                     Width = 10;
                 }
-                //TODO: 20250617 Confirmed Don't need
-                //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                // field("Alternate Lot No."; Rec."Alternate Lot No.")
-                // {
-                //     Editable = false;
-                //     Width = 5;
-                //     ApplicationArea = All;
-                // }
                 field("PO Number"; Rec."PO Number")
                 {
                     Editable = false;
@@ -163,7 +155,7 @@ page 60106 InventoryStatusSummaryByDate
                 /// <summary>
                 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
                 /// </summary>
-                field("OBF-Production Date"; Rec."Production Date")
+                field("Production Date"; Rec."Production Date")
                 {
                     Editable = false;
                     Visible = false;
@@ -237,14 +229,6 @@ page 60106 InventoryStatusSummaryByDate
                     Editable = false;
                     Width = 10;
                 }
-                //TODO: 20250617 Confirmed Don't need
-                //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                // field("Label Text"; Rec."Label Text")
-                // {
-                //     Editable = false;
-                //     Width = 5;
-                //     ApplicationArea = All;
-                // }
                 field("Buyer Code"; Rec."Buyer Code")
                 {
                     Editable = false;
@@ -379,16 +363,6 @@ page 60106 InventoryStatusSummaryByDate
         Rec."Item Description 2" := Item."Description 2";
         Rec."Search Description" := Item."Search Description";
 
-        //TODO: 20250617 Confirmed Don't need
-        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-        // Rec."Pack Size" := Item."OBF-Pack Size";
-        // if MethodofCatch.Get(Item."OBF-Method of Catch") then
-        //     Rec."Method of Catch" := MethodofCatch.Description;
-        // Rec."Brand Code" := Item."OBF-Brand Code";
-
-        // // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1653 - Wrong Purchaser for Work Order Lots on ISS by Date
-        // Rec."Buyer Code" := Item."OBF-Purchaser Code";
-
         if (Rec."On Hand Quantity" <> 0) or (Rec."On Order Quantity 2" > 0) then begin
             Rec."Total Available Quantity" := Rec."On Hand Quantity" + Rec."On Order Quantity 2" - Rec."Qty. on Sales Order";
             Rec."On Hand Weight" := Rec."Total ILE Weight for Item Lot";
@@ -407,15 +381,6 @@ page 60106 InventoryStatusSummaryByDate
                         ItemLedgerEntry.CalcFields("Cost Amount (Actual)", "Cost Amount (Expected)");
                         Rec."Value of Inventory on Hand" := Rec."Value of Inventory on Hand" + ItemLedgerEntry."Cost Amount (Expected)" +
                                 ItemLedgerEntry."Cost Amount (Actual)";
-
-                        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1040 - Set Receipt Date on Item Ledger Entries
-                        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
-                        //TODO: 20250617 Confirmed Don't need
-                        //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-                        // if ItemLedgerEntry.Quantity > 0 then begin
-                        //     Rec."Receipt Date" := ItemLedgerEntry."OBF-Receipt Date";
-                        //     Rec."OBF-Production Date" := ItemLedgerEntry."OBF-Production Date";
-                        // end;
 
                         if ItemLedgerEntry."Document Type" = ItemLedgerEntry."Document Type"::"Purchase Receipt" then begin
                             Rec."PO Number" := ItemLedgerEntry."Document No.";
@@ -440,7 +405,6 @@ page 60106 InventoryStatusSummaryByDate
                     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
                     if PurchaseLine.Get(PurchaseLine."Document Type"::Order, Rec."PO Number", ReservationEntry."Source Ref. No.") then
                         Rec."Expected Receipt Date" := PurchaseLine."Expected Receipt Date";
-                    //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - END
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
                     Rec."Production Date" := ReservationEntry.SBSCOMProductionDate;
@@ -454,12 +418,6 @@ page 60106 InventoryStatusSummaryByDate
                 Rec."Unit Cost" := Rec."Value of Inventory on Hand" / Rec."On Hand Weight"
             else
                 Rec."Unit Cost" := 0;
-
-            //TODO: 20250617 Confirmed Don't need
-            // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-            //TODO: 20250617 Review Later // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-            // if ItemVariantLotInfo.Get(pItemNo, pVariantCode, pLotNo, pLocation) then
-            //     Rec."OBF-Purchased For" := ItemVariantLotInfo."Purchased For";
 
             Rec.Insert();
         end;
