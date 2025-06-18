@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary;
+namespace SilverBay.Inventory.Tracking;
 
 using Microsoft.CRM.Team;
 using Microsoft.Inventory.Item;
@@ -15,7 +15,7 @@ using Microsoft.Inventory.Tracking;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
 /// Migrated from table 50018 "OBF-Distinct Item Lot"
 /// </summary>
-table 60303 DistinctItemLot
+table 60301 DistinctItemLot
 {
     Access = Internal;
     Caption = 'Lots';
@@ -148,7 +148,7 @@ table 60303 DistinctItemLot
                                                                                 "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
                                                                                 "Source Type" = const(39),
                                                                                 "Source Subtype" = const("1"),
-                                                                                SBSCOMLotIsOnHand2 = const(false)));
+                                                                                SBSINVLotIsOnHand2 = const(false)));
             Caption = 'On Order Quantity';
             DecimalPlaces = 0 : 0;
             Editable = false;
@@ -187,7 +187,7 @@ table 60303 DistinctItemLot
         }
         field(36; "On Order Weight"; Decimal)
         {
-            CalcFormula = sum("Reservation Entry".SBSCOMNetWeighttoHandle where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+            CalcFormula = sum("Reservation Entry".SBSINVNetWeighttoHandle where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
                                                                                  "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
                                                                                  "Source Type" = const(39),
                                                                                  "Source Subtype" = const("1")));
@@ -198,7 +198,7 @@ table 60303 DistinctItemLot
         }
         field(37; "Net Weight on Sales Order"; Decimal)
         {
-            CalcFormula = - sum("Reservation Entry".SBSCOMNetWeight where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+            CalcFormula = - sum("Reservation Entry".SBSINVNetWeight where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
                                                                                  "Location Code" = field("Location Code"), "Lot No." = field("Lot No."),
                                                                                  "Source Type" = const(37),
                                                                                  "Source Subtype" = const("1")));
@@ -291,7 +291,7 @@ table 60303 DistinctItemLot
                                                                                  "Lot No." = field("Lot No."),
                                                                                  "Source Type" = const(39),
                                                                                  "Source Subtype" = const("1"),
-                                                                                 SBSCOMPurResEntryisNeg = const(true)));
+                                                                                 SBSINVPurResEntryisNeg = const(true)));
             Caption = 'Qty. in Transit';
             DecimalPlaces = 0 : 0;
             Editable = false;

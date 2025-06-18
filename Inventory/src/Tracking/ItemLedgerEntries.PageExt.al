@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary.Ledger;
+namespace SilverBay.Inventory.Tracking;
 
 using Microsoft.Inventory.Ledger;
 
@@ -6,7 +6,7 @@ using Microsoft.Inventory.Ledger;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Extract and Package Orca Bay Inv. Status by Date page for Deployment to Silver Bay        
 /// Migrated from pageextension 50033 "ItemLedgerEntries" extends "Item Ledger Entries"
 /// </summary>
-pageextension 60303 ItemLedgerEntries extends "Item Ledger Entries"
+pageextension 60300 ItemLedgerEntries extends "Item Ledger Entries"
 {
     layout
     {

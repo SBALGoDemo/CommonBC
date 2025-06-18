@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary.Sales;
+namespace SilverBay.Inventory.Tracking;
 
 using Microsoft.Finance.Dimension;
 using Microsoft.Inventory.Tracking;
@@ -11,7 +11,7 @@ using Microsoft.Utilities;
 /// This is a copy of the standard "Sales Lines" page with SourceTableTemporary set to true 
 /// Migrated from page 50071 "OBF-Sales Lines"
 /// </summary>
-page 60300 SalesLines
+page 60304 SalesLines
 {
     ApplicationArea = All;
     Caption = 'Sales Lines';
@@ -293,7 +293,7 @@ page 60300 SalesLines
         ReservEntry.SetRange(Positive, false);
         ReservEntry.SetFilter("Lot No.", '<>%1', '');
         ReservEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservEntry.SetRange(SBSCOMLotIsOnHand, LotIsOnHand);
+        ReservEntry.SetRange(SBSINVLotIsOnHand, LotIsOnHand);
         if not IncludeAllVariants then
             ReservEntry.SetRange("Variant Code", VariantCode);
         if ReservEntry.FindSet() then

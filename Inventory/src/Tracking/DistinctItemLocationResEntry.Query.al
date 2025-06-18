@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary.Tracking;
+namespace SilverBay.Inventory.Tracking;
 
 using Microsoft.Inventory.Tracking;
 

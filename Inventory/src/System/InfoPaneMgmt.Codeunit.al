@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Inventory.Item;
+namespace SilverBay.Inventory.System;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
@@ -8,14 +8,17 @@ using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Document;
-using SilverBay.Common.Inventory.Availability;
 
 /// <summary>
+/// TODO: Monitor and consider migrating this object to the Common app if/when a future requirement would 
+/// cause us to want to take dependency on the Inventory app rather than Common because of the code location.
+/// This code was initially created in the Inventory app to expedite refactoring and deployment of code originally
+/// written for Orca Bay to Silver Bay's BC. 
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
 /// Migrated from codeunit 50056 "OBF-Info Pane Mgmt"
 /// </summary>
-codeunit 60106 InfoPaneMgmt
+codeunit 60300 InfoPaneMgmt
 {
     internal procedure CalcInventoryOnHandTotalValue(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date) InventoryOnHandTotalValue: Decimal
     var
@@ -48,7 +51,7 @@ codeunit 60106 InfoPaneMgmt
         ReservationEntry.SetRange(Positive, false);
         ReservationEntry.SetFilter("Lot No.", '<>%1', '');
         ReservationEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservationEntry.SetRange(SBSCOMLotIsOnHand, true);
+        ReservationEntry.SetRange(SBSINVLotIsOnHand, true);
 
         if not IncludeAllVariants then
             ReservationEntry.SetRange("Variant Code", VariantCode);
@@ -70,7 +73,7 @@ codeunit 60106 InfoPaneMgmt
         if not IncludeAllVariants then
             ReservationEntry.SetRange("Variant Code", VariantCode);
 
-        ReservationEntry.SetRange(SBSCOMLotIsOnHand, false);
+        ReservationEntry.SetRange(SBSINVLotIsOnHand, false);
 
         ReservationEntry.CalcSums("Quantity (Base)");
 
@@ -106,7 +109,7 @@ codeunit 60106 InfoPaneMgmt
         ReservationEntry.SetRange("Variant Code", VariantCode);
         ReservationEntry.SetRange("Location Code", LocationCode);
         ReservationEntry.SetRange("Lot No.", LotNo);
-        ReservationEntry.SetRange(SBSCOMPurResEntryisNeg, true);
+        ReservationEntry.SetRange(SBSINVPurResEntryisNeg, true);
         ReservationEntries.SetTableView(ReservationEntry);
         ReservationEntries.RunModal();
     end;

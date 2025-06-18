@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary.Sales;
+namespace SilverBay.Inventory.Tracking;
 
 using Microsoft.Sales.Document;
 
@@ -6,7 +6,7 @@ using Microsoft.Sales.Document;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620
 /// Migrated from codeunit 50050 "OBF-Sales Events"
 /// </summary>
-codeunit 60300 SalesHeaderSubscribers
+codeunit 60302 SalesHeaderSubscribers
 {
     Access = Internal;
     SingleInstance = true;

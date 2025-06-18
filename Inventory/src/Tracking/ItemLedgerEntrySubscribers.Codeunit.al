@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary.Ledger;
+namespace SilverBay.Inventory.Tracking;
 
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Item;
@@ -7,7 +7,7 @@ using Microsoft.Inventory.Item;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620
 /// Migrated from codeunit 50051 "OBF-Purchasing Events"
 /// </summary>
-codeunit 60302 ItemLedgerEntrySubscribers
+codeunit 60301 ItemLedgerEntrySubscribers
 {
     Access = Internal;
     SingleInstance = true;

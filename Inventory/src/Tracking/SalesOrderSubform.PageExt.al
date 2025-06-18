@@ -1,20 +1,18 @@
-namespace SilverBay.Inventory.StatusSummary.Sales;
+namespace SilverBay.Inventory.Tracking;
 
 using Microsoft.Sales.Document;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Extract and Package Orca Bay Inv. Status by Date page for Deployment to Silver Bay
-/// Migrated from pageextension 50031 "SalesLines" extends "Sales Lines"
+/// Migrated from pageextension 50042 "SalesOrderSubform" extends "Sales Order Subform"
 /// </summary>
-pageextension 60300 SalesLines extends "Sales Lines"
+pageextension 60302 SalesOrderSubform extends "Sales Order Subform"
 {
     layout
     {
-        addafter("Qty. to Ship")
+        addafter(Quantity)
         {
-            /// <summary>
-            /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1182 - Rebates
-            /// </summary>
+            // https://odydev.visualstudio.com/ThePlan/_workitems/edit/755 - Add "Allocated Quantity" column to "Sales Lines" page
             field(SBSINVAllocatedQuantity; Rec.SBSINVAllocatedQuantity)
             {
                 ApplicationArea = all;

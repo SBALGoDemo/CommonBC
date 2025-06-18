@@ -10,14 +10,6 @@
   "help": "https://www.silverbayseafoods.com/",
   "url": "https://www.silverbayseafoods.com/",
   "logo": "SilverBaySeafoods.png",
-  "dependencies": [
-    {
-      "id": "127b2d32-672c-4fe1-b466-9dbe91f87642",
-      "name": "Common",
-      "publisher": "Silver Bay Seafoods",
-      "version": "25.0.0.0"
-    }
-  ],
   "platform": "25.0.0.0",
   "application": "25.0.0.0",
   "runtime": "14.0",

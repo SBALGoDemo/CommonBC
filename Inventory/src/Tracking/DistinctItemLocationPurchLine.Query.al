@@ -1,4 +1,4 @@
-namespace SilverBay.Inventory.StatusSummary.Purchases;
+namespace SilverBay.Inventory.Tracking;
 
 using Microsoft.Purchases.Document;
 

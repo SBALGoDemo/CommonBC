@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Inventory.Availability;
+namespace SilverBay.Inventory.System;
 
 using Microsoft.Finance.Dimension;
 using Microsoft.Foundation.Address;
@@ -18,12 +18,16 @@ using Microsoft.Sales.Customer;
 using Microsoft.Sales.Document;
 
 /// <summary>
+/// TODO: Monitor and consider migrating this object to the Common app if/when a future requirement would 
+/// cause us to want to take dependency on the Inventory app rather than Common because of the code location.
+/// This code was initially created in the Inventory app to expedite refactoring and deployment of code originally
+/// written for Orca Bay to Silver Bay's BC.
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 /// Note - This table is based on the Item Ledger Entry table.
 /// Migrated from table 50019 "OBF-Item Availability Buffer"
 /// </summary>
-table 60102 ItemAvailabilityBuffer
+table 60300 ItemAvailabilityBuffer
 {
     Access = Internal;
     Caption = 'Item Availability Buffer';

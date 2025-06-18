@@ -1,4 +1,4 @@
-namespace SilverBay.Common.Inventory.Availability;
+namespace SilverBay.Inventory.System;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
@@ -7,13 +7,17 @@ using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
 
 /// <summary>
+/// TODO: Monitor and consider migrating this object to the Common app if/when a future requirement would 
+/// cause us to want to take dependency on the Inventory app rather than Common because of the code location.
+/// This code was initially created in the Inventory app to expedite refactoring and deployment of code originally
+/// written for Orca Bay to Silver Bay's BC. 
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
 /// Migrated from page 50058 "OBF-Item Avail. Drilldown"
 /// </summary>
-page 60105 ItemAvailabilityDrilldown
+page 60301 ItemAvailabilityDrilldown
 {
     ApplicationArea = All;
     Caption = 'Item Availability Drilldown';
