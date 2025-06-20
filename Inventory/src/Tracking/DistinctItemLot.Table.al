@@ -210,7 +210,7 @@ table 60301 DistinctItemLot
         }
         field(38; "Available Net Weight"; Decimal)
         {
-            Caption = 'Available Weight';
+            Caption = 'Available Net Weight';
             DecimalPlaces = 0 : 0;
             ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders';
         }
@@ -250,7 +250,7 @@ table 60301 DistinctItemLot
         /// </summary>
         field(44; "On Order Quantity 2"; Decimal)
         {
-            Caption = 'On Order Quantity';
+            Caption = '+On Order Quantity';
             DecimalPlaces = 0 : 0;
             Editable = false;
             ToolTip = 'Specifies the value of the On Order Quantity field.';

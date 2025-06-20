@@ -438,12 +438,12 @@ table 60300 ItemAvailabilityBuffer
             Caption = 'Return Reason Code';
             TableRelation = "Return Reason";
         }
-        field(60300; "Entry No. 2"; Integer)
+        field(60348; "Entry No. 2"; Integer)
         {
             Caption = 'Entry No.';
             ToolTip = 'Specifies the entry number for the entry.';
         }
-        field(60301; "Date Filter"; Date)
+        field(60349; "Date Filter"; Date)
         {
             Caption = 'Date Filter';
             FieldClass = FlowFilter;
