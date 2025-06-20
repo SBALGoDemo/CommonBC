@@ -29,6 +29,9 @@ page 60300 InventoryStatusSummaryByDate
     PageType = List;
     SourceTable = DistinctItemLot;
     UsageCategory = Lists;
+    AboutTitle = 'About Inventory Status Summary by Date';
+    //TODO: Add additional AboutText and other help comments to make this page more self-documenting 
+    AboutText = 'The Inventory Status Summary by Date page uses a temporary table in the background to display data. The temporary table is NOT automatically populated with records when the page is opened (for performance / user experience reasons). Remember to run the Get Data action or change the As of Date Filter value to generate records in the page after opening it.';
     layout
     {
         area(Content)
@@ -42,11 +45,8 @@ page 60300 InventoryStatusSummaryByDate
                     ToolTip = 'Specifies the value of the As of Date Filter field.';
                     trigger OnValidate()
                     begin
-                        Rec.DeleteAll();
-                        Rec.SetRange("Date Filter", 0D, this.DateFilter);
                         this.SetPageData();
-                        Rec.FindFirst();
-                        CurrPage.Update();
+                        // CurrPage.Update(false);
                         CurrPage.ItemFactBox.Page.SetValues(this.DateFilter, '', true);
                     end;
                 }
@@ -277,8 +277,6 @@ page 60300 InventoryStatusSummaryByDate
                 trigger OnAction()
                 begin
                     this.SetPageData();
-                    Rec.FindFirst();
-                    CurrPage.Update();
                 end;
             }
 
@@ -299,23 +297,22 @@ page 60300 InventoryStatusSummaryByDate
         }
     }
 
-    trigger OnOpenPage()
+    trigger OnInit()
     var
         DateFormula: DateFormula;
     begin
+        CurrPage.Editable(true);
+
         Evaluate(DateFormula, '1Y');
         this.DateFilter := CalcDate(DateFormula, WorkDate());
 
-        Rec.DeleteAll();
-        Rec.SetRange("Date Filter", 0D, this.DateFilter);
-        Rec."Item No." := '';
-        Rec.Insert();
-
         Rec.SetCurrentKey("Item No.", "Variant Code", "Location Code", "Lot No.");
-        Rec.FindFirst();
+    end;
 
-        CurrPage.Editable(true);
-        CurrPage.Update();
+    trigger OnOpenPage()
+    begin
+        Rec.SetRange("Date Filter", 0D, this.DateFilter);
+        Rec.Insert();
     end;
 
     trigger OnAfterGetCurrRecord()
@@ -460,12 +457,13 @@ page 60300 InventoryStatusSummaryByDate
 
     local procedure SetPageData()
     var
-        DistinctItemLotLocResEntry: Query DistinctItemLotLocResEntry;
         DistinctItemLotLocationILE: Query DistinctItemLotLocationILE;
-        DistinctItemLocationPurchLine: Query DistinctItemLocationPurchLine;
+        DistinctItemLotLocResEntry: Query DistinctItemLotLocResEntry;
         DistinctItemLocationResEntry: Query DistinctItemLocationResEntry;
+        DistinctItemLocationPurchLine: Query DistinctItemLocationPurchLine;
         NextRowNo: Integer;
     begin
+        Rec.Reset();
         Rec.DeleteAll();
 
         DistinctItemLotLocationILE.SetRange(Posting_Date_Filter, 0D, this.DateFilter);
@@ -490,5 +488,11 @@ page 60300 InventoryStatusSummaryByDate
             if this.InfoPaneMgmt.CheckItemTrackingCodeNotBlank(DistinctItemLocationPurchLine.Item_No) then
                 if not this.RecordExists(DistinctItemLocationPurchLine.Item_No, DistinctItemLocationPurchLine.Variant_Code, '', DistinctItemLocationPurchLine.Location_Code) then
                     this.AddRecord(DistinctItemLocationPurchLine.Item_No, DistinctItemLocationPurchLine.Variant_Code, '', DistinctItemLocationPurchLine.Location_Code, false, NextRowNo);
+
+        Rec.Reset();
+        Rec.SetRange("Date Filter", 0D, this.DateFilter);
+
+        if not Rec.IsEmpty() then
+            Rec.Find('-');
     end;
 }
