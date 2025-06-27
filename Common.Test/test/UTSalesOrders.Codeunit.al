@@ -3,6 +3,7 @@ namespace SilverBay.Common.Sales.Document;
 using Microsoft.Sales.Document;
 using System.TestLibraries.Utilities;
 using Microsoft.Sales.Customer;
+using Microsoft.Foundation.Shipping;
 
 codeunit 80100 UTSalesOrders
 {
@@ -16,6 +17,7 @@ codeunit 80100 UTSalesOrders
     var
         Assert: Codeunit "Library Assert";
         LibrarySales: Codeunit "Library - Sales";
+        LibraryInventory: Codeunit "Library - Inventory";
         WrongFieldValueErr: Label 'Incorrect field value for %1.', Comment = '%1=Property name';
 
     //     #region UI Tests
@@ -29,7 +31,7 @@ codeunit 80100 UTSalesOrders
         // [GIVEN] Sales Order List page
         this.ViewSalesOrderList(SalesOrderList);
 
-        //[THEN] Ship-to City field is visible on the Sales Order List page
+        //[THEN] Additional fields are visible on the Sales Order List page
         this.VerifyUIOnSalesOrderList(SalesOrderList);
     end;
 
@@ -38,6 +40,7 @@ codeunit 80100 UTSalesOrders
     var
         Customer: Record Customer;
         SalesHeader: Record "Sales Header";
+        ShippingAgent: Record "Shipping Agent";
         SalesOrderList: TestPage "Sales Order List";
     begin
         //[SCENARIO #0002] Additional fields for Silver Bay requirements display the expected values on Sales Order List
@@ -46,13 +49,13 @@ codeunit 80100 UTSalesOrders
         this.CreateCustomerWithAddress(Customer);
 
         // [GIVEN] Sales Order for the customer
-        this.CreateSalesOrderForCustomerNo(SalesHeader, Customer."No.");
+        this.CreateSalesOrderForCustomerNo(SalesHeader, ShippingAgent, Customer."No.");
 
         // [GIVEN] Sales Order List page
         this.ViewSalesOrderList(SalesOrderList, SalesHeader);
 
         //[THEN] Ship-to City on the Sales Order List page has the expected Ship-to City value
-        this.VerifyUIValuesOnSalesOrderList(SalesOrderList, Customer);
+        this.VerifyUIValuesOnSalesOrderList(SalesOrderList, ShippingAgent, Customer);
     end;
     //     #endregion UI Tests
 
@@ -62,9 +65,11 @@ codeunit 80100 UTSalesOrders
         this.LibrarySales.CreateCustomerAddress(Customer);
     end;
 
-    local procedure CreateSalesOrderForCustomerNo(var SalesHeader: Record "Sales Header"; CustomerNo: Code[20])
+    local procedure CreateSalesOrderForCustomerNo(var SalesHeader: Record "Sales Header"; ShippingAgent: Record "Shipping Agent"; CustomerNo: Code[20])
     begin
         this.LibrarySales.CreateSalesOrderForCustomerNo(SalesHeader, CustomerNo);
+        this.LibraryInventory.CreateShippingAgent(ShippingAgent);
+        SalesHeader."Shipping Agent Code" := ShippingAgent.Code;
     end;
 
     local procedure ViewSalesOrderList(var SalesOrderList: TestPage "Sales Order List")
@@ -80,13 +85,23 @@ codeunit 80100 UTSalesOrders
 
     local procedure VerifyUIOnSalesOrderList(var SalesOrderList: TestPage "Sales Order List")
     begin
+        this.Assert.IsTrue(SalesOrderList."Shipment Date".Visible(), 'Visible');
+        this.Assert.IsTrue(SalesOrderList.SBSCOMShippingAgentCode.Visible(), 'Visible');
         this.Assert.IsTrue(SalesOrderList.SBSCOMShiptoCity.Visible(), 'Visible');
+        this.Assert.IsTrue(SalesOrderList.SBSCOMShiptoCounty.Visible(), 'Visible');
+        this.Assert.IsTrue(SalesOrderList.SBSCOMOrderDate.Visible(), 'Visible');
+        this.Assert.IsTrue(SalesOrderList.SBSCOMCreatedByUser.Visible(), 'Visible');
         SalesOrderList.Close();
     end;
 
-    local procedure VerifyUIValuesOnSalesOrderList(var SalesOrderList: TestPage "Sales Order List"; Customer: Record Customer)
+    local procedure VerifyUIValuesOnSalesOrderList(var SalesOrderList: TestPage "Sales Order List"; ShippingAgent: Record "Shipping Agent"; Customer: Record Customer)
     begin
+        this.Assert.AreEqual(Format(WorkDate(), 0, '<Month>/<Day>/<Year4>'), SalesOrderList."Shipment Date".Value, StrSubstNo(this.WrongFieldValueErr, SalesOrderList."Shipment Date".Caption()));
+        this.Assert.AreEqual(ShippingAgent.Code, SalesOrderList.SBSCOMShippingAgentCode.Value, StrSubstNo(this.WrongFieldValueErr, SalesOrderList.SBSCOMShippingAgentCode.Caption()));
         this.Assert.AreEqual(Customer.City, SalesOrderList.SBSCOMShiptoCity.Value, StrSubstNo(this.WrongFieldValueErr, SalesOrderList.SBSCOMShiptoCity.Caption()));
+        this.Assert.AreEqual(Customer.County, SalesOrderList.SBSCOMShiptoCounty.Value, StrSubstNo(this.WrongFieldValueErr, SalesOrderList.SBSCOMShiptoCounty.Caption()));
+        this.Assert.AreEqual(Format(WorkDate(), 0, '<Month>/<Day>/<Year4>'), SalesOrderList.SBSCOMOrderDate.Value, StrSubstNo(this.WrongFieldValueErr, SalesOrderList."Shipment Date".Caption()));
+        this.Assert.AreEqual(Database.UserId(), SalesOrderList.SBSCOMCreatedByUser.Value, StrSubstNo(this.WrongFieldValueErr, SalesOrderList.SBSCOMCreatedByUser.Caption()));
         SalesOrderList.Close();
     end;
 }
