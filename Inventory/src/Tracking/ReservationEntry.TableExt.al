@@ -3,6 +3,8 @@ namespace SilverBay.Inventory.Tracking;
 using Microsoft.CRM.Team;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Purchases.Document;
+using Microsoft.Inventory.Item;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay

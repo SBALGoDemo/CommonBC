@@ -69,6 +69,10 @@ table 60301 DistinctItemLot
         {
             Caption = 'Pack Size';
             ToolTip = 'Specifies the value of the Pack Size field.';
+            ObsoleteState = Pending;
+            ;
+            ObsoleteReason = 'Field is no longer used.';
+            ObsoleteTag = '2025-06-26';
         }
         field(9; "Method of Catch"; Text[50])
         {
