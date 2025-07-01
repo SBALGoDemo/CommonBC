@@ -297,6 +297,9 @@ page 60302 ItemFactbox
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
         Rec.CalcFields(Inventory, "Qty. on Purch. Order");
 
+        this.TotalQty := Rec.Inventory;
+        this.TotalOnHandWeight := this.TotalQty * Rec."Net Weight";
+
         this.OnOrderQty := Rec."Qty. on Purch. Order";
         this.OnOrderWeight := this.OnOrderQty * Rec."Net Weight";
         this.OnOrderCommitted := this.InfoPaneMgmt.CalcInventoryOnOrderTotalCommitted(Rec."No.", this.VariantCode, this.ShowAllVariants);
