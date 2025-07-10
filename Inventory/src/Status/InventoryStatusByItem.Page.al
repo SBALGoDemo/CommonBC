@@ -9,7 +9,7 @@ using SilverBay.Inventory.Tracking;
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
 /// Migrated from page 50095 "OBF-Inv. Status by Item"
 /// </summary>
-page 60312 InventoryStatusByItem
+page 60305 InventoryStatusByItem
 {
     ApplicationArea = All;
     Caption = 'Inventory Status By Item';
