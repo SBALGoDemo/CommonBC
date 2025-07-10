@@ -1,12 +1,26 @@
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2894 - Migrate Orca Bay "Inv. Status by Item" page to Common/Inventory app
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
-page 60314 InvStatusByItem
+namespace SilverBay.Inventory.Status;
+
+using Microsoft.Inventory.Item;
+// using Microsoft.Inventory.Ledger;
+// using Microsoft.Inventory.Tracking;
+// using Microsoft.Purchases.Document;
+// using Microsoft.Purchases.History;
+using SilverBay.Inventory.System;
+using SilverBay.Inventory.Tracking;
+
+
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2894 - Migrate Orca Bay "Inv. Status by Item" page to Common/Inventory app
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
+/// Migrated from page 50095 "OBF-Inv. Status by Item"
+/// </summary>
+page 60312 InventoryStatusByItem
 {
     PageType = List;
     UsageCategory = Tasks;
     SourceTable = Item;
     Editable = false;
-    Caption = 'Inv. Status by Item';
+    Caption = 'Inventory Status By Item';
     ApplicationArea = All;
 
     layout
@@ -73,7 +87,7 @@ page 60314 InvStatusByItem
                     DecimalPlaces = 0 : 0;
                     ToolTip = 'Shows the quantity on purchase order for the item.';
                 }
-                field("OBF-Qty. on Sales Orders"; Rec."OBF-Qty. on Sales Orders")
+                field("OBF-Qty. on Sales Orders"; Rec.SBSINVQtyonSalesOrders)
                 {
                     ApplicationArea = All;
                     Caption = '-Qty. on Sales Orders';
@@ -177,13 +191,13 @@ page 60314 InvStatusByItem
         ShowAllVariants := true;
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold 
-        Rec.CalcFields(Inventory, "Qty. on Purch. Order", "OBF-Qty. on Sales Orders");
+        Rec.CalcFields(Inventory, "Qty. on Purch. Order", SBSINVQtyonSalesOrders);
         OnHandQuantity := Rec.Inventory;
 
-        TotalAvailableQuantity := OnHandQuantity + Rec."Qty. on Purch. Order" - Rec."OBF-Qty. on Sales Orders";
+        TotalAvailableQuantity := OnHandQuantity + Rec."Qty. on Purch. Order" - Rec.SBSINVQtyonSalesOrders;
         AvailableNetWeight := TotalAvailableQuantity * Rec."Net Weight";
         OnOrderNetWeight := Rec."Qty. on Purch. Order" * Rec."Net Weight";
-        NetWeightOnSalesOrders := Rec."OBF-Qty. on Sales Orders" * Rec."Net Weight";
+        NetWeightOnSalesOrders := Rec.SBSINVQtyonSalesOrders * Rec."Net Weight";
         OnHandWeight := OnHandQuantity * Rec."Net Weight";
         AvailableNetWeight := TotalAvailableQuantity * Rec."Net Weight";
     end;
