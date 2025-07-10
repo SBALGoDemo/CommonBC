@@ -3,7 +3,7 @@ namespace SilverBay.Common.Purchases.Vendor;
 using Microsoft.Purchases.Vendor;
 using System.TestLibraries.Utilities;
 
-codeunit 80102 UTVendorBankAccounts
+codeunit 80103 UTVendorBankAccounts
 {
     Subtype = Test;
 
