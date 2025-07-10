@@ -13,23 +13,23 @@ tableextension 60308 Item extends Item
     {
         field(60300; SBSINVQtyonPurchaseOrders; Decimal)
         {
-            Caption = 'Qty. on Purchase Orders';
-            CalcFormula = Sum("Reservation Entry"."Qty. to Handle (Base)" where("Item No." = field("No."),
+            CalcFormula = sum("Reservation Entry"."Qty. to Handle (Base)" where("Item No." = field("No."),
                                                                                  "Source Type" = const(39),
                                                                                  "Source Subtype" = const("1")));
-            FieldClass = FlowField;
-            Editable = false;
+            Caption = 'Qty. on Purchase Orders';
             DecimalPlaces = 0 : 0;
+            Editable = false;
+            FieldClass = FlowField;
         }
         field(60301; SBSINVQtyonSalesOrders; Decimal)
         {
-            Caption = 'Qty. on Sales Orders';
             CalcFormula = - sum("Reservation Entry"."Qty. to Handle (Base)" where("Item No." = field("No."),
                                                                                  "Source Type" = const(37),
                                                                                  "Source Subtype" = const("1")));
-            FieldClass = FlowField;
-            Editable = false;
+            Caption = 'Qty. on Sales Orders';
             DecimalPlaces = 0 : 0;
+            Editable = false;
+            FieldClass = FlowField;
         }
     }
 }

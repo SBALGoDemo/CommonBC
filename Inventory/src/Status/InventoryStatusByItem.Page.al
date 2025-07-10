@@ -8,7 +8,6 @@ using Microsoft.Inventory.Item;
 using SilverBay.Inventory.System;
 using SilverBay.Inventory.Tracking;
 
-
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2894 - Migrate Orca Bay "Inv. Status by Item" page to Common/Inventory app
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
@@ -16,145 +15,137 @@ using SilverBay.Inventory.Tracking;
 /// </summary>
 page 60312 InventoryStatusByItem
 {
-    PageType = List;
-    UsageCategory = Tasks;
-    SourceTable = Item;
-    Editable = false;
-    Caption = 'Inventory Status By Item';
     ApplicationArea = All;
+    Caption = 'Inventory Status By Item';
+    Editable = false;
+    PageType = List;
+    SourceTable = Item;
+    UsageCategory = Tasks;
 
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(Group)
             {
+                Caption = 'Group';
                 field("No."; Rec."No.")
                 {
-                    ApplicationArea = All;
-                    Width = 7;
+                    Caption = 'No.';
                     DrillDown = true;
                     DrillDownPageId = "Item Card";
                     ToolTip = 'Specifies the item number.';
-                    trigger OnDrillDown();
+                    Width = 7;
+                    trigger OnDrillDown()
                     begin
                         InfoPaneMgmt.ShowItem(Rec."No.");
                     end;
                 }
                 field(Description; Rec.Description)
                 {
-                    ApplicationArea = All;
-                    Width = 40;
+                    Caption = 'Description';
                     ToolTip = 'Specifies the item description.';
+                    Width = 40;
                 }
                 field("Description 2"; Rec."Description 2")
                 {
-                    ApplicationArea = All;
-                    Width = 15;
+                    Caption = 'Description 2';
                     ToolTip = 'Specifies the second item description.';
+                    Width = 15;
                 }
                 field("Search Description"; Rec."Search Description")
                 {
-                    ApplicationArea = All;
-                    Width = 30;
+                    Caption = 'Search Description';
                     ToolTip = 'Specifies the search description for the item.';
+                    Width = 30;
                 }
                 field("Item Category Code"; Rec."Item Category Code")
                 {
-                    ApplicationArea = All;
-                    Width = 7;
+                    Caption = 'Item Category Code';
                     ToolTip = 'Specifies the item category code.';
+                    Width = 7;
                 }
                 field("Country/Region of Origin Code"; Rec."Country/Region of Origin Code")
                 {
-                    ApplicationArea = All;
-                    Width = 7;
+                    Caption = 'Country/Region of Origin Code';
                     ToolTip = 'Specifies the country or region of origin code.';
+                    Width = 7;
                 }
                 field(OnHandQuantity; OnHandQuantity)
                 {
-                    ApplicationArea = All;
                     Caption = 'On Hand Quantity';
+                    DecimalPlaces = 0 : 0;
                     ToolTip = 'Excludes Quantity on Quality Hold. Shows the current on hand quantity for the item.';
                     Width = 7;
-                    DecimalPlaces = 0 : 0;
                 }
                 field("Qty. on Purch. Order"; Rec."Qty. on Purch. Order")
                 {
-                    ApplicationArea = All;
                     Caption = '+On Order Quantity';
-                    Width = 7;
                     DecimalPlaces = 0 : 0;
                     ToolTip = 'Shows the quantity on purchase order for the item.';
+                    Width = 7;
                 }
                 field("OBF-Qty. on Sales Orders"; Rec.SBSINVQtyonSalesOrders)
                 {
-                    ApplicationArea = All;
                     Caption = '-Qty. on Sales Orders';
-                    Width = 7;
                     DecimalPlaces = 0 : 0;
                     ToolTip = 'Shows the quantity on sales orders for the item.';
+                    Width = 7;
                 }
 
-                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold 
+                // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
                 field(TotalAvailableQuantity; TotalAvailableQuantity)
                 {
-                    ApplicationArea = All;
                     Caption = '=Total Available Quantity';
+                    DecimalPlaces = 0 : 0;
                     ToolTip = '=On Hand Quantity + On Order Quantity - Quantity on Sales Orders; Excludes Quantity on Quality Hold.';
                     Width = 7;
-                    DecimalPlaces = 0 : 0;
-                    trigger OnDrillDown();
+                    trigger OnDrillDown()
                     begin
                         InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", VariantCode, ShowAllVariants, DateFilter);
                     end;
                 }
                 field(OnHandWeight; OnHandWeight)
                 {
-                    ApplicationArea = All;
                     Caption = 'On Hand Weight';
-                    Visible = false;
-                    Width = 8;
                     DecimalPlaces = 0 : 0;
                     ToolTip = 'Shows the on hand weight for the item.';
+                    Visible = false;
+                    Width = 8;
                 }
                 field(OnOrderNetWeight; OnOrderNetWeight)
                 {
-                    ApplicationArea = All;
                     Caption = 'On Order Net Weight';
-                    Visible = false;
-                    Width = 8;
                     DecimalPlaces = 0 : 0;
                     ToolTip = 'Shows the net weight on order for the item.';
+                    Visible = false;
+                    Width = 8;
                 }
                 field(NetWeightOnSalesOrders; NetWeightOnSalesOrders)
                 {
-                    ApplicationArea = All;
                     Caption = 'Net Weight on Sales Orders';
-                    Visible = false;
-                    Width = 8;
                     DecimalPlaces = 0 : 0;
                     ToolTip = 'Shows the net weight on sales orders for the item.';
+                    Visible = false;
+                    Width = 8;
                 }
                 field(AvailableNetWeight; AvailableNetWeight)
                 {
-                    ApplicationArea = All;
                     Caption = 'Available Net Weight';
-                    Width = 8;
                     DecimalPlaces = 0 : 0;
                     ToolTip = 'Shows the available net weight for the item.';
-                    trigger OnDrillDown();
+                    Width = 8;
+                    trigger OnDrillDown()
                     begin
                         InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", VariantCode, ShowAllVariants, DateFilter);
                     end;
                 }
                 field(ShowItemLots; ShowItemLotsText)
                 {
-                    ApplicationArea = All;
                     Caption = 'Show Item Lots';
                     StyleExpr = 'AttentionAccent';
                     ToolTip = 'Click to view item lots for this item.';
-                    trigger OnDrillDown();
+                    trigger OnDrillDown()
                     var
                         DistinctItemLotLocations: Page DistinctItemLotList;
                     begin
@@ -164,33 +155,31 @@ page 60312 InventoryStatusByItem
                 }
             }
         }
-        area(factboxes)
+        area(FactBoxes)
         {
             part(ItemFactBox; ItemFactbox)
             {
                 ApplicationArea = Suite;
-                SubPageLink = "No." = FIELD("No.");
+                Caption = 'ItemFactbox';
+                SubPageLink = "No." = field("No.");
             }
         }
     }
 
-    actions
-    {
-    }
 
-    trigger OnOpenPage();
+    trigger OnOpenPage()
     begin
         VariantCode := '';
-        Datefilter := CalcDate('<1Y>', WorkDate());
-        Rec.Setfilter(Inventory, '<>%1', 0);
+        DateFilter := CalcDate('<1Y>', WorkDate());
+        Rec.SetFilter(Inventory, '<>%1', 0);
     end;
 
-    trigger OnAfterGetRecord();
+    trigger OnAfterGetRecord()
     begin
         ShowItemLotsText := ShowItemLotsLbl;
         ShowAllVariants := true;
 
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold 
+        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
         Rec.CalcFields(Inventory, "Qty. on Purch. Order", SBSINVQtyonSalesOrders);
         OnHandQuantity := Rec.Inventory;
 
@@ -204,16 +193,15 @@ page 60312 InventoryStatusByItem
 
     var
         InfoPaneMgmt: Codeunit InfoPaneMgmt;
-        DateFilter: Date;
         ShowAllVariants: Boolean;
-        VariantCode: code[10];
-        ShowItemLotsText: Text[40];
-        ShowItemLotsLbl: Label 'Show Item Lots';
-        OnHandQuantity: Decimal;
-        TotalAvailableQuantity: Decimal;
+        VariantCode: Code[10];
+        DateFilter: Date;
         AvailableNetWeight: Decimal;
-        OnOrderNetWeight: Decimal;
         NetWeightOnSalesOrders: Decimal;
+        OnHandQuantity: Decimal;
         OnHandWeight: Decimal;
+        OnOrderNetWeight: Decimal;
+        TotalAvailableQuantity: Decimal;
+        ShowItemLotsLbl: Label 'Show Item Lots';
+        ShowItemLotsText: Text[40];
 }
-
