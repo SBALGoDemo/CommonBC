@@ -66,14 +66,14 @@ codeunit 60300 InfoPaneMgmt
     procedure SetReservationEntryFilters(var ReservationEntry: Record "Reservation Entry"; ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; IsPositive: Boolean; LotIsOnHand: Boolean)
     begin
         ReservationEntry.Reset();
-        ReservationEntry.SetRange("Item No.", ItemNo);
-        ReservationEntry.SetRange(Positive, IsPositive);
         ReservationEntry.SetFilter("Lot No.", '<>%1', '');
         ReservationEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservationEntry.SetRange(SBSINVLotIsOnHand, LotIsOnHand);
 
+        ReservationEntry.SetRange("Item No.", ItemNo);
         if not IncludeAllVariants then
             ReservationEntry.SetRange("Variant Code", VariantCode);
+        ReservationEntry.SetRange(Positive, IsPositive);
+        ReservationEntry.SetRange(SBSINVLotIsOnHand, LotIsOnHand);
     end;
 
     local procedure GetTotal(var ReservationEntry: Record "Reservation Entry"): Decimal

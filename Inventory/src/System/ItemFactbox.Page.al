@@ -105,7 +105,7 @@ page 60302 ItemFactbox
                     var
                         SalesLines: Page SalesLines;
                     begin
-                        SalesLines.SetOnOrderCommittedSalesLines(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
+                        SalesLines.SetOnOrderCommittedSalesLines(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
                         SalesLines.RunModal();
                     end;
                 }
@@ -120,7 +120,7 @@ page 60302 ItemFactbox
                     var
                         SalesLines: Page SalesLines;
                     begin
-                        SalesLines.SetOnOrderCommittedSalesLines(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
+                        SalesLines.SetOnOrderCommittedSalesLines(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
                         SalesLines.RunModal();
                     end;
                 }
