@@ -1,6 +1,7 @@
 namespace SilverBay.Common.TestTools.Configuration;
 
 using System.TestTools.TestRunner;
+using SilverBay.Common.Purchases.Vendor;
 using SilverBay.Common.Sales.Document;
 
 codeunit 80101 CommonTestSuiteInstall
@@ -27,7 +28,7 @@ codeunit 80101 CommonTestSuiteInstall
         TestSuiteMgt.CreateTestSuite(SuiteName);
         ALTestSuite.Get(SuiteName);
 
-        TestSuiteMgt.SelectTestMethodsByRange(ALTestSuite, StrSubstNo('%1', Codeunit::UTSalesOrders));
+        TestSuiteMgt.SelectTestMethodsByRange(ALTestSuite, StrSubstNo('%1|%2', Codeunit::UTSalesOrders, Codeunit::UTVendorBankAccounts));
         TestSuiteMgt.ChangeTestRunner(ALTestSuite, Codeunit::"Test Runner - Isol. Disabled");
     end;
 }
