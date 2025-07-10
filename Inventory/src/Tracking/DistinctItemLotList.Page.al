@@ -59,11 +59,6 @@ page 60303 DistinctItemLotList
                     Editable = false;
                     Width = 30;
                 }
-                field("Pack Size"; Rec."Pack Size")
-                {
-                    Editable = false;
-                    Width = 10;
-                }
                 field("Method of Catch"; Rec."Method of Catch")
                 {
                     Editable = false;
