@@ -1,10 +1,6 @@
 namespace SilverBay.Inventory.Status;
 
 using Microsoft.Inventory.Item;
-// using Microsoft.Inventory.Ledger;
-// using Microsoft.Inventory.Tracking;
-// using Microsoft.Purchases.Document;
-// using Microsoft.Purchases.History;
 using SilverBay.Inventory.System;
 using SilverBay.Inventory.Tracking;
 
@@ -17,11 +13,14 @@ page 60312 InventoryStatusByItem
 {
     ApplicationArea = All;
     Caption = 'Inventory Status By Item';
+    AdditionalSearchTerms = 'ISS,Silver,Bay,Inventory';
     Editable = false;
     PageType = List;
     SourceTable = Item;
     UsageCategory = Tasks;
-
+    AboutTitle = 'About Inventory Status by Item';
+    //TODO: Add additional AboutText and other help comments to make this page more self-documenting 
+    AboutText = 'The Inventory Status By Item page...';
     layout
     {
         area(Content)
@@ -102,7 +101,7 @@ page 60312 InventoryStatusByItem
                     Width = 7;
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", VariantCode, ShowAllVariants, DateFilter);
+                        this.InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.DateFilter);
                     end;
                 }
                 field(OnHandWeight; OnHandWeight)
@@ -137,7 +136,7 @@ page 60312 InventoryStatusByItem
                     Width = 8;
                     trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", VariantCode, ShowAllVariants, DateFilter);
+                        this.InfoPaneMgmt.TotalAvailQtyDrillDown(Rec."No.", this.VariantCode, this.ShowAllVariants, this.DateFilter);
                     end;
                 }
                 field(ShowItemLots; ShowItemLotsText)
@@ -149,7 +148,7 @@ page 60312 InventoryStatusByItem
                     var
                         DistinctItemLotLocations: Page DistinctItemLotList;
                     begin
-                        DistinctItemLotLocations.SetItem(Rec."No.", VariantCode, DateFilter);
+                        DistinctItemLotLocations.SetItem(Rec."No.", this.VariantCode, this.DateFilter);
                         DistinctItemLotLocations.RunModal();
                     end;
                 }
@@ -160,35 +159,33 @@ page 60312 InventoryStatusByItem
             part(ItemFactBox; ItemFactbox)
             {
                 ApplicationArea = Suite;
-                Caption = 'ItemFactbox';
                 SubPageLink = "No." = field("No.");
             }
         }
     }
 
-
     trigger OnOpenPage()
     begin
-        VariantCode := '';
-        DateFilter := CalcDate('<1Y>', WorkDate());
+        this.VariantCode := '';
+        this.DateFilter := CalcDate('<1Y>', WorkDate());
         Rec.SetFilter(Inventory, '<>%1', 0);
     end;
 
     trigger OnAfterGetRecord()
     begin
-        ShowItemLotsText := ShowItemLotsLbl;
-        ShowAllVariants := true;
+        this.ShowItemLotsText := this.ShowItemLotsLbl;
+        this.ShowAllVariants := true;
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
         Rec.CalcFields(Inventory, "Qty. on Purch. Order", SBSINVQtyonSalesOrders);
-        OnHandQuantity := Rec.Inventory;
+        this.OnHandQuantity := Rec.Inventory;
 
-        TotalAvailableQuantity := OnHandQuantity + Rec."Qty. on Purch. Order" - Rec.SBSINVQtyonSalesOrders;
-        AvailableNetWeight := TotalAvailableQuantity * Rec."Net Weight";
-        OnOrderNetWeight := Rec."Qty. on Purch. Order" * Rec."Net Weight";
-        NetWeightOnSalesOrders := Rec.SBSINVQtyonSalesOrders * Rec."Net Weight";
-        OnHandWeight := OnHandQuantity * Rec."Net Weight";
-        AvailableNetWeight := TotalAvailableQuantity * Rec."Net Weight";
+        this.TotalAvailableQuantity := this.OnHandQuantity + Rec."Qty. on Purch. Order" - Rec.SBSINVQtyonSalesOrders;
+        this.AvailableNetWeight := this.TotalAvailableQuantity * Rec."Net Weight";
+        this.OnOrderNetWeight := Rec."Qty. on Purch. Order" * Rec."Net Weight";
+        this.NetWeightOnSalesOrders := Rec.SBSINVQtyonSalesOrders * Rec."Net Weight";
+        this.OnHandWeight := this.OnHandQuantity * Rec."Net Weight";
+        this.AvailableNetWeight := this.TotalAvailableQuantity * Rec."Net Weight";
     end;
 
     var
