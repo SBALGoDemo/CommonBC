@@ -105,7 +105,7 @@ page 60302 ItemFactbox
                     var
                         SalesLines: Page SalesLines;
                     begin
-                        SalesLines.SetOnOrderCommittedSalesLines(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
+                        SalesLines.SetOnOrderCommittedSalesLines(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
                         SalesLines.RunModal();
                     end;
                 }
@@ -120,7 +120,7 @@ page 60302 ItemFactbox
                     var
                         SalesLines: Page SalesLines;
                     begin
-                        SalesLines.SetOnOrderCommittedSalesLines(Rec."No.", this.VariantCode, this.ShowAllVariants, false);
+                        SalesLines.SetOnOrderCommittedSalesLines(Rec."No.", this.VariantCode, this.ShowAllVariants, true);
                         SalesLines.RunModal();
                     end;
                 }
@@ -295,7 +295,10 @@ page 60302 ItemFactbox
             Rec.SetRange("Variant Filter", this.VariantCode);
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1483 - Issue with Qty. on Quality Hold
-        Rec.CalcFields(Inventory, "Qty. on Purch. Order");
+        Rec.CalcFields(Inventory, "Net Change", "Qty. on Purch. Order");
+
+        this.TotalQty := Rec."Net Change";
+        this.TotalOnHandWeight := this.TotalQty * Rec."Net Weight";
 
         this.OnOrderQty := Rec."Qty. on Purch. Order";
         this.OnOrderWeight := this.OnOrderQty * Rec."Net Weight";
@@ -303,13 +306,13 @@ page 60302 ItemFactbox
         this.OnOrderCommittedWeight := this.OnOrderCommitted * Rec."Net Weight";
         this.OnHandCommitted := this.InfoPaneMgmt.CalcInventoryOnHandTotalCommitted(Rec."No.", this.VariantCode, this.ShowAllVariants);
         this.OnHandCommittedWeight := this.OnHandCommitted * Rec."Net Weight";
-        this.OnHandAvailable := Rec.Inventory - this.OnHandCommitted; // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        this.OnHandAvailable := this.TotalQty - this.OnHandCommitted; // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         this.OnHandAvailableWeight := this.TotalOnHandWeight - this.OnHandCommittedWeight;
-        this.TotalAvailableQuantity := Rec.Inventory + this.OnOrderQty - this.OnHandCommitted - this.OnOrderCommitted; // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
+        this.TotalAvailableQuantity := this.TotalQty + this.OnOrderQty - this.OnHandCommitted - this.OnOrderCommitted; // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
         this.TotalAvailableWeight := this.TotalOnHandWeight + this.OnOrderWeight - this.OnHandCommittedWeight - this.OnOrderCommittedWeight;
         this.TotalValueOfInventoryOnHand := this.InfoPaneMgmt.CalcInventoryOnHandTotalValue(Rec."No.", this.VariantCode, this.ShowAllVariants, this.AsOfDate);
         this.UnallocatedSOQty := SalesLine.SBSINVCalcOnOrderTotalUnallocated(Rec."No.", this.VariantCode, this.ShowAllVariants);
-        this.UnallocatedSOWeight := UnallocatedSOQty * Rec."Net Weight";
+        this.UnallocatedSOWeight := this.UnallocatedSOQty * Rec."Net Weight";
 
         if this.TotalOnHandWeight <> 0 then
             this.AverageCost := this.TotalValueOfInventoryOnHand / this.TotalOnHandWeight

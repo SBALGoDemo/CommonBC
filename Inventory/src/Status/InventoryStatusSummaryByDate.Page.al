@@ -83,12 +83,6 @@ page 60300 InventoryStatusSummaryByDate
                     Editable = false;
                     Width = 30;
                 }
-                field("Pack Size"; Rec."Pack Size")
-                {
-                    Editable = false;
-                    Visible = false;
-                    Width = 10;
-                }
                 field("Method of Catch"; Rec."Method of Catch")
                 {
                     Editable = false;
