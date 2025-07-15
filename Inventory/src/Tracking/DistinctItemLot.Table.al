@@ -5,15 +5,11 @@ using Microsoft.Inventory.Item;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Purchases.Document;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
-/// Reverse sign of "Qty. on Sales Orders" and "Net Weight on Sales Order" flowfields
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
-/// Migrated from table 50018 "OBF-Distinct Item Lot"
+/// Migrated from Orca Bay table 50018 "OBF-Distinct Item Lot"
 /// </summary>
 table 60301 DistinctItemLot
 {
@@ -69,6 +65,9 @@ table 60301 DistinctItemLot
         {
             Caption = 'Pack Size';
             ToolTip = 'Specifies the value of the Pack Size field.';
+            ObsoleteState = Pending;
+            ObsoleteReason = 'Field is no longer used.';
+            ObsoleteTag = '2025-06-26';
         }
         field(9; "Method of Catch"; Text[50])
         {
@@ -95,6 +94,10 @@ table 60301 DistinctItemLot
         {
             Caption = 'PO Number';
             ToolTip = 'Specifies the value of the PO Number field.';
+        }
+        field(14; "PO Line No."; Integer)
+        {
+            Caption = 'PO Line No.';
         }
         field(15; "Date Filter"; Date)
         {
@@ -239,6 +242,10 @@ table 60301 DistinctItemLot
         {
             Caption = 'Expected Receipt Date';
             ToolTip = 'Specifies the value of the Expected Receipt Date field.';
+            FieldClass = FlowField;
+            CalcFormula = lookup("Purchase Line"."Expected Receipt Date" where("Document No." = field("PO Number"),
+                                                                                  "Line No." = field("PO Line No.")));
+            Editable = false;
         }
         field(43; "Variant Code"; Code[10])
         {
@@ -262,6 +269,12 @@ table 60301 DistinctItemLot
             Editable = false;
             ToolTip = 'Specifies the value of the On Order Weight field.';
         }
+        field(53; "Item Net Weight"; Decimal)
+        {
+            Caption = 'Item Net Weight';
+            DecimalPlaces = 0 : 5;
+        }
+
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/826 - Add Production and Expiration Dates to Misc. Pages
         /// </summary>
@@ -269,11 +282,19 @@ table 60301 DistinctItemLot
         {
             Caption = 'Production Date';
             ToolTip = 'Specifies the value of the Production Date field.';
+            CalcFormula = lookup("Lot No. Information".SBSINVProductionDate WHERE("Item No." = FIELD("Item No."),
+                                                                                    "Lot No." = FIELD("Lot No.")));
+            FieldClass = FlowField;
+            Editable = false;
         }
         field(61; "Expiration Date"; Date)
         {
             Caption = 'Expiration Date';
             ToolTip = 'Specifies the value of the Expiration Date field.';
+            CalcFormula = lookup("Lot No. Information".SBSINVExpirationDate WHERE("Item No." = FIELD("Item No."),
+                                                                                    "Lot No." = FIELD("Lot No.")));
+            FieldClass = FlowField;
+            Editable = false;
         }
         field(71; "On Hand Quantity 2"; Decimal)
         {
@@ -298,6 +319,14 @@ table 60301 DistinctItemLot
             FieldClass = FlowField;
             ToolTip = 'Specifies the value of the Qty. in Transit field.';
         }
+        field(82; "Is Available"; Boolean)
+        {
+            Caption = 'Is Available';
+            CalcFormula = lookup("Lot No. Information".SBSINVIsAvailable WHERE("Item No." = FIELD("Item No."),
+                                                                                "Lot No." = FIELD("Lot No.")));
+            FieldClass = FlowField;
+            Editable = false;
+        }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
         /// </summary>
@@ -305,6 +334,10 @@ table 60301 DistinctItemLot
         {
             Caption = 'Container No.';
             ToolTip = 'Specifies the value of the Container No. field.';
+            CalcFormula = lookup("Lot No. Information".SBSINVContainerNo WHERE("Item No." = FIELD("Item No."),
+                                                                                "Lot No." = FIELD("Lot No.")));
+            FieldClass = FlowField;
+            Editable = false;
         }
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
@@ -314,7 +347,47 @@ table 60301 DistinctItemLot
             Caption = 'Purchased For';
             TableRelation = "Salesperson/Purchaser";
             ToolTip = 'Specifies the value of the Purchased For field.';
+            ObsoleteState = Pending;
+            ObsoleteReason = 'Field is no longer used.';
+            ObsoleteTag = '2025-07-11';
         }
+
+        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2854 - Migrate Item Tracking Lines page enhancements to Silver Bay
+        field(200; "Selected Quantity"; Decimal)
+        {
+            Caption = 'Selected Quantity';
+            trigger OnValidate();
+            begin
+                if "Selected Quantity" > "Available Quantity" then
+                    Error('The Selected Quantity (%1) is greater than the Available Quantity (%2)', "Selected Quantity", "Available Quantity");
+            end;
+        }
+        field(210; "Available Quantity"; Decimal)
+        {
+            Caption = 'Available Quantity'; //Note - This field is a placeholder for use on the Item Tracking Page; it must be calculated when needed
+            Editable = false;
+        }
+        field(220; "On Purchase Order"; Boolean)
+        {
+            Caption = 'On Purchase Order';
+            FieldClass = FlowField;
+            CalcFormula = exist("Reservation Entry" Where("Item No." = field("Item No."), "Variant Code" = field("Variant Code"),
+                                                                                 "Lot No." = field("Lot No."),
+                                                                                 "Source Type" = const(39),
+                                                                                 "Source Subtype" = const("1")));
+            Editable = false;
+        }
+        field(230; "Total Quantity"; Decimal)
+        {
+            Caption = 'Total Quantity'; //Note - This field is a placeholder for use on the Item Tracking Page; it must be calculated when needed
+            Editable = false;
+        }
+
+        field(280; "Receipt Date (ILE)"; Date)
+        {
+            Caption = 'Receipt Date (ILE)';
+        }
+
     }
 
     keys

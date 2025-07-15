@@ -10,12 +10,7 @@ using SilverBay.Inventory.Tracking;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
-/// Note: This page was copied from and is similar to Page 50054 "Distinct Item Lots"
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
-/// Drilldowns moved to Info Pane Management codeunit
-/// Migrated from page 50053 "OBF-Inv. Stat. Summary by Date"
+/// Migrated from Orca Bay page 50053 "OBF-Inv. Stat. Summary by Date"
 /// </summary>
 page 60300 InventoryStatusSummaryByDate
 {
@@ -82,12 +77,6 @@ page 60300 InventoryStatusSummaryByDate
                 {
                     Editable = false;
                     Width = 30;
-                }
-                field("Pack Size"; Rec."Pack Size")
-                {
-                    Editable = false;
-                    Visible = false;
-                    Width = 10;
                 }
                 field("Method of Catch"; Rec."Method of Catch")
                 {
@@ -239,14 +228,6 @@ page 60300 InventoryStatusSummaryByDate
                     begin
                         Rec.BuyerOnDrillDown();
                     end;
-                }
-                /// <summary>
-                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-                /// </summary>
-                field("Purchased For"; Rec."Purchased For")
-                {
-                    Editable = false;
-                    Visible = false;
                 }
             }
         }

@@ -59,11 +59,6 @@ page 60303 DistinctItemLotList
                     Editable = false;
                     Width = 30;
                 }
-                field("Pack Size"; Rec."Pack Size")
-                {
-                    Editable = false;
-                    Width = 10;
-                }
                 field("Method of Catch"; Rec."Method of Catch")
                 {
                     Editable = false;
@@ -252,13 +247,6 @@ page 60303 DistinctItemLotList
                     begin
                         Rec.BuyerOnDrillDown();
                     end;
-                }
-                /// <summary>
-                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-                /// </summary>
-                field("Purchased For"; Rec."Purchased For")
-                {
-                    Editable = false;
                 }
             }
         }
