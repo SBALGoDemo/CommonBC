@@ -146,6 +146,7 @@
       "codeunit",
       "Debuggable",
       "Drilldowns",
+      "Dtld",
       "Factbox",
       "fieldgroup",
       "fieldgroups",
@@ -158,6 +159,6 @@
       "green": 196,
       "blue": 0,
       "alpha": 0.3
-    },
+    }
   }
 }

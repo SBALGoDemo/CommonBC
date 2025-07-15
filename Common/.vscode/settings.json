@@ -1,3 +1,6 @@
 {
-    "CRS.NamespacePrefixToIgnore": "SilverBay.Common"
+    "CRS.NamespacePrefixToIgnore": "SilverBay.Common",
+    "cSpell.words": [
+        "SBSCOM"
+    ]
 }
