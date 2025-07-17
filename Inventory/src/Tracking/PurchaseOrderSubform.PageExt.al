@@ -13,7 +13,7 @@ pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
                 ApplicationArea = All;
                 trigger OnDrillDown();
                 begin
-                    Message('This function has not been implemented yet.');
+                    AssignLotOrOpenItemTracking();
                 end;
             }
         }
@@ -193,4 +193,37 @@ pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
         AdditionalFieldsEditable := Rec.Quantity > 0;
     end;
 
+    local procedure AssignLotOrOpenItemTracking()
+    begin
+        if Rec.Quantity > 0 then begin
+            if Rec.SBSINVLotNo = '' then
+                Rec.AssignNewLotNo()
+            else
+                SpecialOpenItemTrackingLines;
+            SetAssignOrOpenTrackingText();
+            CurrPage.Update();
+        end else begin
+            OpenItemTrackingLines_NegativeQty(Rec);
+            CurrPage.Update(false);
+        end;
+    end;
+
+    local procedure SpecialOpenItemTrackingLines();
+    var
+        SpecialTrackingMgmt: codeunit SpecialItemTrackingMgmt;
+    begin
+        Rec.TestField(Type, Rec.Type::Item);
+        Rec.TestField("No.");
+
+        Rec.TestField("Quantity (Base)");
+
+        SpecialTrackingMgmt.PurchaseCallItemTracking(Rec);
+    end;
+
+    local procedure OpenItemTrackingLines_NegativeQty(var Rec: Record "Purchase Line");
+    var
+        SpecialItemTrackingMgmt: Codeunit SpecialItemTrackingMgmt;
+    begin
+        SpecialItemTrackingMgmt.CallItemTracking_PurchaseLine_NegativeQty(Rec);
+    end;
 }

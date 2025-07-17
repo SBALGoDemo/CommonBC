@@ -289,6 +289,19 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         ReservationEntry.FindFirst();
     end;
 
+    procedure AssignNewLotNo()
+
+    begin
+        if Rec.Quantity = 0 then
+            exit;
+        Rec.TestField(Type, Rec.Type::Item);
+        Rec.TestField(SBSINVLotNo, '');
+        Rec.TestField("Location Code");
+
+        Rec.SBSINVLotNo := GetNextLotNoForDocumentNo(Rec."Document No.", '', Rec."Document No.");
+        CreateReservationEntryForPurchaseLine(Rec);
+    end;
+
     local procedure UpdateLotOnSales(OriginalLotNo: Code[20]; NewLotNo: Code[20]; OriginalProductionDate: Date; NewProductionDate: Date;
                                         OriginalExpirationDate: Date; NewExpirationDate: Date)
     var
@@ -356,5 +369,36 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         SalesLineReservationEntry.SetRange("Source Subtype", 1);
         if not SalesLineReservationEntry.IsEmpty then
             Error('Sales Order Reservations Exist for Item %1 Lot %2', ItemNo, LotNo);
+    end;
+
+
+    procedure GetNextLotNoForDocumentNo(SourceID: Code[20]; SourceBatchName: Code[20]; DocumentNo: Code[20]): Code[20]
+    var
+        ReservationEntry: Record "Reservation Entry";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        NewLotNo: Code[20];
+    begin
+        if DocumentNo = '' then
+            Error('Document No. must not be blank');
+
+        ReservationEntry.SetRange("Source ID", SourceID);
+        ReservationEntry.SetRange("Source Batch Name", SourceBatchName);
+        ReservationEntry.SetFilter("Lot No.", DocumentNo + '*');
+        ReservationEntry.SetCurrentKey("Lot No.");
+        if ReservationEntry.FindLast() then
+            NewLotNo := IncStr(ReservationEntry."Lot No.")
+        else
+            NewLotNo := DocumentNo + '-001';
+
+        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1409 - Issue with Undo Receipt
+        ItemLedgerEntry.SetRange("Lot No.", NewLotNo);
+        ItemLedgerEntry.SetCurrentKey("Lot No.");
+        if not ItemLedgerEntry.IsEmpty then begin
+            ItemLedgerEntry.SetFilter("Lot No.", DocumentNo + '*');
+            ItemLedgerEntry.FindLast();
+            NewLotNo := IncStr(ItemLedgerEntry."Lot No.");
+        end;
+
+        exit(NewLotNo);
     end;
 }
