@@ -44,7 +44,7 @@
       "..\\.alpackages"
     ],
     "alObjectDesigner.singleObjectPerFile": true,
-    "ALTB.CheckCommentTranslations": true,
+    "ALTB.CheckCommentTranslations": false,
     "CRS.DependencyGraph.IncludeTestApps": true,
     "CRS.DisableDefaultAlSnippets": true,
     "CRS.ObjectNamePrefix": "",

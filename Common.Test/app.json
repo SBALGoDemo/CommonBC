@@ -12,6 +12,12 @@
   "logo": "..\\SilverBaySeafoods.png",
   "dependencies": [
     {
+      "publisher": "Silver Bay Seafoods",
+      "name": "Common",
+      "id": "127b2d32-672c-4fe1-b466-9dbe91f87642",
+      "version": "25.0.0.0"
+    },
+    {
       "publisher": "Microsoft",
       "name": "Library Assert",
       "id": "dd0be2ea-f733-4d65-bb34-a28f4624fb14",
@@ -34,12 +40,6 @@
       "name":  "Test Runner",
       "publisher":  "Microsoft",
       "version":  "18.0.0.0"
-    },
-    {
-      "publisher": "Silver Bay Seafoods",
-      "name": "Common",
-      "id": "127b2d32-672c-4fe1-b466-9dbe91f87642",
-      "version": "25.0.0.0"
     }
   ],
   "platform": "25.0.0.0",

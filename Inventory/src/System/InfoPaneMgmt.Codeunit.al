@@ -20,7 +20,9 @@ using Microsoft.Sales.Document;
 /// </summary>
 codeunit 60300 InfoPaneMgmt
 {
-    internal procedure CalcInventoryOnHandTotalValue(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date) InventoryOnHandTotalValue: Decimal
+    Access = Internal;
+
+    procedure CalcInventoryOnHandTotalValue(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date) InventoryOnHandTotalValue: Decimal
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
     begin
@@ -42,42 +44,42 @@ codeunit 60300 InfoPaneMgmt
             until ItemLedgerEntry.Next() = 0;
     end;
 
-    internal procedure CalcInventoryOnHandTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnHandTotalCommitted: Decimal
+    procedure CalcInventoryOnHandTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnHandTotalCommitted: Decimal
     var
         ReservationEntry: Record "Reservation Entry";
     begin
-        ReservationEntry.Reset();
-        ReservationEntry.SetRange("Item No.", ItemNo);
-        ReservationEntry.SetRange(Positive, false);
-        ReservationEntry.SetFilter("Lot No.", '<>%1', '');
-        ReservationEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservationEntry.SetRange(SBSINVLotIsOnHand, true);
+        this.SetReservationEntryFilters(ReservationEntry, ItemNo, VariantCode, IncludeAllVariants, false, true);
 
-        if not IncludeAllVariants then
-            ReservationEntry.SetRange("Variant Code", VariantCode);
-
-        ReservationEntry.CalcSums("Quantity (Base)");
-
-        InventoryOnHandTotalCommitted := Abs(ReservationEntry."Quantity (Base)");
+        InventoryOnHandTotalCommitted := this.GetTotal(ReservationEntry);
     end;
 
-    internal procedure CalcInventoryOnOrderTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnOrderTotalCommitted: Decimal
+    procedure CalcInventoryOnOrderTotalCommitted(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean) InventoryOnOrderTotalCommitted: Decimal
     var
         ReservationEntry: Record "Reservation Entry";
     begin
-        ReservationEntry.Reset();
-        ReservationEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservationEntry.SetRange("Item No.", ItemNo);
-        ReservationEntry.SetFilter("Lot No.", '<>%1', '');
+        this.SetReservationEntryFilters(ReservationEntry, ItemNo, VariantCode, IncludeAllVariants, false, false);
+        ReservationEntry.SetRange(Positive);
 
+        InventoryOnOrderTotalCommitted := this.GetTotal(ReservationEntry);
+    end;
+
+    procedure SetReservationEntryFilters(var ReservationEntry: Record "Reservation Entry"; ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; IsPositive: Boolean; LotIsOnHand: Boolean)
+    begin
+        ReservationEntry.Reset();
+        ReservationEntry.SetFilter("Lot No.", '<>%1', '');
+        ReservationEntry.SetRange("Source Type", Database::"Sales Line");
+
+        ReservationEntry.SetRange("Item No.", ItemNo);
         if not IncludeAllVariants then
             ReservationEntry.SetRange("Variant Code", VariantCode);
+        ReservationEntry.SetRange(Positive, IsPositive);
+        ReservationEntry.SetRange(SBSINVLotIsOnHand, LotIsOnHand);
+    end;
 
-        ReservationEntry.SetRange(SBSINVLotIsOnHand, false);
-
+    local procedure GetTotal(var ReservationEntry: Record "Reservation Entry"): Decimal
+    begin
         ReservationEntry.CalcSums("Quantity (Base)");
-
-        InventoryOnOrderTotalCommitted := Abs(ReservationEntry."Quantity (Base)");
+        exit(Abs(ReservationEntry."Quantity (Base)"));
     end;
 
     procedure CheckItemTrackingCodeNotBlank(ItemNo: Code[20]) ItemTrackingCodeNotBlank: Boolean
@@ -95,7 +97,7 @@ codeunit 60300 InfoPaneMgmt
     /// <param name="VariantCode"></param>
     /// <param name="LotNo"></param>
     /// <param name="LocationCode"></param>
-    internal procedure InTransitDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; LocationCode: Code[10])
+    procedure InTransitDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; LocationCode: Code[10])
     var
         ReservationEntry: Record "Reservation Entry";
         ReservationEntries: Page "Reservation Entries";
@@ -124,7 +126,7 @@ codeunit 60300 InfoPaneMgmt
         LocationCard.RunModal();
     end;
 
-    internal procedure OnHandDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date)
+    procedure OnHandDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; AsOfDate: Date)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
         ItemLedgerEntries: Page "Item Ledger Entries";
@@ -164,41 +166,23 @@ codeunit 60300 InfoPaneMgmt
         ItemLedgerEntries.Run();
     end;
 
-    internal procedure OnOrderDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
+    procedure OnOrderDrilldown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
     var
         PurchaseLine: Record "Purchase Line";
-        PurchaseLines: Page "Purchase Lines";
     begin
-        PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
-        PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
-        PurchaseLine.SetRange("No.", ItemNo);
-        if not IncludeAllVariants then
-            PurchaseLine.SetRange("Variant Code", VariantCode);
-        PurchaseLine.SetFilter("Outstanding Quantity", '<>%1', 0);
-
-        if not PurchaseLine.IsEmpty then begin
-            PurchaseLines.SetTableView(PurchaseLine);
-            PurchaseLines.RunModal();
-        end;
+        this.FilterPurchaseLines(PurchaseLine, ItemNo, VariantCode, IncludeAllVariants, '');
+        this.ShowPurchaseLines(PurchaseLine);
     end;
 
     procedure OnOrderDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; LocationCode: Code[10])
     var
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
-        PurchaseLines: Page "Purchase Lines";
         ReservationEntries: Page "Reservation Entries";
     begin
         if LotNo = '' then begin
-            PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
-            PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
-            PurchaseLine.SetFilter("Outstanding Quantity", '<>%1', 0);
-            PurchaseLine.SetRange("No.", ItemNo);
-            PurchaseLine.SetRange("Variant Code", VariantCode);
-            PurchaseLine.SetRange("Location Code", LocationCode);
-
-            PurchaseLines.SetTableView(PurchaseLine);
-            PurchaseLines.RunModal();
+            this.FilterPurchaseLines(PurchaseLine, ItemNo, VariantCode, false, LocationCode);
+            this.ShowPurchaseLines(PurchaseLine);
         end else begin
             ReservationEntry.SetRange("Source Type", Database::"Purchase Line");
             ReservationEntry.SetRange("Source Subtype", 1);
@@ -209,6 +193,28 @@ codeunit 60300 InfoPaneMgmt
 
             ReservationEntries.SetTableView(ReservationEntry);
             ReservationEntries.RunModal();
+        end;
+    end;
+
+    local procedure FilterPurchaseLines(var PurchaseLine: Record "Purchase Line"; ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; LocationCode: Code[10])
+    begin
+        PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
+        PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
+        PurchaseLine.SetRange("No.", ItemNo);
+        if not IncludeAllVariants then
+            PurchaseLine.SetRange("Variant Code", VariantCode);
+        PurchaseLine.SetFilter("Outstanding Quantity", '<>%1', 0);
+        if LocationCode <> '' then
+            PurchaseLine.SetRange("Location Code", LocationCode);
+    end;
+
+    local procedure ShowPurchaseLines(var PurchaseLine: Record "Purchase Line")
+    var
+        PurchaseLines: Page "Purchase Lines";
+    begin
+        if not PurchaseLine.IsEmpty then begin
+            PurchaseLines.SetTableView(PurchaseLine);
+            PurchaseLines.RunModal();
         end;
     end;
 
@@ -263,7 +269,7 @@ codeunit 60300 InfoPaneMgmt
         if ItemCard.RunModal() = Action::LookupOK then;
     end;
 
-    internal procedure TotalAvailQtyDrillDown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; DateFilter: Date)
+    procedure TotalAvailQtyDrillDown(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; DateFilter: Date)
     var
         ItemAvailabilityDrilldown: Page ItemAvailabilityDrilldown;
     begin

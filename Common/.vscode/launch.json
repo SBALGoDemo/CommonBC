@@ -18,12 +18,12 @@
             "numberOfSqlStatements": 10
         },
         {
-            "name": "Publish: SBDEV_CALEB",
+            "name": "Publish: SBDEV",
             "type": "al",
             "request": "launch",
             "tenant": "silverbayseafoods.com",
             "environmentType": "Sandbox",
-            "environmentName": "SBDEV_CALEB",
+            "environmentName": "SBDEV",
             "startupObjectId": 22,
             "breakOnError": "All",
             "breakOnRecordWrite": "None",

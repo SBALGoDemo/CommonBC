@@ -4,6 +4,7 @@ using Microsoft.Finance.Dimension;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Sales.Document;
 using Microsoft.Utilities;
+using SilverBay.Inventory.System;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
@@ -285,28 +286,22 @@ page 60304 SalesLines
     /// <param name="LotIsOnHand"></param>
     procedure SetOnOrderCommittedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; LotIsOnHand: Boolean)
     var
-        ReservEntry: Record "Reservation Entry";
+        ReservationEntry: Record "Reservation Entry";
         SalesLine: Record "Sales Line";
+        InfoPaneMgmt: Codeunit InfoPaneMgmt;
     begin
-        ReservEntry.Reset();
-        ReservEntry.SetRange("Item No.", ItemNo);
-        ReservEntry.SetRange(Positive, false);
-        ReservEntry.SetFilter("Lot No.", '<>%1', '');
-        ReservEntry.SetRange("Source Type", Database::"Sales Line");
-        ReservEntry.SetRange(SBSINVLotIsOnHand, LotIsOnHand);
-        if not IncludeAllVariants then
-            ReservEntry.SetRange("Variant Code", VariantCode);
-        if ReservEntry.FindSet() then
+        InfoPaneMgmt.SetReservationEntryFilters(ReservationEntry, ItemNo, VariantCode, IncludeAllVariants, false, LotIsOnHand);
+        if ReservationEntry.FindSet() then
             repeat
-                if SalesLine.Get(ReservEntry."Source Subtype", ReservEntry."Source ID", ReservEntry."Source Ref. No.") then
-                    if Rec.Get(ReservEntry."Source Subtype", ReservEntry."Source ID", ReservEntry."Source Ref. No.") then
+                if SalesLine.Get(ReservationEntry."Source Subtype", ReservationEntry."Source ID", ReservationEntry."Source Ref. No.") then
+                    if Rec.Get(ReservationEntry."Source Subtype", ReservationEntry."Source ID", ReservationEntry."Source Ref. No.") then
                         Rec.Modify()
                     else begin
                         Rec.Init();
                         Rec.TransferFields(SalesLine);
                         Rec.Insert();
                     end;
-            until (ReservEntry.Next() = 0);
+            until (ReservationEntry.Next() = 0);
     end;
 
     internal procedure SetUnallocatedSalesLines(ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
