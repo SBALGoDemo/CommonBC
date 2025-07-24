@@ -2,7 +2,7 @@
   "id": "127b2d32-672c-4fe1-b466-9dbe91f87642",
   "name": "Common",
   "publisher": "Silver Bay Seafoods",
-  "version": "25.250626.0.0",
+  "version": "25.250724.0.0",
   "brief": "Common",
   "description": "Silver Bay Seafoods' Common app contains code we expect is useful, reusable, and shareable across all SBS & OBF BC environments.",
   "privacyStatement": "https://www.silverbayseafoods.com/",
