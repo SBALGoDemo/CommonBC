@@ -1,6 +1,26 @@
 {
     "version": "0.2.0",
-    "configurations": [        
+    "configurations": [
+                {
+            "name": "Publish: BCDEV",
+            "type": "al",
+            "request": "launch",
+            "environmentType": "OnPrem",
+            "server": "http://bctest-v25/",
+            "serverInstance": "BC_V25_DEV",
+            "port": 7249,
+            "authentication": "Windows",
+            "breakOnError": "All",
+            "breakOnRecordWrite": "None",
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10,
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "tenant": "default",
+            "usePublicURLFromServer": true
+        },        
         {
             "name": "Publish: SBDEV_BRAD",
             "type": "al",
