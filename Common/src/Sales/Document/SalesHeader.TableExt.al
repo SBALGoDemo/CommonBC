@@ -1,6 +1,7 @@
 namespace SilverBay.Common.Sales.Document;
 
 using Microsoft.Sales.Document;
+using System.Security.AccessControl;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2882 - Add Ship-to City to Sales Order List page
@@ -29,4 +30,18 @@ tableextension 60106 SalesHeader extends "Sales Header"
             ToolTip = 'Specifies which shipping agent is used to transport the items on the sales document to the customer.';
         }
     }
+
+    /// <summary>
+    /// Gets the user name associated with a SystemCreatedBy value which is a Guid representing the user who created the record.
+    /// https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-table-system-fields
+    /// </summary>
+    /// <param name="UserSecurityID">SystemCreatedBy field value (Guid) from the record from which to get the user name value</param>
+    /// <returns>User Name from the User record linked to the SystemCreatedBy param</returns>
+    procedure GetUserNameFromSecurityID(UserSecurityID: Guid) Username: Code[50]
+    var
+        User: Record User;
+    begin
+        if User.Get(UserSecurityID) then
+            Username := User."User Name";
+    end;
 }
