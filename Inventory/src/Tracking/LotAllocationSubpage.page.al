@@ -1,25 +1,29 @@
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2854 - Migrate Item Tracking Lines page enhancements to Silver Bay
+// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2946 - Add Subform to Item Tracking Lines page
 // Based on Orca Bay page 50093 "OBF-Lot Allocation Subpage" which had a different SourceTable
-page 60305 "Lot Allocation Subpage"
+page 60307 "Lot Allocation Subpage"
 {
     Caption = 'Lot Allocation';
     InsertAllowed = false;
     DeleteAllowed = false;
     PageType = ListPart;
-    SourceTable = DistinctItemLot;
+    SourceTable = "Lot No. Information";
     SourceTableTemporary = true;
-
     layout
     {
         area(content)
         {
             repeater(Group)
             {
-                field("Selected Quantity"; Rec."Selected Quantity")
+                field(SBSINVSelectedQuantity; Rec.SBSINVSelectedQuantity)
                 {
+                    Caption = 'Selected Quantity';
                     ApplicationArea = All;
                     DecimalPlaces = 0 : 5;
                     Style = Unfavorable;
+                    trigger OnValidate();
+                    begin
+                        UpdateSelected();
+                    end;
                 }
                 field("Lot No."; Rec."Lot No.")
                 {
@@ -29,18 +33,24 @@ page 60305 "Lot Allocation Subpage"
                     StyleExpr = OnPurchaseOrder;
                     ToolTip = 'Red font indicates that the Lot is on a Purchase Order and has not yet been received.';
                 }
-                field("On Purchase Order"; Rec."On Purchase Order")
+                field(SBSINVOnPurchaseOrder; Rec.SBSINVOnPurchaseOrder)
                 {
+                    Caption = 'On Purchase Order';
                     ApplicationArea = All;
+                    Editable = false;
+                    StyleExpr = OnPurchaseOrder;
                 }
-                field("Total Quantity"; Rec."Total Quantity")
+                field(SBSINVTotalQuantity; Rec.SBSINVTotalQuantity)
                 {
+                    Caption = 'Total Quantity';
                     ApplicationArea = All;
                     DecimalPlaces = 0 : 5;
                     Editable = false;
                 }
-                field("Available Quantity"; Rec."Available Quantity")
+
+                field(AvailableQuantity; AvailableQuantity)
                 {
+                    Caption = 'Available Quantity';
                     ApplicationArea = All;
                     DecimalPlaces = 0 : 5;
                     Editable = false;
@@ -56,10 +66,28 @@ page 60305 "Lot Allocation Subpage"
                     Caption = 'Available Weight';
                     DecimalPlaces = 0 : 5;
                     Editable = false;
+                    Visible = false;
                     trigger OnDrillDown();
                     begin
                         InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", DateFilter);
                     end;
+                }
+                field(OnHandQuantity; Rec.SBSINVOnHandQuantity)
+                {
+                    ApplicationArea = All;
+                    Caption = 'On Hand Quantity';
+                    DecimalPlaces = 0 : 5;
+                    Editable = false;
+                }
+                field("On Order Quantity"; Rec.SBSINVOnOrderQuantity)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Qty. on Sales Order"; Rec.SBSINVQtyOnSalesOrder)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Alternate Lot No."; LotNoInformation.SBSINVAlternateLotNo)
                 {
@@ -87,61 +115,46 @@ page 60305 "Lot Allocation Subpage"
                     ApplicationArea = All;
 
                 }
-                field("PO Number"; Rec."PO Number")
+                field("Source Number"; Rec.SBSINVSourceNo)
+                {
+                    Caption = 'Source Number';
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Source Number for the Lot.';
+                }
+                field("Vendor Name"; Rec.SBSINVVendorName)
                 {
                     ApplicationArea = All;
                     Editable = false;
                 }
-                field("Vendor Name"; Rec."Vendor Name")
+                field("Receipt Date (ILE)"; Rec.SBSINVReceiptDateILE)
                 {
                     ApplicationArea = All;
                     Editable = false;
                 }
-                field("Receipt Date (ILE)"; Rec."Receipt Date (ILE)")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                }
-                field(ExpectedReceiptDate; Rec."Expected Receipt Date")
+                field(ExpectedReceiptDate; Rec.SBSINVExpectedReceiptDate)
                 {
                     ApplicationArea = All;
                     Caption = 'Expected Receipt Date';
                     ToolTip = 'Specifies the value of the Expected Receipt Date field.';
                     Editable = false;
                 }
-                field("Production Date"; Rec."Production Date")
+                field("Production Date"; Rec.SBSINVProductionDate)
                 {
                     ApplicationArea = All;
                     Editable = false;
                 }
-                field("Expiration Date"; Rec."Expiration Date")
+                field("Expiration Date"; Rec.SBSINVExpirationDate)
                 {
                     ApplicationArea = All;
                     Editable = false;
                 }
-                field("Unit Cost"; Rec."Unit Cost")
+                field("Unit Cost"; Rec.SBSINVUnitCost)
                 {
                     ApplicationArea = All;
                     Editable = false;
                 }
-                field("Value Of Inventory On Hand"; Rec."Value Of Inventory On Hand")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                }
-                field(Buyer; Rec."Buyer Code")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                }
-                field(OnHandQuantity; Rec."On Hand Quantity")
-                {
-                    ApplicationArea = All;
-                    Caption = 'On Hand Quantity';
-                    DecimalPlaces = 0 : 5;
-                    Editable = false;
-                }
-                field("On Order Quantity"; Rec."On Order Quantity")
+                field(Buyer; Rec.SBSINVBuyerCode)
                 {
                     ApplicationArea = All;
                     Editable = false;
@@ -154,13 +167,8 @@ page 60305 "Lot Allocation Subpage"
                     Editable = false;
                     trigger OnDrillDown();
                     begin
-                        InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", Rec."Location Code");
+                        InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.");
                     end;
-                }
-                field("Qty. on Sales Order"; Rec."Qty. on Sales Order")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
                 }
                 field(OnSalesOrderWeight; OnSalesOrderWeight)
                 {
@@ -169,23 +177,18 @@ page 60305 "Lot Allocation Subpage"
                     DecimalPlaces = 0 : 5;
                     Editable = false;
                 }
-                field("Qty. In Transit"; Rec."Qty. In Transit")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                }
             }
         }
     }
 
     trigger OnAfterGetRecord();
     begin
-        Rec.CalcFields("On Hand Quantity", "On Order Quantity", "Qty. on Sales Order", "On Purchase Order");
-        AvailableQuantity := Rec."On Hand Quantity" + Rec."On Order Quantity" - Rec."Qty. on Sales Order";
-        AvailableNetWeight := AvailableQuantity * Rec."Item Net Weight";
-        OnOrderWeight := Rec."On Order Quantity" * Rec."Item Net Weight";
-        OnSalesOrderWeight := Rec."Qty. on Sales Order" * Rec."Item Net Weight";
-        OnPurchaseOrder := Rec."On Purchase Order";
+        Rec.CalcFields(SBSINVOnHandQuantity, SBSINVOnOrderQuantity, SBSINVQtyOnSalesOrder, SBSINVOnPurchaseOrder);
+        AvailableQuantity := Rec.SBSINVOnHandQuantity + Rec.SBSINVOnOrderQuantity - Rec.SBSINVQtyOnSalesOrder;
+        AvailableNetWeight := AvailableQuantity * Rec.SBSINVItemNetWeight;
+        OnOrderWeight := Rec.SBSINVOnOrderQuantity * Rec.SBSINVItemNetWeight;
+        OnSalesOrderWeight := Rec.SBSINVQtyOnSalesOrder * Rec.SBSINVItemNetWeight;
+        OnPurchaseOrder := Rec.SBSINVOnPurchaseOrder;
         if not LotNoInformation.Get(Rec."Item No.", Rec."Variant Code", Rec."Lot No.") then
             LotNoInformation.Init();
     end;
@@ -193,32 +196,54 @@ page 60305 "Lot Allocation Subpage"
     trigger OnOpenPage();
     begin
         DateFilter := CalcDate('1Y', WorkDate);
-        Rec.SetRange("Is Available", true);
-        ItemCategoryFilter := Rec.GetFilter("Item Category Code");
+        Rec.SetRange(SBSINVIsAvailable, true);
+        ItemCategoryFilter := Rec.GetFilter(SBSINVItemCategoryCode);
         ItemNoFilter := Rec.GetFilter("Item No.");
     end;
 
-    procedure SetPageDataForItemAndLocation(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]);
+    procedure SetPageDataForItemVariant(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]);
+    var
+        LotNoInformation: Record "Lot No. Information";
     begin
-        if (ItemNo = '') or (LocationCode = '') then
+        Message('In SetPageDataForItemVariant: ItemNo=%1, VariantCode=%2, LocationCode=%3', ItemNo, VariantCode, LocationCode);
+        if (ItemNo = '') then
             exit;
 
-        if (ItemNo = gItemNo) and (LocationCode = gLocationCode) and (VariantCode = gVariantCode) then
+        if (ItemNo = gItemNo) and (VariantCode = gVariantCode) and (LocationCode = gLocationCode) then
             exit;
 
         gItemNo := ItemNo;
         gVariantCode := VariantCode;
-        gLocationCode := LocationCode;
         Rec.DeleteAll();
+
+        LotNoInformation.SetRange("Item No.", ItemNo);
+        LotNoInformation.SetRange("Variant Code", VariantCode);
+        LotNoInformation.SetRange(SBSINVLocationCode, LocationCode);
+        if LotNoInformation.FindSet() then
+            repeat
+                Rec := LotNoInformation;
+                Rec.Insert();
+            until LotNoInformation.Next() = 0;
 
     end;
 
+    local procedure RecordExists(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[50]) Result: Boolean
+    begin
+        Rec.SetRange("Item No.", NewItemNo);
+        Rec.SetRange("Lot No.", NewLotNo);
+        Rec.SetRange("Variant Code", NewVariantCode);
+        Result := not Rec.IsEmpty;
+        Rec.Reset();
+    end;
+
+
+
     procedure UpdateSelected();
     begin
-        Rec.SetFilter("Selected Quantity", '<>%1', 0);
+        Rec.SetFilter(SBSINVSelectedQuantity, '<>%1', 0);
         if Rec.FindSet() then
             repeat
-                Rec."Available Quantity" := Rec."Available Quantity" - Rec."Selected Quantity";
+                Rec.SBSINVAvailableQuantity := Rec.SBSINVAvailableQuantity - Rec.SBSINVSelectedQuantity;
                 Rec.Modify;
             until Rec.Next() = 0;
     end;
@@ -228,7 +253,7 @@ page 60305 "Lot Allocation Subpage"
 
         if Rec.FindSet then begin
             repeat
-                Rec."Selected Quantity" := 0;
+                Rec.SBSINVSelectedQuantity := 0;
                 Rec.Modify;
             until Rec.Next = 0;
         end;

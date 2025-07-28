@@ -7,6 +7,16 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
         {
             Visible = false;
         }
+
+        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2946 - Add Subform to Item Tracking Lines page
+        addbefore(Control1)
+        {
+            part(LotAllocationSubpage; "Lot Allocation Subpage")
+            {
+                ApplicationArea = All;
+            }
+        }
+
         addlast(Control1)
         {
             field(SBSINVAlternateLotNo; LotNoInformation.SBSINVAlternateLotNo)
@@ -72,7 +82,12 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
     trigger OnAfterGetRecord()
     begin
         if not LotNoInformation.Get(Rec."Item No.", Rec."Variant Code", Rec."Lot No.") then
-            exit;
+            LotNoInformation.Init();
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        CurrPage.LotAllocationSubpage.page.SetPageDataForItemVariant(Rec."Item No.", Rec."Variant Code", Rec."Location Code");
     end;
 
     var
