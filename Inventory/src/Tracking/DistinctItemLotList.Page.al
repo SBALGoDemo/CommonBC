@@ -9,15 +9,6 @@ using SilverBay.Inventory.System;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
-/// Reverse sign of "Qty. on Sales Orders" and Net Weight on Sales Orders in "Total Available Quantity" and "Total Available Net Weight" calculation
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
-/// Drilldowns moved to Info Pane Management codeunit
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1195 - Hold Functionality
-/// Replaced "Quantity on Quality Hold" with "Qty on Quality Hold"
 /// Migrated from page 50054 "OBF-Distinct Item Lots"
 /// </summary>
 page 60303 DistinctItemLotList
@@ -152,7 +143,7 @@ page 60303 DistinctItemLotList
                     Width = 5;
                     trigger OnDrillDown()
                     begin
-                        this.InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", Rec."Location Code");
+                        this.InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.");
                     end;
                 }
                 field("Qty. on Sales Order"; Rec."Qty. on Sales Order")
@@ -312,6 +303,7 @@ page 60303 DistinctItemLotList
         PurchRcptHeader: Record "Purch. Rcpt. Header";
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
+        LotNoInfo: Record "Lot No. Information";
         PurchaseUnitCost: Decimal;
     begin
         NewNextRowNo += 1;
@@ -323,6 +315,17 @@ page 60303 DistinctItemLotList
         Rec."Variant Code" := NewVariantCode;
         Rec."Lot No." := NewLotNo;
         Rec."Location Code" := NewLocation;
+
+        if LotNoInfo.Get(NewItemNo, NewVariantCode, NewLotNo) then begin
+            Rec."Production Date" := LotNoInfo.SBSINVProductionDate;
+            Rec."Buyer Code" := LotNoInfo.SBSINVBuyerCode;
+            Rec."Expected Receipt Date" := LotNoInfo.SBSINVExpectedReceiptDate;
+        end else begin
+            Rec."Production Date" := 0D;
+            Rec."Buyer Code" := '';
+            Rec."Expected Receipt Date" := 0D;
+        end;
+
         PurchaseUnitCost := 0;
         Rec.SetRange("Date Filter", 0D, this.DateFilter);
 
@@ -390,10 +393,7 @@ page 60303 DistinctItemLotList
                     Rec."PO Number" := ReservationEntry."Source ID";
 
                     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1055 - Inv. Status Performance
-                    Rec."Production Date" := ReservationEntry.SBSINVProductionDate;
                     Rec."Expiration Date" := ReservationEntry."Expiration Date";
-                    if ReservationEntry.SBSINVPurchaserCode <> '' then
-                        Rec."Buyer Code" := ReservationEntry.SBSINVPurchaserCode;
 
                     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
                     if PurchaseLine.Get(PurchaseLine."Document Type"::Order, Rec."PO Number", ReservationEntry."Source Ref. No.") then begin

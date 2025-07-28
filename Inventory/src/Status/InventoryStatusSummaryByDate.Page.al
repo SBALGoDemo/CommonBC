@@ -166,7 +166,7 @@ page 60300 InventoryStatusSummaryByDate
                     Width = 5;
                     trigger OnDrillDown()
                     begin
-                        this.InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", Rec."Location Code");
+                        this.InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.");
                     end;
                 }
                 field("Qty. on Sales Order"; Rec."Qty. on Sales Order")
@@ -312,6 +312,7 @@ page 60300 InventoryStatusSummaryByDate
         PurchRcptHeader: Record "Purch. Rcpt. Header";
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
+        LotNoInfo: Record "Lot No. Information";
         UnassignedPurchaseLineQty: Decimal;
     begin
         NewNextRowNo += 1;
@@ -341,6 +342,16 @@ page 60300 InventoryStatusSummaryByDate
         Rec."Item Description" := Item.Description;
         Rec."Item Description 2" := Item."Description 2";
         Rec."Search Description" := Item."Search Description";
+
+        if LotNoInfo.Get(NewItemNo, NewVariantCode, NewLotNo) then begin
+            Rec."Production Date" := LotNoInfo.SBSINVProductionDate;
+            Rec."Buyer Code" := LotNoInfo.SBSINVBuyerCode;
+            Rec."Expected Receipt Date" := LotNoInfo.SBSINVExpectedReceiptDate;
+        end else begin
+            Rec."Production Date" := 0D;
+            Rec."Buyer Code" := '';
+            Rec."Expected Receipt Date" := 0D;
+        end;
 
         if (Rec."On Hand Quantity" <> 0) or (Rec."On Order Quantity 2" > 0) then begin
             Rec."Total Available Quantity" := Rec."On Hand Quantity" + Rec."On Order Quantity 2" - Rec."Qty. on Sales Order";
@@ -384,13 +395,6 @@ page 60300 InventoryStatusSummaryByDate
                     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
                     if PurchaseLine.Get(PurchaseLine."Document Type"::Order, Rec."PO Number", ReservationEntry."Source Ref. No.") then
                         Rec."Expected Receipt Date" := PurchaseLine."Expected Receipt Date";
-
-                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
-                    Rec."Production Date" := ReservationEntry.SBSINVProductionDate;
-
-                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1653 - Wrong Purchaser for Work Order Lots on ISS by Date
-                    if ReservationEntry.SBSINVPurchaserCode <> '' then
-                        Rec."Buyer Code" := ReservationEntry.SBSINVPurchaserCode;
                 end;
             end;
             if Rec."On Hand Weight" <> 0 then

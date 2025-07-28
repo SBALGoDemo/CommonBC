@@ -5,14 +5,10 @@ using Microsoft.Inventory.Item;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Purchases.Document;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/469 - Top-down ISS Page
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/614 - Prevent over-allocating lots on sales orders
-/// Reverse sign of "Qty. on Sales Orders" and "Net Weight on Sales Order" flowfields
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS and Inv. Status by Item Pages
 /// Migrated from table 50018 "OBF-Distinct Item Lot"
 /// </summary>
 table 60301 DistinctItemLot
@@ -64,14 +60,6 @@ table 60301 DistinctItemLot
         {
             Caption = 'Search Description';
             ToolTip = 'Specifies the value of the Search Description field.';
-        }
-        field(8; "Pack Size"; Text[30])
-        {
-            Caption = 'Pack Size';
-            ToolTip = 'Specifies the value of the Pack Size field.';
-            ObsoleteState = Pending;
-            ObsoleteReason = 'Field is no longer used.';
-            ObsoleteTag = '25.250624.0.0';
         }
         field(9; "Method of Catch"; Text[50])
         {
@@ -242,6 +230,10 @@ table 60301 DistinctItemLot
         {
             Caption = 'Expected Receipt Date';
             ToolTip = 'Specifies the value of the Expected Receipt Date field.';
+            FieldClass = FlowField;
+            CalcFormula = lookup("Purchase Line"."Expected Receipt Date" where("Document No." = field("PO Number"),
+                                                                                  "Line No." = field("PO Line No.")));
+            Editable = false;
         }
         field(43; "Variant Code"; Code[10])
         {
@@ -272,11 +264,19 @@ table 60301 DistinctItemLot
         {
             Caption = 'Production Date';
             ToolTip = 'Specifies the value of the Production Date field.';
+            CalcFormula = lookup("Lot No. Information".SBSINVProductionDate WHERE("Item No." = FIELD("Item No."),
+                                                                                    "Lot No." = FIELD("Lot No.")));
+            FieldClass = FlowField;
+            Editable = false;
         }
         field(61; "Expiration Date"; Date)
         {
             Caption = 'Expiration Date';
             ToolTip = 'Specifies the value of the Expiration Date field.';
+            CalcFormula = lookup("Lot No. Information".SBSINVExpirationDate WHERE("Item No." = FIELD("Item No."),
+                                                                                    "Lot No." = FIELD("Lot No.")));
+            FieldClass = FlowField;
+            Editable = false;
         }
         field(71; "On Hand Quantity 2"; Decimal)
         {
@@ -301,6 +301,12 @@ table 60301 DistinctItemLot
             FieldClass = FlowField;
             ToolTip = 'Specifies the value of the Qty. in Transit field.';
         }
+
+        field(85; "PO Line No."; Integer)
+        {
+            Caption = 'PO Line No.';
+        }
+
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1151 - Enhanced Container Functionality
         /// </summary>
