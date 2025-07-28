@@ -3,12 +3,18 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
 {
     fields
     {
+        modify("Location Code")
+        {
+            trigger OnAfterValidate()
+            begin
+                LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
+            end;
+        }
         field(60300; SBSINVLotNo; Code[20])
         {
             Caption = 'Lot No.';
             trigger OnValidate()
             var
-                LotNoInformation: Record "Lot No. Information";
                 OriginalLotNo: Code[20];
                 NewLotNo: Code[20];
             begin
@@ -23,11 +29,11 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
                 end else if (OriginalLotNo <> '') and (NewLotNo = '') then begin
                     CheckIfSOReservationsExistForItemAndLot(Rec."No.", OriginalLotNo, Rec.Type, Rec.Quantity);
                     DeleteReservationEntriesForPOLine();
-                    DeleteLotNoInfoForPurchaseLine(Rec, OriginalLotNo);
+                    LotNoInformation.DeleteLotNoInfoForPurchaseLine(Rec, OriginalLotNo);
                 end else if NewLotNo <> OriginalLotNo then begin
                     CheckIfDuplicateLot(NewLotNo);
-                    UpdateLotNoInfoForPurchaseLine(Rec, xRec);
-                    DeleteLotNoInfoForPurchaseLine(Rec, OriginalLotNo);
+                    LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
+                    LotNoInformation.DeleteLotNoInfoForPurchaseLine(Rec, OriginalLotNo);
                     UpdateLotOnSales(OriginalLotNo, NewLotNo, Rec.SBSINVProductionDate, Rec.SBSINVProductionDate, Rec.SBSINVExpirationDate, Rec.SBSINVExpirationDate);
                     UpdateLotOnPurchaseLineReservationEntry(Rec, OriginalLotNo, NewLotNo);
                 end;
@@ -38,7 +44,7 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
             Caption = 'Alternate Lot No.';
             trigger OnValidate()
             begin
-                UpdateLotNoInfoForPurchaseLine(Rec, xRec);
+                LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
             end;
         }
         field(60310; SBSINVLabel; Text[50])
@@ -46,7 +52,7 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
             Caption = 'Label';
             trigger OnValidate()
             begin
-                UpdateLotNoInfoForPurchaseLine(Rec, xRec);
+                LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
             end;
         }
         field(60325; SBSINVVessel; Text[50])
@@ -54,7 +60,7 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
             Caption = 'Vessel';
             trigger OnValidate()
             begin
-                UpdateLotNoInfoForPurchaseLine(Rec, xRec);
+                LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
             end;
         }
         field(60330; SBSINVContainerNo; Code[20])
@@ -62,7 +68,7 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
             Caption = 'Container No.';
             trigger OnValidate()
             begin
-                UpdateLotNoInfoForPurchaseLine(Rec, xRec);
+                LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
             end;
         }
         field(60335; SBSINVCountryOfOrigin; Text[30])
@@ -78,7 +84,7 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
             Caption = 'Production Date';
             trigger OnValidate()
             begin
-                UpdateLotNoInfoForPurchaseLine(Rec, xRec);
+                LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
             end;
         }
         field(60345; SBSINVExpirationDate; Date)
@@ -86,73 +92,13 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
             Caption = 'Expiration Date';
             trigger OnValidate()
             begin
-                UpdateLotNoInfoForPurchaseLine(Rec, xRec);
+                LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
             end;
         }
     }
-    local procedure UpdateLotNoInfoForPurchaseLine(PurchaseLine: Record "Purchase Line"; xPurchaseLine: record "Purchase Line")
+
     var
         LotNoInformation: Record "Lot No. Information";
-        InventorySetup: Record "Inventory Setup";
-        Vendor: Record Vendor;
-    begin
-        if PurchaseLine.SBSINVLotNo = '' then
-            exit;
-        if PurchaseLine.Type <> PurchaseLine.Type::Item then
-            exit;
-        if PurchaseLine."No." = '' then
-            exit;
-        if not CheckIfPurchaseLineCustomFieldsChanged(PurchaseLine, xPurchaseLine) then
-            exit;
-        if not LotNoInformation.Get(PurchaseLine."No.", PurchaseLine."Variant Code", PurchaseLine.SBSINVLotNo) then begin
-            LotNoInformation.Init();
-            LotNoInformation."Item No." := PurchaseLine."No.";
-            LotNoInformation."Variant Code" := PurchaseLine."Variant Code";
-            LotNoInformation."Lot No." := PurchaseLine.SBSINVLotNo;
-            LotNoInformation.Description := '';
-            LotNoInformation.SBSINVVendorNo := PurchaseLine."Buy-from Vendor No.";
-            if Vendor.Get(PurchaseLine."Buy-from Vendor No.") then
-                LotNoInformation.SBSINVVendorName := Vendor.Name
-            else
-                LotNoInformation.SBSINVVendorName := '';
-            LotNoInformation.Insert();
-        end;
-        LotNoInformation.SBSINVAlternateLotNo := PurchaseLine.SBSINVAlternateLotNo;
-        LotNoInformation.SBSINVLabel := PurchaseLine.SBSINVLabel;
-        LotNoInformation.SBSINVExpirationDate := PurchaseLine.SBSINVExpirationDate;
-        LotNoInformation.SBSINVProductionDate := PurchaseLine.SBSINVProductionDate;
-        LotNoInformation.SBSINVContainerNo := PurchaseLine.SBSINVContainerNo;
-        LotNoInformation.SBSINVVessel := PurchaseLine.SBSINVVessel;
-        LotNoInformation.SBSINVIsAvailable := true;
-        LotNoInformation.Modify();
-    end;
-
-    local procedure DeleteLotNoInfoForPurchaseLine(PurchaseLine: Record "Purchase Line"; LotNo: Code[20])
-    var
-        LotNoInformation: Record "Lot No. Information";
-    begin
-        if LotNo = '' then
-            exit;
-        if PurchaseLine.Type <> PurchaseLine.Type::Item then
-            exit;
-        if PurchaseLine."No." = '' then
-            exit;
-        if LotNoInformation.Get(PurchaseLine."No.", PurchaseLine."Variant Code", LotNo) then
-            LotNoInformation.Delete();
-    end;
-
-    local procedure CheckIfPurchaseLineCustomFieldsChanged(PurchaseLine: Record "Purchase Line"; xPurchaseLine: record "Purchase Line"): Boolean
-    begin
-        if (PurchaseLine.SBSINVAlternateLotNo = xPurchaseLine.SBSINVAlternateLotNo) and
-           (PurchaseLine.SBSINVLabel = xPurchaseLine.SBSINVLabel) and
-           (PurchaseLine.SBSINVExpirationDate = xPurchaseLine.SBSINVExpirationDate) and
-           (PurchaseLine.SBSINVProductionDate = xPurchaseLine.SBSINVProductionDate) and
-           (PurchaseLine.SBSINVContainerNo = xPurchaseLine.SBSINVContainerNo) and
-           (PurchaseLine.SBSINVVessel = xPurchaseLine.SBSINVVessel) then
-            exit(false)
-        else
-            exit(true);
-    end;
 
     local procedure DeleteReservationEntriesForPOLine();
     var
@@ -300,6 +246,7 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
 
         Rec.SBSINVLotNo := GetNextLotNoForDocumentNo(Rec."Document No.", '', Rec."Document No.");
         CreateReservationEntryForPurchaseLine(Rec);
+        LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
     end;
 
     local procedure UpdateLotOnSales(OriginalLotNo: Code[20]; NewLotNo: Code[20]; OriginalProductionDate: Date; NewProductionDate: Date;
@@ -370,7 +317,6 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         if not SalesLineReservationEntry.IsEmpty then
             Error('Sales Order Reservations Exist for Item %1 Lot %2', ItemNo, LotNo);
     end;
-
 
     procedure GetNextLotNoForDocumentNo(SourceID: Code[20]; SourceBatchName: Code[20]; DocumentNo: Code[20]): Code[20]
     var
