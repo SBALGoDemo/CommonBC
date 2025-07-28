@@ -23,6 +23,8 @@ tableextension 60300 ItemLedgerEntry extends "Item Ledger Entry"
             DataClassification = CustomerContent;
             ToolTip = 'Specifies the Net Weight for the quantity of of the item ledger entry.';
         }
+
+        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2964 - Add Lot Related Fields to Item Ledger Entry
         field(60302; "SBSINVOriginalLotNo"; Code[20])
         {
             Caption = 'Original Lot No.';
@@ -75,6 +77,7 @@ tableextension 60300 ItemLedgerEntry extends "Item Ledger Entry"
         LotNoInformation.Modify();
     end;
 
+    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2964 - Add Lot Related Fields to Item Ledger Entry
     procedure SBSINVCopyLotNoInfoCustomFieldsFromLotNoInformation()
     var
         LotNoInformation: Record "Lot No. Information";

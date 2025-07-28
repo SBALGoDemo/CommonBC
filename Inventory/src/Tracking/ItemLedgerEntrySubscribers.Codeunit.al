@@ -33,7 +33,9 @@ codeunit 60301 ItemLedgerEntrySubscribers
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2942 - Add Custom Fields to Lot No. Information Table
         Rec.SBSINVUpdateLotNoInfoForItemLedgerEntry();
 
+        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2964 - Add Lot Related Fields to Item Ledger Entry
         Rec.SBSINVCopyLotNoInfoCustomFieldsFromLotNoInformation();
+
     end;
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2942 - Add Custom Fields to Lot No. Information Table
