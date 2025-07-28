@@ -150,9 +150,9 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
             Caption = 'Sales Order Filter';
             FieldClass = FlowFilter;
         }
-        field(60445; SBSINVPurchaseOrderNo; Code[20])
+        field(60445; SBSINVSourceNo; Code[20])
         {
-            Caption = 'PO Number';
+            Caption = 'Source Number';
             DataClassification = CustomerContent;
         }
         field(60450; SBSINVExpectedReceiptDate; Date)
@@ -173,13 +173,14 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
         }
     }
 
-    procedure CreateLotNoInformation(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50])
+    procedure CreateLotNoInformation(SourceNo: Code[20]; ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50])
     begin
         if not Rec.Get(ItemNo, VariantCode, LotNo) then begin
             Rec.Init();
             Rec.Validate("Item No.", ItemNo);
             Rec.Validate("Variant Code", VariantCode);
             Rec.Validate("Lot No.", LotNo);
+            Rec.SBSINVSourceNo := SourceNo;
             Rec.Insert(true);
         end;
     end;
@@ -196,7 +197,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
         if PurchaseLine."No." = '' then
             exit;
         if not LotNoInformation.Get(PurchaseLine."No.", PurchaseLine."Variant Code", PurchaseLine.SBSINVLotNo) then begin
-            LotNoInformation.CreateLotNoInformation(PurchaseLine."No.", PurchaseLine."Variant Code", PurchaseLine.SBSINVLotNo);
+            LotNoInformation.CreateLotNoInformation(PurchaseLine."Document No.", PurchaseLine."No.", PurchaseLine."Variant Code", PurchaseLine.SBSINVLotNo);
             LotNoInformation.Description := '';
             LotNoInformation.SBSINVVendorNo := PurchaseLine."Buy-from Vendor No.";
             if Vendor.Get(PurchaseLine."Buy-from Vendor No.") then
@@ -228,7 +229,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
         if ItemLedgerEntry."Item No." = '' then
             exit;
         if not LotNoInformation.Get(ItemLedgerEntry."Item No.", ItemLedgerEntry."Variant Code", ItemLedgerEntry."Lot No.") then begin
-            LotNoInformation.CreateLotNoInformation(ItemLedgerEntry."Item No.", ItemLedgerEntry."Variant Code", ItemLedgerEntry."Lot No.");
+            LotNoInformation.CreateLotNoInformation(ItemLedgerEntry."Source No.", ItemLedgerEntry."Item No.", ItemLedgerEntry."Variant Code", ItemLedgerEntry."Lot No.");
             LotNoInformation.Description := '';
             LotNoInformation.SBSINVVendorNo := '';
             LotNoInformation.SBSINVVendorName := '';
