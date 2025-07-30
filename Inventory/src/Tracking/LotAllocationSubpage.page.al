@@ -20,10 +20,6 @@ page 60307 "Lot Allocation Subpage"
                     ApplicationArea = All;
                     DecimalPlaces = 0 : 5;
                     Style = Unfavorable;
-                    trigger OnValidate();
-                    begin
-                        UpdateSelected();
-                    end;
                 }
                 field("Lot No."; Rec."Lot No.")
                 {
@@ -48,7 +44,7 @@ page 60307 "Lot Allocation Subpage"
                     Editable = false;
                 }
 
-                field(AvailableQuantity; AvailableQuantity)
+                field(AvailableQuantity; Rec.SBSINVAvailableQuantity)
                 {
                     Caption = 'Available Quantity';
                     ApplicationArea = All;
@@ -184,8 +180,7 @@ page 60307 "Lot Allocation Subpage"
     trigger OnAfterGetRecord();
     begin
         Rec.CalcFields(SBSINVOnHandQuantity, SBSINVOnOrderQuantity, SBSINVQtyOnSalesOrder, SBSINVOnPurchaseOrder);
-        AvailableQuantity := Rec.SBSINVOnHandQuantity + Rec.SBSINVOnOrderQuantity - Rec.SBSINVQtyOnSalesOrder;
-        AvailableNetWeight := AvailableQuantity * Rec.SBSINVItemNetWeight;
+        AvailableNetWeight := Rec.SBSINVAvailableQuantity * Rec.SBSINVItemNetWeight;
         OnOrderWeight := Rec.SBSINVOnOrderQuantity * Rec.SBSINVItemNetWeight;
         OnSalesOrderWeight := Rec.SBSINVQtyOnSalesOrder * Rec.SBSINVItemNetWeight;
         OnPurchaseOrder := Rec.SBSINVOnPurchaseOrder;
@@ -201,12 +196,11 @@ page 60307 "Lot Allocation Subpage"
         ItemNoFilter := Rec.GetFilter("Item No.");
     end;
 
-    procedure SetPageDataForItemVariant(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]);
+    procedure SetPageDataForItemVariantAndLocation(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]);
     var
         LotNoInformation: Record "Lot No. Information";
     begin
-        Message('In SetPageDataForItemVariant: ItemNo=%1, VariantCode=%2, LocationCode=%3', ItemNo, VariantCode, LocationCode);
-        if (ItemNo = '') then
+        if (ItemNo = '') or (LocationCode = '') then
             exit;
 
         if (ItemNo = gItemNo) and (VariantCode = gVariantCode) and (LocationCode = gLocationCode) then
@@ -214,6 +208,7 @@ page 60307 "Lot Allocation Subpage"
 
         gItemNo := ItemNo;
         gVariantCode := VariantCode;
+        gLocationCode := LocationCode;
         Rec.DeleteAll();
 
         LotNoInformation.SetRange("Item No.", ItemNo);
@@ -221,22 +216,35 @@ page 60307 "Lot Allocation Subpage"
         LotNoInformation.SetRange(SBSINVLocationCode, LocationCode);
         if LotNoInformation.FindSet() then
             repeat
-                Rec := LotNoInformation;
-                Rec.Insert();
+                if not LotExists(LotNoInformation."Lot No.") then begin
+                    Rec := LotNoInformation;
+                    Rec.CalcFields(SBSINVOnHandQuantity, SBSINVOnOrderQuantity, SBSINVQtyOnSalesOrder);
+                    Rec.SBSINVAvailableQuantity := Rec.SBSINVOnHandQuantity + Rec.SBSINVOnOrderQuantity - Rec.SBSINVQtyOnSalesOrder;
+                    Rec.Insert();
+                end;
             until LotNoInformation.Next() = 0;
-
     end;
 
-    local procedure RecordExists(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLotNo: Code[50]) Result: Boolean
+    local procedure LotExists(LotNo: Code[50]) Result: Boolean
     begin
-        Rec.SetRange("Item No.", NewItemNo);
-        Rec.SetRange("Lot No.", NewLotNo);
-        Rec.SetRange("Variant Code", NewVariantCode);
+        Rec.SetRange("Lot No.", LotNo);
         Result := not Rec.IsEmpty;
-        Rec.Reset();
+        Rec.SetRange("Lot No.");
     end;
 
-
+    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2973 - Add "Open Tracking" link to Sales Order Subform
+    procedure GetSelected(var LotNoInformation: Record "Lot No. Information" temporary);
+    begin
+        LotNoInformation.Reset();
+        LotNoInformation.DeleteAll();
+        Rec.SetFilter(SBSINVSelectedQuantity, '<>%1', 0);
+        if Rec.FindSet() then
+            repeat
+                LotNoInformation := Rec;
+                LotNoInformation.Insert();
+            until Rec.Next() = 0;
+        Rec.SetRange(SBSINVSelectedQuantity);
+    end;
 
     procedure UpdateSelected();
     begin
@@ -246,6 +254,7 @@ page 60307 "Lot Allocation Subpage"
                 Rec.SBSINVAvailableQuantity := Rec.SBSINVAvailableQuantity - Rec.SBSINVSelectedQuantity;
                 Rec.Modify;
             until Rec.Next() = 0;
+        Rec.SetRange(SBSINVSelectedQuantity);
     end;
 
     procedure SetSelectedQuantity();
@@ -265,7 +274,6 @@ page 60307 "Lot Allocation Subpage"
         DateFilter: date;
         ItemCategoryFilter: Text;
         ItemNoFilter: Text;
-        AvailableQuantity: Decimal;
         AvailableNetWeight: Decimal;
         OnOrderWeight: Decimal;
         OnSalesOrderWeight: Decimal;

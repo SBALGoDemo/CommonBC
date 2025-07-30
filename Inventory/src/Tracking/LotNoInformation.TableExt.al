@@ -105,9 +105,14 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
         {
             Caption = 'Selected Quantity';
             trigger OnValidate();
+            var
+                AvailableQuantity: Decimal;
             begin
-                if SBSINVSelectedQuantity > SBSINVAvailableQuantity then
-                    Error('The Selected Quantity (%1) is greater than the Available Quantity (%2)', SBSINVSelectedQuantity, SBSINVAvailableQuantity);
+                SelectLatestVersion();
+                Rec.CalcFields(SBSINVOnHandQuantity, SBSINVOnOrderQuantity, SBSINVQtyOnSalesOrder);
+                AvailableQuantity := Rec.SBSINVOnHandQuantity + Rec.SBSINVOnOrderQuantity - Rec.SBSINVQtyOnSalesOrder;
+                if SBSINVSelectedQuantity > AvailableQuantity then
+                    Error('The Selected Quantity (%1) is greater than the Available Quantity (%2)', SBSINVSelectedQuantity, AvailableQuantity);
             end;
         }
         field(60410; SBSINVAvailableQuantity; Decimal)
