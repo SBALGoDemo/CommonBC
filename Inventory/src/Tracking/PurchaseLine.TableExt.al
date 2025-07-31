@@ -82,10 +82,26 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         field(60340; SBSINVProductionDate; Date)
         {
             Caption = 'Production Date';
+
+            // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2978 - Set Expiration Date based on Production Date
             trigger OnValidate()
+            var
+                PurchasesSetup: Record "Purchases & Payables Setup";
             begin
+                if CurrFieldNo <> Rec.FieldNo(SBSINVProductionDate) then
+                    exit;
+                Rec.TestField(Type, Rec.Type::Item);
+                if Rec."Quantity (Base)" <= 0 then
+                    Error('You can only set the Production Date for supply transactions.');
+                CheckIfLotAlreadyReceived();
                 LotNoInformation.UpdateLotNoInfoForPurchaseLine(Rec);
+                PurchasesSetup.Get;
+                if PurchasesSetup.SBSINVEnableSetExpDate then begin
+                    Rec.SBSINVExpirationDate := CalcExpirationDate(Rec."No.", Rec.SBSINVProductionDate, Rec.SBSINVExpirationDate);
+                    UpdateLotOnPurchaseLineReservationEntry(Rec, Rec.SBSINVLotNo, Rec.SBSINVLotNo);
+                end;
             end;
+
         }
         field(60345; SBSINVExpirationDate; Date)
         {
@@ -346,5 +362,24 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         end;
 
         exit(NewLotNo);
+    end;
+
+    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2978 - Set Expiration Date based on Production Date
+    procedure CalcExpirationDate(ItemNo: Code[20]; ProductionDate: Date; ExistingExpirationDate: Date): Date;
+    var
+        Item: Record Item;
+        NewExpirationDate: Date;
+    begin
+        if not Item.Get(ItemNo) then
+            exit(ExistingExpirationDate);
+
+        if ProductionDate = 0D then
+            exit(0D);
+
+        if (Format(Item."Expiration Calculation") = '') then
+            exit(ExistingExpirationDate);
+
+        NewExpirationDate := CalcDate(Item."Expiration Calculation", ProductionDate);
+        exit(NewExpirationDate);
     end;
 }
