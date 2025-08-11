@@ -31,11 +31,10 @@ codeunit 60301 ItemLedgerEntrySubscribers
         Rec.SBSINVNetWeight := Rec.Quantity * Item."Net Weight";
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2942 - Add Custom Fields to Lot No. Information Table
-        Rec.SBSINVUpdateLotNoInfoForItemLedgerEntry();
+        Rec.SBSINVSetCustomFieldsFromItemLedgerEntry();
 
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2964 - Add Lot Related Fields to Item Ledger Entry
-        Rec.SBSINVCopyLotNoInfoCustomFieldsFromLotNoInformation();
-
+        Rec.SBSINVSetCustomFieldsFromLotNoInformation();
     end;
 
     // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2942 - Add Custom Fields to Lot No. Information Table
@@ -56,5 +55,4 @@ codeunit 60301 ItemLedgerEntrySubscribers
                 LotNoInformation.Modify(true);
             end;
     end;
-
 }
