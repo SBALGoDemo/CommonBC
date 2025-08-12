@@ -31,32 +31,32 @@ tableextension 60300 ItemLedgerEntry extends "Item Ledger Entry"
             Editable = false;
             ToolTip = 'Specifies the original lot number of the item ledger entry.';
         }
-        field(60305; SBSINVAlternateLotNo; Code[20])
+        field(60303; SBSINVAlternateLotNo; Code[20])
         {
             Caption = 'Alternate Lot No.';
             DataClassification = CustomerContent;
             ToolTip = 'Specifies the alternate lot number of the item ledger entry.';
         }
-        field(60310; SBSINVLabel; Text[50])
+        field(60304; SBSINVLabel; Text[50])
         {
             Caption = 'Label';
             DataClassification = CustomerContent;
             ToolTip = 'Specifies the label value of the item ledger entry.';
         }
-        field(60325; SBSINVVessel; Text[50])
+        field(60310; SBSINVVessel; Text[50])
         {
             Caption = 'Vessel';
             DataClassification = CustomerContent;
             Editable = false;
             ToolTip = 'Specifies the vessel of the item ledger entry.';
         }
-        field(60330; SBSINVContainerNo; Code[20])
+        field(60311; SBSINVContainerNo; Code[20])
         {
             Caption = 'Container No.';
             DataClassification = CustomerContent;
             ToolTip = 'Specifies the container number of the item ledger entry.';
         }
-        field(60340; SBSINVProductionDate; Date)
+        field(60312; SBSINVProductionDate; Date)
         {
             Caption = 'Production Date';
             DataClassification = CustomerContent;
@@ -95,14 +95,8 @@ tableextension 60300 ItemLedgerEntry extends "Item Ledger Entry"
         if Rec."Remaining Quantity" <= 0 then
             exit;
 
-        if not this.GetLotNoInformation(LotNoInformation) then begin
-            LotNoInformation.Init();
-            LotNoInformation."Item No." := Rec."Item No.";
-            LotNoInformation."Variant Code" := Rec."Variant Code";
-            LotNoInformation."Lot No." := Rec."Lot No.";
-            LotNoInformation.Description := '';
-            LotNoInformation.Insert();
-        end;
+        if not this.GetLotNoInformation(LotNoInformation) then
+            LotNoInformation.SBSINVCreateLotNoInformation('', Rec."Item No.", Rec."Variant Code", Rec."Lot No.");
 
         LotNoInformation.SBSINVExpirationDate := Rec."Expiration Date";
         LotNoInformation.SBSINVIsAvailable := true;
