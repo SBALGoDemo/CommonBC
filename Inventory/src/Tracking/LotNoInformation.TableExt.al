@@ -22,14 +22,14 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
             TableRelation = Location;
             ToolTip = 'Specifies the location code the lot is associated with.';
         }
-        field(60302; SBSINVOriginalLotNo; Code[20])
+        field(60302; SBSINVOriginalLotNo; Code[50])
         {
             Caption = 'Original Lot No.';
             DataClassification = CustomerContent;
             Editable = false;
             ToolTip = 'Specifies the original lot number of the lot number information.';
         }
-        field(60303; SBSINVAlternateLotNo; Code[20])
+        field(60303; SBSINVAlternateLotNo; Code[50])
         {
             Caption = 'Alternate Lot No.';
             DataClassification = CustomerContent;
@@ -251,7 +251,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
     /// </summary>
     /// <param name="PurchaseLine">A purchase line record containing the key values for a lot number information record you need to delete</param>
     /// <param name="LotNo">The specific Lot No. value for which you need to delete the related lot number information record</param>
-    internal procedure SBSINVDeleteLotNoInfoForPurchaseLine(PurchaseLine: Record "Purchase Line"; LotNo: Code[20])
+    internal procedure SBSINVDeleteLotNoInfoForPurchaseLine(PurchaseLine: Record "Purchase Line"; LotNo: Code[50])
     var
         LotNoInformation: Record "Lot No. Information";
     begin
@@ -316,7 +316,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
     /// <param name="PurchaseLine">The purchase line record being assessed</param>
     /// <param name="LotNo">The lot number value being assessed</param>
     /// <returns></returns>
-    local procedure SkipRecord(PurchaseLine: Record "Purchase Line"; LotNo: Code[20]): Boolean
+    local procedure SkipRecord(PurchaseLine: Record "Purchase Line"; LotNo: Code[50]): Boolean
     begin
         case true of
             (LotNo = ''):
@@ -385,7 +385,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
     /// <param name="ProductionDate"></param>
     /// <param name="ContainerNo"></param>
     /// <param name="Vessel"></param>
-    local procedure SBSINVDoSetAdditionalCustomFields(var LotNoInformation: Record "Lot No. Information"; LocationCode: Code[20]; AlternateLotNo: Code[20]; Label: Text[50]; ExpirationDate: Date; ProductionDate: Date; ContainerNo: Code[20]; Vessel: Text[50])
+    local procedure SBSINVDoSetAdditionalCustomFields(var LotNoInformation: Record "Lot No. Information"; LocationCode: Code[20]; AlternateLotNo: Code[50]; Label: Text[50]; ExpirationDate: Date; ProductionDate: Date; ContainerNo: Code[20]; Vessel: Text[50])
     begin
         LotNoInformation.SBSINVLocationCode := LocationCode;
         LotNoInformation.SBSINVAlternateLotNo := AlternateLotNo;

@@ -1,3 +1,6 @@
 {
-    "CRS.NamespacePrefixToIgnore": "SilverBay.Inventory"
+    "CRS.NamespacePrefixToIgnore": "SilverBay.Inventory",
+    "cSpell.words": [
+        "SBSINV"
+    ]
 }

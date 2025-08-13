@@ -21,7 +21,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
             end;
         }
-        field(60302; SBSINVLotNo; Code[20])
+        field(60302; SBSINVLotNo; Code[50])
         {
             Caption = 'Lot No.';
             DataClassification = CustomerContent;
@@ -29,8 +29,8 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
 
             trigger OnValidate()
             var
-                NewLotNo: Code[20];
-                OriginalLotNo: Code[20];
+                NewLotNo: Code[50];
+                OriginalLotNo: Code[50];
             begin
                 // TODO: This code can be improved by refactoring it out into smaller procedures/functions to enhance readability and maintainability. This should not all be in an "OnValidate" trigger.
                 Rec.TestField("Location Code");
@@ -57,7 +57,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                         end;
             end;
         }
-        field(60303; SBSINVAlternateLotNo; Code[20])
+        field(60303; SBSINVAlternateLotNo; Code[50])
         {
             Caption = 'Alternate Lot No.';
             DataClassification = CustomerContent;
@@ -187,7 +187,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
         exit(NewLotNo);
     end;
 
-    local procedure CheckIfDuplicateLot(LotNo: Code[20])
+    local procedure CheckIfDuplicateLot(LotNo: Code[50])
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
     begin
@@ -214,7 +214,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
         end;
     end;
 
-    local procedure CheckIfSOReservationsExistForItemAndLot(ItemNo: Code[20]; LotNo: Code[20]; PurchaseLineType: Enum "Purchase Line Type"; PurchaseLineQuantity: Decimal)
+    local procedure CheckIfSOReservationsExistForItemAndLot(ItemNo: Code[20]; LotNo: Code[50]; PurchaseLineType: Enum "Purchase Line Type"; PurchaseLineQuantity: Decimal)
     var
         SalesLineReservationEntry: Record "Reservation Entry";
     begin
@@ -320,7 +320,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
         ReservationEntry.FindFirst();
     end;
 
-    local procedure UpdateLotOnPurchaseLineReservationEntry(PurchaseLine: Record "Purchase Line"; NewLotNo: Code[20])
+    local procedure UpdateLotOnPurchaseLineReservationEntry(PurchaseLine: Record "Purchase Line"; NewLotNo: Code[50])
     var
         ReservationEntry: Record "Reservation Entry";
     begin
@@ -341,7 +341,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
         until (ReservationEntry.Next() = 0);
     end;
 
-    local procedure UpdateLotOnSales(OriginalLotNo: Code[20]; NewLotNo: Code[20]; OriginalProductionDate: Date; NewProductionDate: Date;
+    local procedure UpdateLotOnSales(OriginalLotNo: Code[50]; NewLotNo: Code[50]; OriginalProductionDate: Date; NewProductionDate: Date;
                                         OriginalExpirationDate: Date; NewExpirationDate: Date)
     var
         ReservationEntry: Record "Reservation Entry";
@@ -392,7 +392,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
         if TempSalesLine.FindSet() then
             repeat
                 SalesLine := TempSalesLine;
-                SalesLine.GetLotNoAndAllocatedQty(SalesLine);
+                SalesLine.SBSINVGetLotNoAndAllocatedQty(SalesLine);
             until (TempSalesLine.Next() = 0);
     end;
 }

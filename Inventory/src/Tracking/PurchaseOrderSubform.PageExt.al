@@ -227,10 +227,11 @@ pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
         // https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-al-control-statements#programming-conventions-1
         if (Rec.Type <> Rec.Type::Item) or (Rec.Quantity = 0) then
             SBSINVAssignLotOrOpenTrackingText := ''
-        else if (Rec.SBSINVLotNo = '') and (Rec.Quantity > 0) then
-            SBSINVAssignLotOrOpenTrackingText := 'Assign Lot (Shift+Alt+L)'
         else
-            SBSINVAssignLotOrOpenTrackingText := 'Open Tracking';
+            if (Rec.SBSINVLotNo = '') and (Rec.Quantity > 0) then
+                SBSINVAssignLotOrOpenTrackingText := 'Assign Lot (Shift+Alt+L)'
+            else
+                SBSINVAssignLotOrOpenTrackingText := 'Open Tracking';
     end;
 
     local procedure SBSINVSpecialOpenItemTrackingLines()

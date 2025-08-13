@@ -26,7 +26,7 @@ pageextension 60302 SalesOrderSubform extends "Sales Order Subform"
                 begin
                     this.SBSINVOpenItemTrackingLines(Rec);
                     CurrPage.Update(false);
-                    Rec.GetLotNoAndAllocatedQty(Rec);
+                    Rec.SBSINVGetLotNoAndAllocatedQty(Rec);
                     this.SBSINVUpdateUnitCostByLot(Rec);
                 end;
             }

@@ -24,14 +24,14 @@ tableextension 60300 ItemLedgerEntry extends "Item Ledger Entry"
         /// <summary>
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2964 - Add Lot Related Fields to Item Ledger Entry
         /// </summary>
-        field(60302; SBSINVOriginalLotNo; Code[20])
+        field(60302; SBSINVOriginalLotNo; Code[50])
         {
             Caption = 'Original Lot No.';
             DataClassification = CustomerContent;
             Editable = false;
             ToolTip = 'Specifies the original lot number of the item ledger entry.';
         }
-        field(60303; SBSINVAlternateLotNo; Code[20])
+        field(60303; SBSINVAlternateLotNo; Code[50])
         {
             Caption = 'Alternate Lot No.';
             DataClassification = CustomerContent;
