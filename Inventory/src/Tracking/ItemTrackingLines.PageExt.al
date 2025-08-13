@@ -1,5 +1,13 @@
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2854 - Migrate Item Tracking Lines page enhancements to Silver Bay
-pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
+namespace SilverBay.Inventory.Tracking;
+
+using Microsoft.Inventory.Tracking;
+using Microsoft.Inventory.Ledger;
+
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2854 - Migrate Item Tracking Lines page enhancements to Silver Bay
+/// TODO: Review and refactor code in the page extension when possible. Significant amounts of the code can likely be simplified and made more intuitive by migrating it to procedures in codeunits. 
+/// </summary>
+pageextension 60304 ItemTrackingLines extends "Item Tracking Lines"
 {
     layout
     {
@@ -7,72 +15,77 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
         {
             Visible = false;
         }
-
         // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2946 - Add Subform to Item Tracking Lines page
         addbefore(Control1)
         {
-            part(LotAllocationSubpage; "Lot Allocation Subpage")
+            part(SBSINVLotAllocationSubpage; "Lot Allocation Subpage")
             {
                 ApplicationArea = All;
+                Caption = 'Lot Allocation Subpage';
             }
         }
-
         addlast(Control1)
         {
             field(SBSINVAlternateLotNo; LotNoInformation.SBSINVAlternateLotNo)
             {
+                ApplicationArea = All;
                 Caption = 'Alternate Lot No.';
                 Editable = false;
-                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Alternate Lot No. field.';
             }
-
             field(SBSINVVessel; LotNoInformation.SBSINVVessel)
             {
+                ApplicationArea = All;
                 Caption = 'Vessel';
                 Editable = false;
-                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Vessel field.';
             }
-
             field(SBSINVLabel; LotNoInformation.SBSINVLabel)
             {
+                ApplicationArea = All;
                 Caption = 'Label';
                 Editable = false;
-                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Label field.';
             }
-            field(VendorNo; LotNoInformation.SBSINVVendorNo)
+            field(SBSINVVendorNo; LotNoInformation.SBSINVVendorNo)
             {
+                ApplicationArea = All;
                 Caption = 'Vendor No.';
                 Editable = false;
-                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Vendor No. field.';
             }
-            field(VendorName; LotNoInformation.SBSINVVendorName)
+            field(SBSINVVendorName; LotNoInformation.SBSINVVendorName)
             {
+                ApplicationArea = All;
                 Caption = 'Vendor Name';
                 Editable = false;
-                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Vendor Name field.';
             }
-            field("Country of Origin Code"; Rec.SBSINVCountryOfOriginCode)
+            field(SBSINVCountryofOriginCode; Rec.SBSINVCountryOfOriginCode)
             {
+                ApplicationArea = All;
                 Caption = 'Country of Origin Code';
                 Editable = false;
-                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Country of Origin Code field.';
             }
             field(SBSINVContainerNo; LotNoInformation.SBSINVContainerNo)
             {
+                ApplicationArea = All;
                 Caption = 'Container No.';
                 Editable = false;
-                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Container No. field.';
             }
-
-            field("Production Date"; LotNoInformation.SBSINVProductionDate)
+            field(SBSINVProductionDate; LotNoInformation.SBSINVProductionDate)
             {
+                ApplicationArea = All;
                 Caption = 'Production Date';
                 Editable = false;
-                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Production Date field.';
             }
-            field("New Production Date"; Rec.SBSINVNewProductionDate)
+            field(SBSINVNewProductionDate; Rec.SBSINVNewProductionDate)
             {
                 ApplicationArea = ItemTracking;
+                Caption = 'New Production Date';
                 Editable = NewExpirationDateEditable;
                 ToolTip = 'Specifies a new Production date.';
                 Visible = NewExpirationDateVisible;
@@ -85,7 +98,7 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
     {
         addlast(FunctionsDemand)
         {
-            action("Apply Lot Allocation")
+            action(SBSINVApplyLotAllocation)
             {
                 ApplicationArea = ItemTracking;
                 Caption = 'Apply Lot Allocation (Alt+A)';
@@ -94,57 +107,57 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 PromotedOnly = true;
+                ShortcutKey = 'Alt+A';
                 ToolTip = 'Select from existing, available lots.';
                 Visible = FunctionsDemandVisible;
-                ShortcutKey = 'Alt+A';
 
-                trigger OnAction();
+                trigger OnAction()
                 var
-                    xTrackingSpec: Record "Tracking Specification";
                     TempLotNoInformation: Record "Lot No. Information" temporary;
+                    xTrackingSpec: Record "Tracking Specification";
                 begin
                     xTrackingSpec.CopyFilters(Rec);
                     if InsertIsBlocked then
                         exit;
 
-                    CurrPage.LotAllocationSubpage.Page.GetSelected(TempLotNoInformation);
-                    CurrPage.LotAllocationSubpage.Page.UpdateSelected();
+                    CurrPage.SBSINVLotAllocationSubpage.Page.GetSelected(TempLotNoInformation);
+                    CurrPage.SBSINVLotAllocationSubpage.Page.UpdateSelected();
 
                     if TempLotNoInformation.IsEmpty then
                         exit;
 
                     // Swap sign on the selected entries if parent is a negative supply line
 
-                    if CurrentSignFactor > 0 then // Negative supply lines  
+                    if CurrentSignFactor > 0 then // Negative supply lines
                         if TempLotNoInformation.Find('-') then
                             repeat
                                 TempLotNoInformation.SBSINVSelectedQuantity := -TempLotNoInformation.SBSINVSelectedQuantity;
-                                TempLotNoInformation.Modify;
-                            until TempLotNoInformation.Next = 0;
+                                TempLotNoInformation.Modify();
+                            until TempLotNoInformation.Next() = 0;
 
                     // Modify the item tracking lines with the selected quantities
-                    AddSelectedTrackingToDataSet(TempLotNoInformation, Rec, CurrentSignFactor);
+                    this.SBSINVAddSelectedTrackingToDataSet(TempLotNoInformation, Rec, CurrentSignFactor);
 
                     Rec."Bin Code" := '';
-                    if Rec.FindSet then
+                    if Rec.FindSet() then
                         repeat
-                            case Rec."Buffer Status" OF
-                                Rec."Buffer Status"::Modify:
+                            case Rec."Buffer Status" of
+                                Rec."Buffer Status"::MODIFY:
                                     begin
                                         if TempItemTrackLineModify.Get(Rec."Entry No.") then
-                                            TempItemTrackLineModify.DELETE;
+                                            TempItemTrackLineModify.Delete();
                                         if TempItemTrackLineInsert.Get(Rec."Entry No.") then begin
                                             TempItemTrackLineInsert.TransferFields(Rec);
-                                            TempItemTrackLineInsert.Modify;
+                                            TempItemTrackLineInsert.Modify();
                                         end else begin
                                             TempItemTrackLineModify.TransferFields(Rec);
-                                            TempItemTrackLineModify.Insert;
+                                            TempItemTrackLineModify.Insert();
                                         end;
                                     end;
-                                Rec."Buffer Status"::Insert:
+                                Rec."Buffer Status"::INSERT:
                                     begin
                                         TempItemTrackLineInsert.TransferFields(Rec);
-                                        TempItemTrackLineInsert.Insert;
+                                        TempItemTrackLineInsert.Insert();
                                     end;
                             end;
                             Rec."Buffer Status" := 0;
@@ -152,17 +165,16 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
                         until Rec.Next() = 0;
 
                     LastEntryNo := Rec."Entry No.";
-                    CalculateSums;
+                    this.CalculateSums();
 
-                    UpdateUndefinedQtyArray;
-                    CurrPage.LotAllocationSubpage.Page.SetSelectedQuantity();
+                    this.SBSINVUpdateUndefinedQtyArray();
+                    CurrPage.SBSINVLotAllocationSubpage.Page.SetSelectedQuantity();
                     //UpdateEntriesOnAllocation(TempEntrySummary); //IBNH
 
                     Rec.CopyFilters(xTrackingSpec);
                     CurrPage.Update(false);
                 end;
             }
-
         }
     }
     trigger OnAfterGetRecord()
@@ -173,20 +185,22 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
 
     trigger OnAfterGetCurrRecord()
     begin
-        CurrPage.LotAllocationSubpage.page.SetPageDataForItemVariantAndLocation(Rec."Item No.", Rec."Variant Code", Rec."Location Code");
+        CurrPage.SBSINVLotAllocationSubpage.Page.SetPageDataForItemVariantAndLocation(Rec."Item No.", Rec."Variant Code", Rec."Location Code");
     end;
 
     var
         LotNoInformation: Record "Lot No. Information";
-        GotData: Boolean;
 
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2973 - Add "Open Tracking" link to Sales Order Subform
-    procedure AddSelectedTrackingToDataSet(var TempLotNoInformation: Record "Lot No. Information" temporary; var TempTrackingSpecification: Record "Tracking Specification" temporary; CurrentSignFactor: Integer);
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2973 - Add "Open Tracking" link to Sales Order Subform
+    /// </summary>
+    /// <param name="TempLotNoInformation"></param>
+    /// <param name="TempTrackingSpecification"></param>
+    /// <param name="CurrentSignFactor"></param>
+    internal procedure SBSINVAddSelectedTrackingToDataSet(var TempLotNoInformation: Record "Lot No. Information" temporary; var TempTrackingSpecification: Record "Tracking Specification" temporary; CurrentSignFactor: Integer)
     var
         TrackingSpecification2: Record "Tracking Specification";
         LastEntryNo: Integer;
-        ChangeType: Option Insert,Modify,Delete;
-        Item: Record Item;
     begin
         TempLotNoInformation.Reset();
         TempLotNoInformation.SetFilter(SBSINVSelectedQuantity, '<>%1', 0);
@@ -194,7 +208,7 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
             exit;
 
         // To save general and pointer information
-        TrackingSpecification2.init;
+        TrackingSpecification2.Init();
         TrackingSpecification2."Item No." := TempTrackingSpecification."Item No.";
         TrackingSpecification2."Location Code" := TempTrackingSpecification."Location Code";
         TrackingSpecification2."Source Type" := TempTrackingSpecification."Source Type";
@@ -217,8 +231,8 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
             if TempTrackingSpecification.FindFirst() then begin
                 TempTrackingSpecification.Validate("Quantity (Base)",
                 TempTrackingSpecification."Quantity (Base)" + TempLotNoInformation.SBSINVSelectedQuantity);
-                TempTrackingSpecification."Buffer Status" := TempTrackingSpecification."Buffer Status"::Modify;
-                TransferFromLotNoInformationToTrackingSpecification(TempTrackingSpecification, TempLotNoInformation);
+                TempTrackingSpecification."Buffer Status" := TempTrackingSpecification."Buffer Status"::MODIFY;
+                this.SBSINVTransferFromLotNoInformationToTrackingSpecification(TempTrackingSpecification, TempLotNoInformation);
                 TempTrackingSpecification.Modify();
                 //UpdateTrackingDataSetWithChange(TempTrackingSpecification, true, CurrentSignFactor, ChangeType::Modify);
             end else begin
@@ -226,22 +240,23 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
                 TempTrackingSpecification."Entry No." := LastEntryNo + 1;
                 LastEntryNo := TempTrackingSpecification."Entry No.";
                 TempTrackingSpecification."Lot No." := TempLotNoInformation."Lot No.";
-                TempTrackingSpecification."Buffer Status" := TempTrackingSpecification."Buffer Status"::Insert;
-                TransferFromLotNoInformationToTrackingSpecification(TempTrackingSpecification, TempLotNoInformation);
-                if TempTrackingSpecification.IsReclass then begin
+                TempTrackingSpecification."Buffer Status" := TempTrackingSpecification."Buffer Status"::INSERT;
+                this.SBSINVTransferFromLotNoInformationToTrackingSpecification(TempTrackingSpecification, TempLotNoInformation);
+                if TempTrackingSpecification.IsReclass() then begin
                     TempTrackingSpecification."New Serial No." := TempTrackingSpecification."Serial No.";
                     TempTrackingSpecification."New Lot No." := TempTrackingSpecification."Lot No.";
                 end;
+
                 TempTrackingSpecification.Validate("Quantity (Base)", TempLotNoInformation.SBSINVSelectedQuantity);
                 TempTrackingSpecification.Insert();
                 //UpdateTrackingDataSetWithChange(TempTrackingSpecification, true, CurrentSignFactor, ChangeType::Insert);
             end;
-        until TempLotNoInformation.Next = 0;
+        until TempLotNoInformation.Next() = 0;
 
-        TempTrackingSpecification.Reset;
+        TempTrackingSpecification.Reset();
     end;
 
-    local procedure TransferFromLotNoInformationToTrackingSpecification(var TrackingSpecification: Record "Tracking Specification" temporary; var TempLotNoInformation: Record "Lot No. Information" temporary);
+    local procedure SBSINVTransferFromLotNoInformationToTrackingSpecification(var TrackingSpecification: Record "Tracking Specification" temporary; var TempLotNoInformation: Record "Lot No. Information" temporary)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
     begin
@@ -252,12 +267,14 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
             ItemLedgerEntry.FindFirst()
         else
             ItemLedgerEntry.Init();
+
         TempLotNoInformation.CalcFields(SBSINVOnOrderQuantity, SBSINVQtyOnSalesOrder);
         TempLotNoInformation.SBSINVTotalQuantity := TempLotNoInformation.SBSINVOnHandQuantity + TempLotNoInformation.SBSINVOnOrderQuantity - TempLotNoInformation.SBSINVQtyOnSalesOrder;
+
         if TempLotNoInformation.SBSINVTotalQuantity <> 0 then begin
             TrackingSpecification."Buffer Status2" := TrackingSpecification."Buffer Status2"::"ExpDate blocked";
             TrackingSpecification."Expiration Date" := TempLotNoInformation.SBSINVExpirationDate;
-            if TrackingSpecification.IsReclass then begin
+            if TrackingSpecification.IsReclass() then begin
                 TrackingSpecification."New Expiration Date" := TrackingSpecification."Expiration Date";
                 TrackingSpecification.SBSINVNewProductionDate := ItemLedgerEntry.SBSINVProductionDate;
             end else begin
@@ -272,11 +289,10 @@ pageextension 60304 ItemTrackingLinesExt extends "Item Tracking Lines"
         end;
     end;
 
-    local procedure UpdateUndefinedQtyArray()
+    local procedure SBSINVUpdateUndefinedQtyArray()
     begin
         UndefinedQtyArray[1] := SourceQuantityArray[1] - TotalTrackingSpecification."Quantity (Base)";
         UndefinedQtyArray[2] := SourceQuantityArray[2] - TotalTrackingSpecification."Qty. to Handle (Base)";
         UndefinedQtyArray[3] := SourceQuantityArray[3] - TotalTrackingSpecification."Qty. to Invoice (Base)";
     end;
-
 }

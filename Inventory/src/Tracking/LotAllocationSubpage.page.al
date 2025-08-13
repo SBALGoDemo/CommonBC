@@ -1,29 +1,39 @@
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2946 - Add Subform to Item Tracking Lines page
-// Based on Orca Bay page 50093 "OBF-Lot Allocation Subpage" which had a different SourceTable
+namespace SilverBay.Inventory.Tracking;
+
+using Microsoft.Inventory.Tracking;
+using SilverBay.Inventory.System;
+
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2946 - Add Subform to Item Tracking Lines page
+/// Based on Orca Bay page 50093 "OBF-Lot Allocation Subpage" which had a different SourceTable
+/// TODO: Review and refactor code in the page when possible. Significant amounts of the code can likely be simplified and made more intuitive by migrating it to procedures in codeunits. /// 
+/// </summary>
 page 60307 "Lot Allocation Subpage"
 {
+    ApplicationArea = All;
     Caption = 'Lot Allocation';
-    InsertAllowed = false;
     DeleteAllowed = false;
+    InsertAllowed = false;
     PageType = ListPart;
     SourceTable = "Lot No. Information";
     SourceTableTemporary = true;
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(Group)
             {
+                Caption = 'Group';
                 field(SBSINVSelectedQuantity; Rec.SBSINVSelectedQuantity)
                 {
                     Caption = 'Selected Quantity';
-                    ApplicationArea = All;
                     DecimalPlaces = 0 : 5;
                     Style = Unfavorable;
+                    ToolTip = 'Specifies the value of the Selected Quantity field.';
                 }
                 field("Lot No."; Rec."Lot No.")
                 {
-                    ApplicationArea = All;
+                    Caption = 'Lot No.';
                     Editable = false;
                     Style = Attention;
                     StyleExpr = OnPurchaseOrder;
@@ -32,197 +42,252 @@ page 60307 "Lot Allocation Subpage"
                 field(SBSINVOnPurchaseOrder; Rec.SBSINVOnPurchaseOrder)
                 {
                     Caption = 'On Purchase Order';
-                    ApplicationArea = All;
                     Editable = false;
                     StyleExpr = OnPurchaseOrder;
+                    ToolTip = 'Specifies the value of the On Purchase Order field.';
                 }
                 field(SBSINVTotalQuantity; Rec.SBSINVTotalQuantity)
                 {
                     Caption = 'Total Quantity';
-                    ApplicationArea = All;
                     DecimalPlaces = 0 : 5;
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Total Quantity field.';
                 }
-
                 field(AvailableQuantity; Rec.SBSINVAvailableQuantity)
                 {
                     Caption = 'Available Quantity';
-                    ApplicationArea = All;
                     DecimalPlaces = 0 : 5;
                     Editable = false;
                     Style = Unfavorable;
-                    trigger OnDrillDown();
+                    ToolTip = 'Specifies the value of the Available Quantity field.';
+                    trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", DateFilter);
+                        this.InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", this.DateFilter);
                     end;
                 }
-                field(AvailableNetWeight; AvailableNetWeight)
+                field(AvailableNetWeight; this.AvailableNetWeight)
                 {
-                    ApplicationArea = All;
                     Caption = 'Available Weight';
                     DecimalPlaces = 0 : 5;
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Available Weight field.';
                     Visible = false;
-                    trigger OnDrillDown();
+                    trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", DateFilter);
+                        this.InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", this.DateFilter);
                     end;
                 }
                 field(OnHandQuantity; Rec.SBSINVOnHandQuantity)
                 {
-                    ApplicationArea = All;
                     Caption = 'On Hand Quantity';
                     DecimalPlaces = 0 : 5;
                     Editable = false;
+                    ToolTip = 'Specifies the value of the On Hand Quantity field.';
                 }
                 field("On Order Quantity"; Rec.SBSINVOnOrderQuantity)
                 {
-                    ApplicationArea = All;
+                    Caption = 'On Order Quantity';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the On Order Quantity field.';
                 }
                 field("Qty. on Sales Order"; Rec.SBSINVQtyOnSalesOrder)
                 {
-                    ApplicationArea = All;
+                    Caption = 'Qty. on Sales Orders';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Qty. on Sales Orders field.';
                 }
-                field("Alternate Lot No."; LotNoInformation.SBSINVAlternateLotNo)
+                field("Alternate Lot No."; this.LotNoInformation.SBSINVAlternateLotNo)
                 {
                     Caption = 'Alternate Lot No.';
                     Editable = false;
-                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Alternate Lot No. field.';
                 }
-
-                field("Label Text"; LotNoInformation.SBSINVLabel)
+                field("Label Text"; this.LotNoInformation.SBSINVLabel)
                 {
                     Caption = 'Label Text';
                     Editable = false;
-                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Label Text field.';
                 }
-                field(Vessel; LotNoInformation.SBSINVVessel)
+                field(Vessel; this.LotNoInformation.SBSINVVessel)
                 {
                     Caption = 'Vessel';
                     Editable = false;
-                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Vessel field.';
                 }
-                field("Container No."; LotNoInformation.SBSINVContainerNo)
+                field("Container No."; this.LotNoInformation.SBSINVContainerNo)
                 {
                     Caption = 'Container No.';
                     Editable = false;
-                    ApplicationArea = All;
-
+                    ToolTip = 'Specifies the value of the Container No. field.';
                 }
                 field("Source Number"; Rec.SBSINVSourceNo)
                 {
                     Caption = 'Source Number';
-                    ApplicationArea = All;
                     Editable = false;
                     ToolTip = 'Specifies the Source Number for the Lot.';
                 }
                 field("Vendor Name"; Rec.SBSINVVendorName)
                 {
-                    ApplicationArea = All;
+                    Caption = 'Vendor Name';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Vendor Name field.';
                 }
                 field("Receipt Date (ILE)"; Rec.SBSINVReceiptDateILE)
                 {
-                    ApplicationArea = All;
+                    Caption = 'Receipt Date (ILE)';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Receipt Date (ILE) field.';
                 }
                 field(ExpectedReceiptDate; Rec.SBSINVExpectedReceiptDate)
                 {
-                    ApplicationArea = All;
                     Caption = 'Expected Receipt Date';
-                    ToolTip = 'Specifies the value of the Expected Receipt Date field.';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Expected Receipt Date field.';
                 }
                 field("Production Date"; Rec.SBSINVProductionDate)
                 {
-                    ApplicationArea = All;
+                    Caption = 'Production Date';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Production Date field.';
                 }
                 field("Expiration Date"; Rec.SBSINVExpirationDate)
                 {
-                    ApplicationArea = All;
+                    Caption = 'Expiration Date';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Expiration Date field.';
                 }
                 field("Unit Cost"; Rec.SBSINVUnitCost)
                 {
-                    ApplicationArea = All;
+                    Caption = 'Unit Cost';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Unit Cost field.';
                 }
                 field(Buyer; Rec.SBSINVBuyerCode)
                 {
-                    ApplicationArea = All;
+                    Caption = 'Buyer';
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Buyer field.';
                 }
-                field(OnOrderWeight; OnOrderWeight)
+                field(OnOrderWeight; this.OnOrderWeight)
                 {
-                    ApplicationArea = All;
                     Caption = 'On Order Weight';
                     DecimalPlaces = 0 : 5;
                     Editable = false;
-                    trigger OnDrillDown();
+                    ToolTip = 'Specifies the value of the On Order Weight field.';
+                    trigger OnDrillDown()
                     begin
-                        InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.");
+                        this.InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.");
                     end;
                 }
-                field(OnSalesOrderWeight; OnSalesOrderWeight)
+                field(OnSalesOrderWeight; this.OnSalesOrderWeight)
                 {
-                    ApplicationArea = All;
                     Caption = 'Weight on Sales Orders';
                     DecimalPlaces = 0 : 5;
                     Editable = false;
+                    ToolTip = 'Specifies the value of the Weight on Sales Orders field.';
                 }
             }
         }
     }
 
-    trigger OnAfterGetRecord();
+    trigger OnAfterGetRecord()
     begin
         Rec.CalcFields(SBSINVOnHandQuantity, SBSINVOnOrderQuantity, SBSINVQtyOnSalesOrder, SBSINVOnPurchaseOrder);
-        AvailableNetWeight := Rec.SBSINVAvailableQuantity * Rec.SBSINVItemNetWeight;
-        OnOrderWeight := Rec.SBSINVOnOrderQuantity * Rec.SBSINVItemNetWeight;
-        OnSalesOrderWeight := Rec.SBSINVQtyOnSalesOrder * Rec.SBSINVItemNetWeight;
-        OnPurchaseOrder := Rec.SBSINVOnPurchaseOrder;
-        if not LotNoInformation.Get(Rec."Item No.", Rec."Variant Code", Rec."Lot No.") then
-            LotNoInformation.Init();
+        this.AvailableNetWeight := Rec.SBSINVAvailableQuantity * Rec.SBSINVItemNetWeight;
+        this.OnOrderWeight := Rec.SBSINVOnOrderQuantity * Rec.SBSINVItemNetWeight;
+        this.OnSalesOrderWeight := Rec.SBSINVQtyOnSalesOrder * Rec.SBSINVItemNetWeight;
+        this.OnPurchaseOrder := Rec.SBSINVOnPurchaseOrder;
+        if not this.LotNoInformation.Get(Rec."Item No.", Rec."Variant Code", Rec."Lot No.") then
+            this.LotNoInformation.Init();
     end;
 
-    trigger OnOpenPage();
+    trigger OnOpenPage()
     begin
-        DateFilter := CalcDate('1Y', WorkDate);
+        this.DateFilter := CalcDate('<1Y>', WorkDate());
         Rec.SetRange(SBSINVIsAvailable, true);
-        ItemCategoryFilter := Rec.GetFilter(SBSINVItemCategoryCode);
-        ItemNoFilter := Rec.GetFilter("Item No.");
+        this.ItemCategoryFilter := Rec.GetFilter(SBSINVItemCategoryCode);
+        this.ItemNoFilter := Rec.GetFilter("Item No.");
     end;
 
-    procedure SetPageDataForItemVariantAndLocation(ItemNo: Code[20]; VariantCode: Code[10]; LocationCode: Code[10]);
     var
         LotNoInformation: Record "Lot No. Information";
+        InfoPaneMgmt: Codeunit InfoPaneMgmt;
+        OnPurchaseOrder: Boolean;
+        VariantCode: Code[10];
+        ItemNo: Code[20];
+        LocationCode: Code[20];
+        DateFilter: Date;
+        AvailableNetWeight: Decimal;
+        OnOrderWeight: Decimal;
+        OnSalesOrderWeight: Decimal;
+        ItemCategoryFilter: Text;
+        ItemNoFilter: Text;
+
+    /// <summary>
+    /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2973 - Add "Open Tracking" link to Sales Order Subform
+    /// </summary>
+    /// <param name="TempLotNoInformation"></param>
+    internal procedure GetSelected(var TempLotNoInformation: Record "Lot No. Information" temporary)
     begin
-        if (ItemNo = '') or (LocationCode = '') then
+        TempLotNoInformation.Reset();
+        TempLotNoInformation.DeleteAll();
+        Rec.SetFilter(SBSINVSelectedQuantity, '<>%1', 0);
+        if Rec.FindSet() then
+            repeat
+                TempLotNoInformation := Rec;
+                TempLotNoInformation.Insert();
+            until Rec.Next() = 0;
+        Rec.SetRange(SBSINVSelectedQuantity);
+    end;
+
+    procedure SetPageDataForItemVariantAndLocation(NewItemNo: Code[20]; NewVariantCode: Code[10]; NewLocationCode: Code[10])
+    var
+        LotNoInformation2: Record "Lot No. Information";
+    begin
+        if (NewItemNo = '') or (NewLocationCode = '') then
             exit;
 
-        if (ItemNo = gItemNo) and (VariantCode = gVariantCode) and (LocationCode = gLocationCode) then
+        if (NewItemNo = this.ItemNo) and (NewVariantCode = this.VariantCode) and (NewLocationCode = this.LocationCode) then
             exit;
 
-        gItemNo := ItemNo;
-        gVariantCode := VariantCode;
-        gLocationCode := LocationCode;
+        this.ItemNo := NewItemNo;
+        this.VariantCode := NewVariantCode;
+        this.LocationCode := NewLocationCode;
+
         Rec.DeleteAll();
 
-        LotNoInformation.SetRange("Item No.", ItemNo);
-        LotNoInformation.SetRange("Variant Code", VariantCode);
-        LotNoInformation.SetRange(SBSINVLocationCode, LocationCode);
-        if LotNoInformation.FindSet() then
+        LotNoInformation2.SetRange("Item No.", NewItemNo);
+        LotNoInformation2.SetRange("Variant Code", NewVariantCode);
+        LotNoInformation2.SetRange(SBSINVLocationCode, NewLocationCode);
+        if LotNoInformation2.FindSet() then
             repeat
-                if not LotExists(LotNoInformation."Lot No.") then begin
-                    Rec := LotNoInformation;
+                if not this.LotExists(LotNoInformation2."Lot No.") then begin
+                    Rec := LotNoInformation2;
                     Rec.CalcFields(SBSINVOnHandQuantity, SBSINVOnOrderQuantity, SBSINVQtyOnSalesOrder);
                     Rec.SBSINVAvailableQuantity := Rec.SBSINVOnHandQuantity + Rec.SBSINVOnOrderQuantity - Rec.SBSINVQtyOnSalesOrder;
                     Rec.Insert();
                 end;
-            until LotNoInformation.Next() = 0;
+            until LotNoInformation2.Next() = 0;
+    end;
+
+    procedure SetSelectedQuantity()
+    begin
+        if Rec.FindSet() then
+            repeat
+                Rec.SBSINVSelectedQuantity := 0;
+                Rec.Modify();
+            until Rec.Next() = 0;
+    end;
+
+    procedure UpdateSelected()
+    begin
+        Rec.SetFilter(SBSINVSelectedQuantity, '<>%1', 0);
+        if Rec.FindSet() then
+            repeat
+                Rec.SBSINVAvailableQuantity := Rec.SBSINVAvailableQuantity - Rec.SBSINVSelectedQuantity;
+                Rec.Modify();
+            until Rec.Next() = 0;
+        Rec.SetRange(SBSINVSelectedQuantity);
     end;
 
     local procedure LotExists(LotNo: Code[50]) Result: Boolean
@@ -231,54 +296,4 @@ page 60307 "Lot Allocation Subpage"
         Result := not Rec.IsEmpty;
         Rec.SetRange("Lot No.");
     end;
-
-    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/2973 - Add "Open Tracking" link to Sales Order Subform
-    procedure GetSelected(var LotNoInformation: Record "Lot No. Information" temporary);
-    begin
-        LotNoInformation.Reset();
-        LotNoInformation.DeleteAll();
-        Rec.SetFilter(SBSINVSelectedQuantity, '<>%1', 0);
-        if Rec.FindSet() then
-            repeat
-                LotNoInformation := Rec;
-                LotNoInformation.Insert();
-            until Rec.Next() = 0;
-        Rec.SetRange(SBSINVSelectedQuantity);
-    end;
-
-    procedure UpdateSelected();
-    begin
-        Rec.SetFilter(SBSINVSelectedQuantity, '<>%1', 0);
-        if Rec.FindSet() then
-            repeat
-                Rec.SBSINVAvailableQuantity := Rec.SBSINVAvailableQuantity - Rec.SBSINVSelectedQuantity;
-                Rec.Modify;
-            until Rec.Next() = 0;
-        Rec.SetRange(SBSINVSelectedQuantity);
-    end;
-
-    procedure SetSelectedQuantity();
-    begin
-
-        if Rec.FindSet then begin
-            repeat
-                Rec.SBSINVSelectedQuantity := 0;
-                Rec.Modify;
-            until Rec.Next = 0;
-        end;
-    end;
-
-    var
-        InfoPaneMgmt: Codeunit InfoPaneMgmt;
-        LotNoInformation: Record "Lot No. Information";
-        DateFilter: date;
-        ItemCategoryFilter: Text;
-        ItemNoFilter: Text;
-        AvailableNetWeight: Decimal;
-        OnOrderWeight: Decimal;
-        OnSalesOrderWeight: Decimal;
-        OnPurchaseOrder: Boolean;
-        gItemNo: Code[20];
-        gLocationCode: Code[20];
-        gVariantCode: Code[10];
 }
