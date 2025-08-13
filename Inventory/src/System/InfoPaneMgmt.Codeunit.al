@@ -170,25 +170,24 @@ codeunit 60300 InfoPaneMgmt
     var
         PurchaseLine: Record "Purchase Line";
     begin
-        this.FilterPurchaseLines(PurchaseLine, ItemNo, VariantCode, IncludeAllVariants, '');
+        this.FilterPurchaseLines(PurchaseLine, ItemNo, VariantCode, IncludeAllVariants);
         this.ShowPurchaseLines(PurchaseLine);
     end;
 
-    procedure OnOrderDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50]; LocationCode: Code[10])
+    procedure OnOrderDrillDownByLot(ItemNo: Code[20]; VariantCode: Code[10]; LotNo: Code[50])
     var
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
         ReservationEntries: Page "Reservation Entries";
     begin
         if LotNo = '' then begin
-            this.FilterPurchaseLines(PurchaseLine, ItemNo, VariantCode, false, LocationCode);
+            this.FilterPurchaseLines(PurchaseLine, ItemNo, VariantCode, false);
             this.ShowPurchaseLines(PurchaseLine);
         end else begin
             ReservationEntry.SetRange("Source Type", Database::"Purchase Line");
             ReservationEntry.SetRange("Source Subtype", 1);
             ReservationEntry.SetRange("Item No.", ItemNo);
             ReservationEntry.SetRange("Variant Code", VariantCode);
-            ReservationEntry.SetRange("Location Code", LocationCode);
             ReservationEntry.SetRange("Lot No.", LotNo);
 
             ReservationEntries.SetTableView(ReservationEntry);
@@ -196,7 +195,7 @@ codeunit 60300 InfoPaneMgmt
         end;
     end;
 
-    local procedure FilterPurchaseLines(var PurchaseLine: Record "Purchase Line"; ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean; LocationCode: Code[10])
+    local procedure FilterPurchaseLines(var PurchaseLine: Record "Purchase Line"; ItemNo: Code[20]; VariantCode: Code[10]; IncludeAllVariants: Boolean)
     begin
         PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
         PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
@@ -204,8 +203,6 @@ codeunit 60300 InfoPaneMgmt
         if not IncludeAllVariants then
             PurchaseLine.SetRange("Variant Code", VariantCode);
         PurchaseLine.SetFilter("Outstanding Quantity", '<>%1', 0);
-        if LocationCode <> '' then
-            PurchaseLine.SetRange("Location Code", LocationCode);
     end;
 
     local procedure ShowPurchaseLines(var PurchaseLine: Record "Purchase Line")

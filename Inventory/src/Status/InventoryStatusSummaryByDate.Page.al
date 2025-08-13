@@ -10,12 +10,7 @@ using SilverBay.Inventory.Tracking;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2620 - Migrate Inv. Status by Date page to Silver Bay
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/638 - Add Variant info to ISS
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/678 - Item Factbox Issues
-/// Note: This page was copied from and is similar to Page 50054 "Distinct Item Lots"
-/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/664 - Inv. Status Summary page enhancements
-/// Drilldowns moved to Info Pane Management codeunit
-/// Migrated from page 50053 "OBF-Inv. Stat. Summary by Date"
+/// Migrated from Orca Bay page 50053 "OBF-Inv. Stat. Summary by Date"
 /// </summary>
 page 60300 InventoryStatusSummaryByDate
 {
@@ -171,7 +166,7 @@ page 60300 InventoryStatusSummaryByDate
                     Width = 5;
                     trigger OnDrillDown()
                     begin
-                        this.InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", Rec."Location Code");
+                        this.InfoPaneMgmt.OnOrderDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.");
                     end;
                 }
                 field("Qty. on Sales Order"; Rec."Qty. on Sales Order")
@@ -233,14 +228,6 @@ page 60300 InventoryStatusSummaryByDate
                     begin
                         Rec.BuyerOnDrillDown();
                     end;
-                }
-                /// <summary>
-                /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1654 - Need "Purchased For" field for lots
-                /// </summary>
-                field("Purchased For"; Rec."Purchased For")
-                {
-                    Editable = false;
-                    Visible = false;
                 }
             }
         }
@@ -325,6 +312,7 @@ page 60300 InventoryStatusSummaryByDate
         PurchRcptHeader: Record "Purch. Rcpt. Header";
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
+        LotNoInformation: Record "Lot No. Information";
         UnassignedPurchaseLineQty: Decimal;
     begin
         NewNextRowNo += 1;
@@ -354,6 +342,16 @@ page 60300 InventoryStatusSummaryByDate
         Rec."Item Description" := Item.Description;
         Rec."Item Description 2" := Item."Description 2";
         Rec."Search Description" := Item."Search Description";
+
+        if LotNoInformation.Get(NewItemNo, NewVariantCode, NewLotNo) then begin
+            Rec."Production Date" := LotNoInformation.SBSINVProductionDate;
+            Rec."Buyer Code" := LotNoInformation.SBSINVBuyerCode;
+            Rec."Expected Receipt Date" := LotNoInformation.SBSINVExpectedReceiptDate;
+        end else begin
+            Rec."Production Date" := 0D;
+            Rec."Buyer Code" := '';
+            Rec."Expected Receipt Date" := 0D;
+        end;
 
         if (Rec."On Hand Quantity" <> 0) or (Rec."On Order Quantity 2" > 0) then begin
             Rec."Total Available Quantity" := Rec."On Hand Quantity" + Rec."On Order Quantity 2" - Rec."Qty. on Sales Order";
@@ -397,13 +395,6 @@ page 60300 InventoryStatusSummaryByDate
                     //https://odydev.visualstudio.com/ThePlan/_workitems/edit/629 - Add "Expected Receipt Date" to Inv. Status page
                     if PurchaseLine.Get(PurchaseLine."Document Type"::Order, Rec."PO Number", ReservationEntry."Source Ref. No.") then
                         Rec."Expected Receipt Date" := PurchaseLine."Expected Receipt Date";
-
-                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1378 -   Add Production Date to Inv. Status by Date
-                    Rec."Production Date" := ReservationEntry.SBSINVProductionDate;
-
-                    // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1653 - Wrong Purchaser for Work Order Lots on ISS by Date
-                    if ReservationEntry.SBSINVPurchaserCode <> '' then
-                        Rec."Buyer Code" := ReservationEntry.SBSINVPurchaserCode;
                 end;
             end;
             if Rec."On Hand Weight" <> 0 then
