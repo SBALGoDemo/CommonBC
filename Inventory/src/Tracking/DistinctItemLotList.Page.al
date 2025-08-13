@@ -303,7 +303,7 @@ page 60303 DistinctItemLotList
         PurchRcptHeader: Record "Purch. Rcpt. Header";
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
-        LotNoInfo: Record "Lot No. Information";
+        LotNoInformation: Record "Lot No. Information";
         PurchaseUnitCost: Decimal;
     begin
         NewNextRowNo += 1;
@@ -316,10 +316,10 @@ page 60303 DistinctItemLotList
         Rec."Lot No." := NewLotNo;
         Rec."Location Code" := NewLocation;
 
-        if LotNoInfo.Get(NewItemNo, NewVariantCode, NewLotNo) then begin
-            Rec."Production Date" := LotNoInfo.SBSINVProductionDate;
-            Rec."Buyer Code" := LotNoInfo.SBSINVBuyerCode;
-            Rec."Expected Receipt Date" := LotNoInfo.SBSINVExpectedReceiptDate;
+        if LotNoInformation.Get(NewItemNo, NewVariantCode, NewLotNo) then begin
+            Rec."Production Date" := LotNoInformation.SBSINVProductionDate;
+            Rec."Buyer Code" := LotNoInformation.SBSINVBuyerCode;
+            Rec."Expected Receipt Date" := LotNoInformation.SBSINVExpectedReceiptDate;
         end else begin
             Rec."Production Date" := 0D;
             Rec."Buyer Code" := '';
