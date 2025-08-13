@@ -21,7 +21,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
             end;
         }
-        field(60300; SBSINVLotNo; Code[20])
+        field(60302; SBSINVLotNo; Code[20])
         {
             Caption = 'Lot No.';
             DataClassification = CustomerContent;
@@ -57,7 +57,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                         end;
             end;
         }
-        field(60305; SBSINVAlternateLotNo; Code[20])
+        field(60303; SBSINVAlternateLotNo; Code[20])
         {
             Caption = 'Alternate Lot No.';
             DataClassification = CustomerContent;
@@ -68,7 +68,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
             end;
         }
-        field(60310; SBSINVLabel; Text[50])
+        field(60304; SBSINVLabel; Text[50])
         {
             Caption = 'Label';
             DataClassification = CustomerContent;
@@ -79,7 +79,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
             end;
         }
-        field(60325; SBSINVVessel; Text[50])
+        field(60310; SBSINVVessel; Text[50])
         {
             Caption = 'Vessel';
             DataClassification = CustomerContent;
@@ -90,7 +90,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
             end;
         }
-        field(60330; SBSINVContainerNo; Code[20])
+        field(60311; SBSINVContainerNo; Code[20])
         {
             Caption = 'Container No.';
             DataClassification = CustomerContent;
@@ -101,7 +101,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
             end;
         }
-        field(60335; SBSINVCountryOfOrigin; Text[30])
+        field(60330; SBSINVCountryOfOrigin; Text[30])
         {
             CalcFormula = lookup(Item."Country/Region of Origin Code" where("No." = field("No.")));
             Caption = 'Country of Origin';
@@ -110,7 +110,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
             TableRelation = "Country/Region";
             ToolTip = 'Specifies the value of the Country of Origin field.';
         }
-        field(60340; SBSINVProductionDate; Date)
+        field(60312; SBSINVProductionDate; Date)
         {
             Caption = 'Production Date';
             DataClassification = CustomerContent;
@@ -121,7 +121,7 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
             end;
         }
-        field(60345; SBSINVExpirationDate; Date)
+        field(60313; SBSINVExpirationDate; Date)
         {
             Caption = 'Expiration Date';
             DataClassification = CustomerContent;
