@@ -1,4 +1,10 @@
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2855 - Add Purchase Order Subform lot tracking enhancements
+namespace SilverBay.Inventory.Tracking;
+
+using Microsoft.Purchases.Document;
+
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2855 - Add Purchase Order Subform lot tracking enhancements
+/// </summary>
 pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
 {
     layout
@@ -7,13 +13,14 @@ pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
         {
             field(SBSINVAssignLotOrOpenTrackingText; SBSINVAssignLotOrOpenTrackingText)
             {
+                ApplicationArea = All;
                 Caption = 'Assign Lot/Open Tracking (Shift+Alt+L)';
                 Editable = false;
                 StyleExpr = 'AttentionAccent';
-                ApplicationArea = All;
-                trigger OnDrillDown();
+                ToolTip = 'Specifies the value of the Assign Lot/Open Tracking (Shift+Alt+L) field.';
+                trigger OnDrillDown()
                 begin
-                    AssignLotOrOpenItemTracking();
+                    this.SBSINVAssignLotOrOpenItemTracking();
                 end;
             }
         }
@@ -21,57 +28,65 @@ pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
         {
             field(SBSINVLotNo; Rec.SBSINVLotNo)
             {
-                Editable = AdditionalFieldsEditable;
                 ApplicationArea = All;
+                Caption = 'Lot No.';
+                Editable = SBSINVAdditionalFieldsEditable;
                 trigger OnValidate()
                 begin
-                    SetAssignOrOpenTrackingText();
+                    this.SBSINVSetAssignOrOpenTrackingText();
                     CurrPage.Update();
                 end;
             }
             field(SBSINVAlternateLotNo; Rec.SBSINVAlternateLotNo)
             {
-                Editable = AdditionalFieldsEditable;
                 ApplicationArea = All;
+                Caption = 'Alternate Lot No.';
+                Editable = SBSINVAdditionalFieldsEditable;
             }
             field(SBSINVLabel; Rec.SBSINVLabel)
             {
-                Editable = AdditionalFieldsEditable;
                 ApplicationArea = All;
+                Caption = 'Label';
+                Editable = SBSINVAdditionalFieldsEditable;
             }
             field(SBSINVVessel; Rec.SBSINVVessel)
             {
-                Editable = AdditionalFieldsEditable;
                 ApplicationArea = All;
+                Caption = 'Vessel';
+                Editable = SBSINVAdditionalFieldsEditable;
             }
             field(SBSINVProductionDate; Rec.SBSINVProductionDate)
             {
-                Editable = AdditionalFieldsEditable;
-                Width = 14;
                 ApplicationArea = All;
+                Caption = 'Production Date';
+                Editable = SBSINVAdditionalFieldsEditable;
+                Width = 14;
             }
             field(SBSINVExpirationDate; Rec.SBSINVExpirationDate)
             {
-                Editable = AdditionalFieldsEditable;
-                Width = 14;
                 ApplicationArea = All;
+                Caption = 'Expiration Date';
+                Editable = SBSINVAdditionalFieldsEditable;
+                Width = 14;
             }
             field(SBSINVContainerNo; Rec.SBSINVContainerNo)
             {
-                Editable = AdditionalFieldsEditable;
-                Width = 15;
                 ApplicationArea = All;
+                Caption = 'Container No.';
+                Editable = SBSINVAdditionalFieldsEditable;
+                Width = 15;
             }
             field(SBSINVCountryOfOrigin; Rec.SBSINVCountryOfOrigin)
             {
                 ApplicationArea = All;
+                Caption = 'Country of Origin';
             }
         }
         movefirst(Control1; Type)
         modify(Description)
         {
-            Width = 40;
             QuickEntry = false;
+            Width = 40;
         }
         modify("Bin Code")
         {
@@ -155,21 +170,17 @@ pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
         }
     }
 
-    var
-        SBSINVAssignLotOrOpenTrackingText: Text;
-        AdditionalFieldsEditable: Boolean;
-
-    trigger OnAfterGetRecord();
+    trigger OnAfterGetRecord()
     begin
-        SetAssignOrOpenTrackingText();
-        SetAdditionalFieldsEditable();
+        this.SBSINVSetAssignOrOpenTrackingText();
+        this.SBSINVSetAdditionalFieldsEditable();
     end;
 
     trigger OnModifyRecord(): Boolean
     begin
         if Rec.Quantity = xRec.Quantity then
             exit(true);
-        SetAssignOrOpenTrackingText();
+        this.SBSINVSetAssignOrOpenTrackingText();
         exit(true);
     end;
 
@@ -178,39 +189,53 @@ pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
         SBSINVAssignLotOrOpenTrackingText := '';
     end;
 
-    local procedure SetAssignOrOpenTrackingText()
+    var
+        SBSINVAdditionalFieldsEditable: Boolean;
+        SBSINVAssignLotOrOpenTrackingText: Text;
+
+    internal procedure SBSINVSetAdditionalFieldsEditable()
     begin
-        if (Rec.Type <> Rec.Type::Item) or (rec.Quantity = 0) then
+        SBSINVAdditionalFieldsEditable := Rec.Quantity > 0;
+    end;
+
+    local procedure SBSINVAssignLotOrOpenItemTracking()
+    begin
+        if Rec.Quantity > 0 then begin
+            if Rec.SBSINVLotNo = '' then
+                Rec.SBSINVAssignNewLotNo()
+            else
+                this.SBSINVSpecialOpenItemTrackingLines();
+            this.SBSINVSetAssignOrOpenTrackingText();
+            CurrPage.Update();
+        end else begin
+            this.SBSINVOpenItemTrackingLinesNegativeQty(Rec);
+            CurrPage.Update(false);
+        end;
+    end;
+
+    // TODO: there is no need to pass the PurchaseLine as a parameter, it can be used directly from Rec. Refactor this later.
+    local procedure SBSINVOpenItemTrackingLinesNegativeQty(var PurchaseLine: Record "Purchase Line")
+    var
+        SpecialItemTrackingMgmt: Codeunit SpecialItemTrackingMgmt;
+    begin
+        SpecialItemTrackingMgmt.CallItemTracking_PurchaseLine_NegativeQty(PurchaseLine);
+    end;
+
+    local procedure SBSINVSetAssignOrOpenTrackingText()
+    begin
+        // TODO: refactor this into a case statement.
+        // https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-al-control-statements#programming-conventions-1
+        if (Rec.Type <> Rec.Type::Item) or (Rec.Quantity = 0) then
             SBSINVAssignLotOrOpenTrackingText := ''
-        else if (Rec.SBSINVLotNo = '') and (rec.Quantity > 0) then
+        else if (Rec.SBSINVLotNo = '') and (Rec.Quantity > 0) then
             SBSINVAssignLotOrOpenTrackingText := 'Assign Lot (Shift+Alt+L)'
         else
             SBSINVAssignLotOrOpenTrackingText := 'Open Tracking';
     end;
 
-    procedure SetAdditionalFieldsEditable()
-    begin
-        AdditionalFieldsEditable := Rec.Quantity > 0;
-    end;
-
-    local procedure AssignLotOrOpenItemTracking()
-    begin
-        if Rec.Quantity > 0 then begin
-            if Rec.SBSINVLotNo = '' then
-                Rec.AssignNewLotNo()
-            else
-                SpecialOpenItemTrackingLines;
-            SetAssignOrOpenTrackingText();
-            CurrPage.Update();
-        end else begin
-            OpenItemTrackingLines_NegativeQty(Rec);
-            CurrPage.Update(false);
-        end;
-    end;
-
-    local procedure SpecialOpenItemTrackingLines();
+    local procedure SBSINVSpecialOpenItemTrackingLines()
     var
-        SpecialTrackingMgmt: codeunit SpecialItemTrackingMgmt;
+        SpecialTrackingMgmt: Codeunit SpecialItemTrackingMgmt;
     begin
         Rec.TestField(Type, Rec.Type::Item);
         Rec.TestField("No.");
@@ -218,12 +243,5 @@ pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
         Rec.TestField("Quantity (Base)");
 
         SpecialTrackingMgmt.PurchaseCallItemTracking(Rec);
-    end;
-
-    local procedure OpenItemTrackingLines_NegativeQty(var Rec: Record "Purchase Line");
-    var
-        SpecialItemTrackingMgmt: Codeunit SpecialItemTrackingMgmt;
-    begin
-        SpecialItemTrackingMgmt.CallItemTracking_PurchaseLine_NegativeQty(Rec);
     end;
 }

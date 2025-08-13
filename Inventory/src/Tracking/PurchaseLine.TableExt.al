@@ -1,5 +1,16 @@
-// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2855 - Add Purchase Order Subform lot tracking enhancements
-tableextension 60310 PurchaseLine extends "Purchase Line"
+namespace SilverBay.Inventory.Tracking;
+
+using Microsoft.Inventory.Tracking;
+using Microsoft.Purchases.Document;
+using Microsoft.Foundation.Address;
+using Microsoft.Sales.Document;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Item;
+
+/// <summary>
+/// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2855 - Add Purchase Order Subform lot tracking enhancements
+/// </summary>
+tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
 {
     fields
     {
@@ -13,35 +24,45 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         field(60300; SBSINVLotNo; Code[20])
         {
             Caption = 'Lot No.';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies a lot number if the item carries such a number.';
+
             trigger OnValidate()
             var
-                OriginalLotNo: Code[20];
                 NewLotNo: Code[20];
+                OriginalLotNo: Code[20];
             begin
+                // TODO: This code can be improved by refactoring it out into smaller procedures/functions to enhance readability and maintainability. This should not all be in an "OnValidate" trigger.
                 Rec.TestField("Location Code");
                 Rec.TestField(Type, Rec.Type::Item);
-                CheckIfLotAlreadyReceived();
+                this.CheckIfLotAlreadyReceived();
                 OriginalLotNo := xRec.SBSINVLotNo;
                 NewLotNo := Rec.SBSINVLotNo;
+                // TODO: The following code can likely be improved via use of a case statement for better clarity.
                 if (OriginalLotNo = '') and (NewLotNo <> '') then begin
-                    CheckIfDuplicateLot(NewLotNo);
-                    CreateReservationEntryForPurchaseLine(Rec);
-                end else if (OriginalLotNo <> '') and (NewLotNo = '') then begin
-                    CheckIfSOReservationsExistForItemAndLot(Rec."No.", OriginalLotNo, Rec.Type, Rec.Quantity);
-                    DeleteReservationEntriesForPOLine();
-                    LotNoInformation.SBSINVDeleteLotNoInfoForPurchaseLine(Rec, OriginalLotNo);
-                end else if NewLotNo <> OriginalLotNo then begin
-                    CheckIfDuplicateLot(NewLotNo);
-                    LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
-                    LotNoInformation.SBSINVDeleteLotNoInfoForPurchaseLine(Rec, OriginalLotNo);
-                    UpdateLotOnSales(OriginalLotNo, NewLotNo, Rec.SBSINVProductionDate, Rec.SBSINVProductionDate, Rec.SBSINVExpirationDate, Rec.SBSINVExpirationDate);
-                    UpdateLotOnPurchaseLineReservationEntry(Rec, OriginalLotNo, NewLotNo);
-                end;
+                    this.CheckIfDuplicateLot(NewLotNo);
+                    this.CreateReservationEntryForPurchaseLine(Rec);
+                end else
+                    if (OriginalLotNo <> '') and (NewLotNo = '') then begin
+                        this.CheckIfSOReservationsExistForItemAndLot(Rec."No.", OriginalLotNo, Rec.Type, Rec.Quantity);
+                        this.DeleteReservationEntriesForPOLine();
+                        LotNoInformation.SBSINVDeleteLotNoInfoForPurchaseLine(Rec, OriginalLotNo);
+                    end else
+                        if NewLotNo <> OriginalLotNo then begin
+                            this.CheckIfDuplicateLot(NewLotNo);
+                            LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
+                            LotNoInformation.SBSINVDeleteLotNoInfoForPurchaseLine(Rec, OriginalLotNo);
+                            this.UpdateLotOnSales(OriginalLotNo, NewLotNo, Rec.SBSINVProductionDate, Rec.SBSINVProductionDate, Rec.SBSINVExpirationDate, Rec.SBSINVExpirationDate);
+                            this.UpdateLotOnPurchaseLineReservationEntry(Rec, NewLotNo);
+                        end;
             end;
         }
         field(60305; SBSINVAlternateLotNo; Code[20])
         {
             Caption = 'Alternate Lot No.';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the value of the Alternate Lot No. field.';
+
             trigger OnValidate()
             begin
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
@@ -50,6 +71,9 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         field(60310; SBSINVLabel; Text[50])
         {
             Caption = 'Label';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the value of the Label field.';
+
             trigger OnValidate()
             begin
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
@@ -58,6 +82,9 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         field(60325; SBSINVVessel; Text[50])
         {
             Caption = 'Vessel';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the value of the Vessel field.';
+
             trigger OnValidate()
             begin
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
@@ -66,6 +93,9 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         field(60330; SBSINVContainerNo; Code[20])
         {
             Caption = 'Container No.';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the value of the Container No. field.';
+
             trigger OnValidate()
             begin
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
@@ -73,15 +103,19 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         }
         field(60335; SBSINVCountryOfOrigin; Text[30])
         {
-            Caption = 'Country of Origin';
-            TableRelation = "Country/Region";
             CalcFormula = lookup(Item."Country/Region of Origin Code" where("No." = field("No.")));
-            fieldClass = Flowfield;
+            Caption = 'Country of Origin';
             Editable = false;
+            FieldClass = FlowField;
+            TableRelation = "Country/Region";
+            ToolTip = 'Specifies the value of the Country of Origin field.';
         }
         field(60340; SBSINVProductionDate; Date)
         {
             Caption = 'Production Date';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the value of the Production Date field.';
+
             trigger OnValidate()
             begin
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
@@ -90,6 +124,9 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         field(60345; SBSINVExpirationDate; Date)
         {
             Caption = 'Expiration Date';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the last date that the item on the line can be used.';
+
             trigger OnValidate()
             begin
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
@@ -99,25 +136,71 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
 
     var
         LotNoInformation: Record "Lot No. Information";
+        DocumentNumberBlankErr: Label 'Document No. must not be blank';
+        LotExistsErr: Label 'Lot %1 already exists', Comment = '%1 = Lot No.';
+        LotRecievedErr: Label 'You cannot change %1 after the lot has been received.', Comment = '%1 = name of the field being changed.';
+        SalesReservationsExistErr: Label 'Sales Order Reservations Exist for Item %1 Lot %2', Comment = '%1 = an item number, %2 = a lot number';
 
-    local procedure DeleteReservationEntriesForPOLine();
-    var
-        ReservationEntry: Record "Reservation Entry";
+    internal procedure SBSINVAssignNewLotNo()
     begin
-        ReservationEntry.SetRange("Item No.", Rec."No.");
-        ReservationEntry.SetRange("Source Type", Database::"Purchase Line");
-        ReservationEntry.SetRange("Source Subtype", 1);
-        ReservationEntry.SetRange("Source ID", Rec."Document No.");
-        ReservationEntry.SetRange("Source Ref. No.", Rec."Line No.");
-        if not ReservationEntry.IsEmpty then
-            ReservationEntry.DeleteAll();
+        // TODO: Review this code for consistency with other similar functions. Do we have a good reason for using TestField here but in other parts of the related code we're simply exiting procedures on the same conditions?
+        // TODO: Improve / simplify this procedure by migrating the "tests" to their own procedure that'd control whether or not the balance of the procedure code would execute.
+        if Rec.Quantity = 0 then
+            exit;
+        Rec.TestField(Type, Rec.Type::Item);
+        Rec.TestField(SBSINVLotNo, '');
+        Rec.TestField("Location Code");
+
+        Rec.SBSINVLotNo := this.SBSINVGetNextLotNoForDocumentNo(Rec."Document No.", '', Rec."Document No.");
+        this.CreateReservationEntryForPurchaseLine(Rec);
+        LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
     end;
 
-    local procedure CheckIfLotAlreadyReceived();
+    internal procedure SBSINVGetNextLotNoForDocumentNo(SourceID: Code[20]; SourceBatchName: Code[20]; DocumentNo: Code[20]) NewLotNo: Code[50]
+    var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+    begin
+        // TODO: Improve / simplify this procedure by migrating the "tests" to their own procedure that'd control whether or not the balance of the procedure code would execute.        
+        if DocumentNo = '' then
+            Error(DocumentNumberBlankErr);
+
+        // TODO: Improve / simplify this procedure by refactoring the logic for generating the new lot number in the following 2 code blocks into a separate procedures.
+        ReservationEntry.SetRange("Source ID", SourceID);
+        ReservationEntry.SetRange("Source Batch Name", SourceBatchName);
+        ReservationEntry.SetFilter("Lot No.", DocumentNo + '*');
+        ReservationEntry.SetCurrentKey("Lot No.");
+        if ReservationEntry.FindLast() then
+            NewLotNo := IncStr(ReservationEntry."Lot No.")
+        else
+            NewLotNo := DocumentNo + '-001';
+
+        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1409 - Issue with Undo Receipt
+        ItemLedgerEntry.SetRange("Lot No.", NewLotNo);
+        ItemLedgerEntry.SetCurrentKey("Lot No.");
+        if not ItemLedgerEntry.IsEmpty then begin
+            ItemLedgerEntry.SetFilter("Lot No.", DocumentNo + '*');
+            ItemLedgerEntry.FindLast();
+            NewLotNo := IncStr(ItemLedgerEntry."Lot No.");
+        end;
+
+        exit(NewLotNo);
+    end;
+
+    local procedure CheckIfDuplicateLot(LotNo: Code[20])
+    var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+    begin
+        ItemLedgerEntry.SetRange("Lot No.", LotNo);
+        if not ItemLedgerEntry.IsEmpty then
+            Error(LotExistsErr, LotNo);
+    end;
+
+    local procedure CheckIfLotAlreadyReceived()
     var
         PurchaseLineRecRef: RecordRef;
         CurrFieldRef: FieldRef;
-        FieldName: Text[50];
+        FieldName: Text;
     begin
         if Rec."Quantity Received" > 0 then begin
             if CurrFieldNo = 0 then
@@ -125,27 +208,66 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
             else begin
                 PurchaseLineRecRef.Open(Database::"Purchase Line");
                 CurrFieldRef := PurchaseLineRecRef.Field(CurrFieldNo);
-                FieldName := CurrFieldRef.Caption;
+                FieldName := CurrFieldRef.Caption();
             end;
-            Error('You cannot change %1 after the lot has been received.', FieldName);
+            Error(LotRecievedErr, FieldName);
         end;
     end;
 
-    local procedure CreateReservationEntryForPurchaseLine(PurchaseLine: Record "Purchase Line");
+    local procedure CheckIfSOReservationsExistForItemAndLot(ItemNo: Code[20]; LotNo: Code[20]; PurchaseLineType: Enum "Purchase Line Type"; PurchaseLineQuantity: Decimal)
     var
-        PurchLineReserve: Codeunit "Purch. Line-Reserve";
-        CreateReservEntry: Codeunit "Create Reserv. Entry";
-        TrackingSpecification: Record "Tracking Specification";
-        InventorySetup: Record "Inventory Setup";
+        SalesLineReservationEntry: Record "Reservation Entry";
+    begin
+        // TODO: Improve / simplify this procedure by migrating the "tests" to their own procedure that'd control whether or not the balance of the procedure code would execute.
+        if PurchaseLineType <> PurchaseLineType::Item then
+            exit;
+        if PurchaseLineQuantity <= 0 then
+            exit;
+        if LotNo = '' then
+            exit;
+
+        SalesLineReservationEntry.SetRange("Item No.", ItemNo);
+        SalesLineReservationEntry.SetRange("Lot No.", LotNo);
+        SalesLineReservationEntry.SetRange("Source Type", Database::"Sales Line");
+        SalesLineReservationEntry.SetRange("Source Subtype", 1);
+        if not SalesLineReservationEntry.IsEmpty then
+            Error(SalesReservationsExistErr, ItemNo, LotNo);
+    end;
+
+    local procedure CopyPurchaseLineToTrackingSpecification(PurchaseLine: Record "Purchase Line"; var TrackingSpecification: Record "Tracking Specification")
+    begin
+        TrackingSpecification."Source Type" := Database::"Purchase Line";
+        TrackingSpecification."Source Subtype" := 1;
+        TrackingSpecification."Source ID" := PurchaseLine."Document No.";
+        TrackingSpecification."Source Batch Name" := '';
+        TrackingSpecification."Source Prod. Order Line" := 0;
+        TrackingSpecification."Source Ref. No." := PurchaseLine."Line No.";
+        TrackingSpecification."Item No." := PurchaseLine."No.";
+        TrackingSpecification.Description := '';
+        TrackingSpecification."Variant Code" := PurchaseLine."Variant Code";
+        TrackingSpecification."Location Code" := PurchaseLine."Location Code";
+        TrackingSpecification."Serial No." := '';
+        TrackingSpecification."Lot No." := PurchaseLine.SBSINVLotNo;
+        TrackingSpecification."Qty. per Unit of Measure" := PurchaseLine."Qty. per Unit of Measure";
+        TrackingSpecification."Quantity (Base)" := PurchaseLine."Quantity (Base)";
+        TrackingSpecification."Expiration Date" := PurchaseLine.SBSINVExpirationDate;
+    end;
+
+    local procedure CreateReservationEntryForPurchaseLine(PurchaseLine: Record "Purchase Line")
+    var
         ReservationEntry: Record "Reservation Entry";
+        TrackingSpecification: Record "Tracking Specification";
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        PurchLineReserve: Codeunit "Purch. Line-Reserve";
         ShipmentDate: Date;
         CurrentEntryStatus: Enum "Reservation Status";
         TransferredFromEntryNo: Integer;
     begin
-        CopyPurchaseLineToTrackingSpecification(PurchaseLine, TrackingSpecification);
+        this.CopyPurchaseLineToTrackingSpecification(PurchaseLine, TrackingSpecification);
         CurrentEntryStatus := CurrentEntryStatus::Surplus;
         ShipmentDate := 0D;
         TransferredFromEntryNo := 0;
+
         if not PurchLineReserve.FindReservEntry(PurchaseLine, ReservationEntry) then begin
             CreateReservEntry.CreateReservEntryFor(
                       TrackingSpecification."Source Type",
@@ -171,54 +293,17 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         end;
     end;
 
-    local procedure CopyPurchaseLineToTrackingSpecification(PurchaseLine: Record "Purchase Line"; var TrackingSpecification: record "Tracking Specification");
-    begin
-        TrackingSpecification."Source Type" := DATABASE::"Purchase Line";
-        TrackingSpecification."Source Subtype" := 1;
-        TrackingSpecification."Source ID" := PurchaseLine."Document No.";
-        TrackingSpecification."Source Batch Name" := '';
-        TrackingSpecification."Source Prod. Order Line" := 0;
-        TrackingSpecification."Source Ref. No." := PurchaseLine."Line No.";
-        TrackingSpecification."Item No." := PurchaseLine."No.";
-        TrackingSpecification.Description := '';
-        TrackingSpecification."Variant Code" := PurchaseLine."Variant Code";
-        TrackingSpecification."Location Code" := PurchaseLine."Location Code";
-        TrackingSpecification."Serial No." := '';
-        TrackingSpecification."Lot No." := PurchaseLine.SBSINVLotNo;
-        TrackingSpecification."Qty. per Unit of Measure" := PurchaseLine."Qty. per Unit of Measure";
-        TrackingSpecification."Quantity (Base)" := PurchaseLine."Quantity (Base)";
-        TrackingSpecification."Expiration Date" := PurchaseLine.SBSINVExpirationDate;
-    end;
-
-    local procedure CheckIfDuplicateLot(LotNo: Code[20])
+    local procedure DeleteReservationEntriesForPOLine()
     var
-        ItemLedgerEntry: Record "Item Ledger Entry";
-    begin
-        ItemLedgerEntry.SetRange("Lot No.", LotNo);
-        if not ItemLedgerEntry.IsEmpty then
-            Error('Lot %1 already exists', LotNo);
-    end;
-
-    local procedure UpdateLotOnPurchaseLineReservationEntry(PurchaseLine: Record "Purchase Line"; OriginalLotNo: Code[20]; NewLotNo: Code[20])
-    var
-        Item: Record Item;
         ReservationEntry: Record "Reservation Entry";
-        InventorySetup: Record "Inventory Setup";
-        NumResEntries: Integer;
     begin
-        if PurchaseLine.SBSINVLotNo = '' then
-            exit;
-        FindReservationEntryForPurchaseLine(PurchaseLine, ReservationEntry);
-        ReservationEntry.FindSet();
-        repeat
-            ReservationEntry."Lot No." := NewLotNo;
-            ReservationEntry."Expiration Date" := PurchaseLine.SBSINVExpirationDate;
-            ReservationEntry.Quantity := PurchaseLine.Quantity;
-            ReservationEntry."Quantity (Base)" := PurchaseLine."Quantity (Base)";
-            ReservationEntry."Qty. to Handle (Base)" := PurchaseLine."Qty. to Receive (Base)";
-            ReservationEntry."Qty. to Invoice (Base)" := PurchaseLine."Qty. to Invoice (Base)";
-            ReservationEntry.Modify();
-        until (ReservationEntry.Next() = 0);
+        ReservationEntry.SetRange("Item No.", Rec."No.");
+        ReservationEntry.SetRange("Source Type", Database::"Purchase Line");
+        ReservationEntry.SetRange("Source Subtype", 1);
+        ReservationEntry.SetRange("Source ID", Rec."Document No.");
+        ReservationEntry.SetRange("Source Ref. No.", Rec."Line No.");
+        if not ReservationEntry.IsEmpty then
+            ReservationEntry.DeleteAll();
     end;
 
     local procedure FindReservationEntryForPurchaseLine(PurchaseLine: Record "Purchase Line"; var ReservationEntry: Record "Reservation Entry")
@@ -235,18 +320,25 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         ReservationEntry.FindFirst();
     end;
 
-    procedure AssignNewLotNo()
-
+    local procedure UpdateLotOnPurchaseLineReservationEntry(PurchaseLine: Record "Purchase Line"; NewLotNo: Code[20])
+    var
+        ReservationEntry: Record "Reservation Entry";
     begin
-        if Rec.Quantity = 0 then
+        if PurchaseLine.SBSINVLotNo = '' then
             exit;
-        Rec.TestField(Type, Rec.Type::Item);
-        Rec.TestField(SBSINVLotNo, '');
-        Rec.TestField("Location Code");
 
-        Rec.SBSINVLotNo := GetNextLotNoForDocumentNo(Rec."Document No.", '', Rec."Document No.");
-        CreateReservationEntryForPurchaseLine(Rec);
-        LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
+        this.FindReservationEntryForPurchaseLine(PurchaseLine, ReservationEntry);
+
+        ReservationEntry.FindSet();
+        repeat
+            ReservationEntry."Lot No." := NewLotNo;
+            ReservationEntry."Expiration Date" := PurchaseLine.SBSINVExpirationDate;
+            ReservationEntry.Quantity := PurchaseLine.Quantity;
+            ReservationEntry."Quantity (Base)" := PurchaseLine."Quantity (Base)";
+            ReservationEntry."Qty. to Handle (Base)" := PurchaseLine."Qty. to Receive (Base)";
+            ReservationEntry."Qty. to Invoice (Base)" := PurchaseLine."Qty. to Invoice (Base)";
+            ReservationEntry.Modify();
+        until (ReservationEntry.Next() = 0);
     end;
 
     local procedure UpdateLotOnSales(OriginalLotNo: Code[20]; NewLotNo: Code[20]; OriginalProductionDate: Date; NewProductionDate: Date;
@@ -255,20 +347,23 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         ReservationEntry: Record "Reservation Entry";
         ReservationEntry2: Record "Reservation Entry";
         SalesLine: Record "Sales Line";
-        SalesLineTemp: Record "Sales Line" temporary;
+        TempSalesLine: Record "Sales Line" temporary;
     begin
+        // TODO: Improve / simplify this procedure by migrating the "tests" to their own procedure that'd control whether or not the balance of the procedure code would execute.
         if Rec."Document Type" <> Rec."Document Type"::Order then
             exit;
         if Rec.Type <> Rec.Type::Item then
             exit;
         if Rec."No." = '' then
             exit;
-        If (OriginalLotNo = '') then
+        if (OriginalLotNo = '') then
             exit;
         if (NewLotNo = OriginalLotNo) and
            (NewProductionDate = OriginalProductionDate) and
            (NewExpirationDate = OriginalExpirationDate) then
             exit;
+
+        // TODO: Improve / simplify this procedure by refactoring the logic in the following 2 code blocks into separate procedures.
         ReservationEntry.SetCurrentKey("Item No.", "Variant Code", "Location Code", "Lot No.", "Serial No.");
         ReservationEntry.SetRange(Positive, false);
         ReservationEntry.SetRange("Source Type", Database::"Sales Line");
@@ -278,73 +373,26 @@ tableextension 60310 PurchaseLine extends "Purchase Line"
         ReservationEntry.SetRange("Location Code", Rec."Location Code");
         ReservationEntry.SetRange("Lot No.", OriginalLotNo);
         ReservationEntry.SetFilter("Source ID", '<>%1', '');
-        If ReservationEntry.FindSet then
+        if ReservationEntry.FindSet() then
             repeat
                 ReservationEntry2 := ReservationEntry;
                 ReservationEntry2."Lot No." := NewLotNo;
                 ReservationEntry2."Expiration Date" := Rec.SBSINVExpirationDate;
                 ReservationEntry2.Modify(false);
                 if SalesLine.Get(ReservationEntry."Source Subtype", ReservationEntry."Source ID", ReservationEntry."Source Ref. No.") then begin
-                    SalesLineTemp := SalesLine;
-                    SalesLineTemp.SetRecFilter;
-                    if SalesLineTemp.IsEmpty then
-                        SalesLineTemp.Insert;
+                    TempSalesLine := SalesLine;
+                    TempSalesLine.SetRecFilter();
+                    if TempSalesLine.IsEmpty then
+                        TempSalesLine.Insert();
                 end;
-            until ReservationEntry.Next = 0;
-        SelectLatestVersion;
-        SalesLineTemp.Reset;
-        if SalesLineTemp.FindSet then
+            until ReservationEntry.Next() = 0;
+
+        SelectLatestVersion();
+        TempSalesLine.Reset();
+        if TempSalesLine.FindSet() then
             repeat
-                SalesLine := SalesLineTemp;
+                SalesLine := TempSalesLine;
                 SalesLine.GetLotNoAndAllocatedQty(SalesLine);
-            until (SalesLineTemp.Next = 0);
-    end;
-
-    local procedure CheckIfSOReservationsExistForItemAndLot(ItemNo: Code[20]; LotNo: Code[20]; PurchaseLineType: enum "Purchase Line Type"; PurchaseLineQuantity: Decimal);
-    var
-        SalesLineReservationEntry: Record "Reservation Entry";
-    begin
-        if PurchaseLineType <> PurchaseLineType::Item then
-            exit;
-        if PurchaseLineQuantity <= 0 then
-            exit;
-        if LotNo = '' then
-            exit;
-        SalesLineReservationEntry.SetRange("Item No.", ItemNo);
-        SalesLineReservationEntry.SetRange("Lot No.", LotNo);
-        SalesLineReservationEntry.SetRange("Source Type", Database::"Sales Line");
-        SalesLineReservationEntry.SetRange("Source Subtype", 1);
-        if not SalesLineReservationEntry.IsEmpty then
-            Error('Sales Order Reservations Exist for Item %1 Lot %2', ItemNo, LotNo);
-    end;
-
-    procedure GetNextLotNoForDocumentNo(SourceID: Code[20]; SourceBatchName: Code[20]; DocumentNo: Code[20]): Code[20]
-    var
-        ReservationEntry: Record "Reservation Entry";
-        ItemLedgerEntry: Record "Item Ledger Entry";
-        NewLotNo: Code[20];
-    begin
-        if DocumentNo = '' then
-            Error('Document No. must not be blank');
-
-        ReservationEntry.SetRange("Source ID", SourceID);
-        ReservationEntry.SetRange("Source Batch Name", SourceBatchName);
-        ReservationEntry.SetFilter("Lot No.", DocumentNo + '*');
-        ReservationEntry.SetCurrentKey("Lot No.");
-        if ReservationEntry.FindLast() then
-            NewLotNo := IncStr(ReservationEntry."Lot No.")
-        else
-            NewLotNo := DocumentNo + '-001';
-
-        // https://odydev.visualstudio.com/ThePlan/_workitems/edit/1409 - Issue with Undo Receipt
-        ItemLedgerEntry.SetRange("Lot No.", NewLotNo);
-        ItemLedgerEntry.SetCurrentKey("Lot No.");
-        if not ItemLedgerEntry.IsEmpty then begin
-            ItemLedgerEntry.SetFilter("Lot No.", DocumentNo + '*');
-            ItemLedgerEntry.FindLast();
-            NewLotNo := IncStr(ItemLedgerEntry."Lot No.");
-        end;
-
-        exit(NewLotNo);
+            until (TempSalesLine.Next() = 0);
     end;
 }
