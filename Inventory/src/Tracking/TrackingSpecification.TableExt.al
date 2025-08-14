@@ -13,7 +13,7 @@ tableextension 60304 TrackingSpecification extends "Tracking Specification"
 {
     fields
     {
-        field(60312; SBSINVNewProductionDate; Date)
+        field(60310; SBSINVNewProductionDate; Date)
         {
             Caption = 'New Production Date';
             DataClassification = CustomerContent;
