@@ -21,12 +21,36 @@ pageextension 60305 LotNoInformationCard extends "Lot No. Information Card"
                     Editable = false;
                     ToolTip = 'Specifies the value of the Alternate Lot No. field.';
                 }
-                field(SBSINVLabel; Rec.SBSINVLabel)
+                field(SBSINVGrade; Rec.SBSINVGrade)
                 {
                     ApplicationArea = All;
-                    Caption = 'Label';
+                    Caption = 'SPA Grade';
+                    ToolTip = 'Specifies the value of the SPA Grade field.';
+                }
+                field(SBSINVFacilityNumber; Rec.SBSINVFacilityNumber)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Facility Number';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Label field.';
+                    ToolTip = 'Specifies the value of the Facility Number field.';
+                }
+                field(SBSINVLotText; Rec.SBSINVLotText)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Lot Text';
+                    ToolTip = 'Specifies the value of the Lot Text field.';
+                }
+                field(SBSINVCustomerGrades; Rec.SBSINVCustomerGrades)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Customer Grades';
+                    ToolTip = 'Specifies the value of the Customer Grades field.';
+                }
+                field(SBSINVSpecialHandling; Rec.SBSINVSpecialHandling)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Special Handling';
+                    ToolTip = 'Specifies the value of the Special Handling field.';
                 }
                 field(SBSINVVessel; Rec.SBSINVVessel)
                 {

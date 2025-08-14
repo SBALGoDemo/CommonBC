@@ -29,38 +29,38 @@ tableextension 60300 ItemLedgerEntry extends "Item Ledger Entry"
             Caption = 'Original Lot No.';
             DataClassification = CustomerContent;
             Editable = false;
-            ToolTip = 'Specifies the original lot number of the item ledger entry.';
+            ToolTip = 'Specifies the original lot number of the lot.';
         }
         field(60303; SBSINVAlternateLotNo; Code[50])
         {
             Caption = 'Alternate Lot No.';
             DataClassification = CustomerContent;
-            ToolTip = 'Specifies the alternate lot number of the item ledger entry.';
+            ToolTip = 'Specifies the alternate lot number of the lot.';
         }
-        field(60304; SBSINVLabel; Text[50])
+        field(60304; SBSINVLotText; Text[50])
         {
-            Caption = 'Label';
+            Caption = 'Lot Text';
             DataClassification = CustomerContent;
-            ToolTip = 'Specifies the label value of the item ledger entry.';
+            ToolTip = 'Specifies the lot text of the lot.';
         }
         field(60310; SBSINVVessel; Text[50])
         {
             Caption = 'Vessel';
             DataClassification = CustomerContent;
             Editable = false;
-            ToolTip = 'Specifies the vessel of the item ledger entry.';
+            ToolTip = 'Specifies the vessel of the lot.';
         }
         field(60311; SBSINVContainerNo; Code[20])
         {
             Caption = 'Container No.';
             DataClassification = CustomerContent;
-            ToolTip = 'Specifies the container number of the item ledger entry.';
+            ToolTip = 'Specifies the container number of the lot.';
         }
         field(60312; SBSINVProductionDate; Date)
         {
             Caption = 'Production Date';
             DataClassification = CustomerContent;
-            ToolTip = 'Specifies the production date of the item ledger entry.';
+            ToolTip = 'Specifies the production date of the lot.';
         }
     }
 
@@ -75,7 +75,7 @@ tableextension 60300 ItemLedgerEntry extends "Item Ledger Entry"
         if this.GetLotNoInformation(LotNoInformation) then begin
             Rec.SBSINVOriginalLotNo := LotNoInformation.SBSINVOriginalLotNo;
             Rec.SBSINVAlternateLotNo := LotNoInformation.SBSINVAlternateLotNo;
-            Rec.SBSINVLabel := LotNoInformation.SBSINVLabel;
+            Rec.SBSINVLotText := LotNoInformation.SBSINVLotText;
             Rec.SBSINVVessel := LotNoInformation.SBSINVVessel;
             Rec.SBSINVContainerNo := LotNoInformation.SBSINVContainerNo;
             Rec.SBSINVProductionDate := LotNoInformation.SBSINVProductionDate;

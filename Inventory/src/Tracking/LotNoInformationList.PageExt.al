@@ -55,12 +55,40 @@ pageextension 60306 SBSINVLotNoInformationList extends "Lot No. Information List
                 Editable = false;
                 ToolTip = 'Specifies the value of the Alternate Lot No. field.';
             }
-            field(SBSINVLabel; Rec.SBSINVLabel)
+            field(SBSINVLotText; Rec.SBSINVLotText)
             {
                 ApplicationArea = All;
-                Caption = 'Label';
+                Caption = 'Lot Text';
                 Editable = false;
-                ToolTip = 'Specifies the value of the Label field.';
+                ToolTip = 'Specifies the value of the Lot Text associated with the Lot.';
+            }
+            field(SBSINVGrade; Rec.SBSINVGrade)
+            {
+                ApplicationArea = All;
+                Caption = 'SPA Grade';
+                Editable = false;
+                ToolTip = 'Specifies the value of the Grade of the Lot.';
+            }
+            field(SBSINVFacilityNumber; Rec.SBSINVFacilityNumber)
+            {
+                ApplicationArea = All;
+                Caption = 'Facility Number';
+                Editable = false;
+                ToolTip = 'Specifies the value of the Facility Number field.';
+            }
+            field(SBSINVCustomerGrades; Rec.SBSINVCustomerGrades)
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Grades';
+                Editable = false;
+                ToolTip = 'Specifies the value of the Customer Grades field.';
+            }
+            field(SBSINVSpecialHandling; Rec.SBSINVSpecialHandling)
+            {
+                ApplicationArea = All;
+                Caption = 'Special Handling';
+                Editable = false;
+                ToolTip = 'Specifies the value of the Special Handling field.';
             }
             field(SBSINVVessel; Rec.SBSINVVessel)
             {
