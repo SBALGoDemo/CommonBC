@@ -35,11 +35,11 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
             DataClassification = CustomerContent;
             ToolTip = 'Specifies the alternate lot number of the lot number information.';
         }
-        field(60304; SBSINVLabel; Text[50])
+        field(60304; SBSINVLotText; Text[50])
         {
-            Caption = 'Label';
+            Caption = 'Lot Text';
             DataClassification = CustomerContent;
-            ToolTip = 'Specifies the label value of the lot number information.';
+            ToolTip = 'Specifies the lot text value of the lot number information.';
         }
         field(60305; SBSINVVendorNo; Code[20])
         {
@@ -174,7 +174,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
             Caption = 'Total Quantity'; //Note - This field is a placeholder for use on the Item Tracking Page; it must be calculated when needed
             DataClassification = CustomerContent;
             Editable = false;
-            ToolTip = 'Specifies the total quantity of all lots for the item.';
+            ToolTip = 'Specifies the total available quantity of this lot.';
         }
         field(60322; SBSINVReceiptDateILE; Date)
         {
@@ -210,7 +210,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
         {
             Caption = 'Expected Receipt Date';
             DataClassification = CustomerContent;
-            ToolTip = 'Specifies the date that you expect the items to be available in your warehouse.';
+            ToolTip = 'Specifies the date that you expect the lot to be available in your warehouse.';
         }
         field(60328; SBSINVBuyerCode; Code[20])
         {
@@ -223,7 +223,31 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
         {
             Caption = 'Unit Cost';
             DataClassification = CustomerContent;
-            ToolTip = 'Specifies the cost of one unit of the item.';
+            ToolTip = 'Specifies the cost of one unit of the Lot.';
+        }
+        field(60330; SBSINVGrade; Code[20])
+        {
+            Caption = 'Grade';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the Grade of the Lot.';
+        }
+        field(60331; SBSINVFacilityNumber; Code[20])
+        {
+            Caption = 'Facility Number';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the Facility Number where the Lot originated.';
+        }
+        field(60332; SBSINVSpecialHandling; Text[50])
+        {
+            Caption = 'Special Handling';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the special handling instructions for the lot.';
+        }
+        field(60333; SBSINVCustomerGrades; Text[50])
+        {
+            Caption = 'Customer Grades';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the customer grades for the lot.';
         }
     }
 
@@ -341,7 +365,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
                 exit(true);
             (PurchaseLine.SBSINVAlternateLotNo <> LotNoInformation.SBSINVAlternateLotNo):
                 exit(true);
-            (PurchaseLine.SBSINVLabel <> LotNoInformation.SBSINVLabel):
+            (PurchaseLine.SBSINVLotText <> LotNoInformation.SBSINVLotText):
                 exit(true);
             (PurchaseLine.SBSINVExpirationDate <> LotNoInformation.SBSINVExpirationDate):
                 exit(true);
@@ -361,7 +385,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
     /// <param name="LotNoInformation"></param>
     local procedure SBSINVSetAdditionalCustomFields(ItemLedgerEntry: Record "Item Ledger Entry"; var LotNoInformation: Record "Lot No. Information")
     begin
-        this.SBSINVDoSetAdditionalCustomFields(LotNoInformation, ItemLedgerEntry."Location Code", ItemLedgerEntry.SBSINVAlternateLotNo, ItemLedgerEntry.SBSINVLabel, ItemLedgerEntry."Expiration Date", ItemLedgerEntry.SBSINVProductionDate, ItemLedgerEntry.SBSINVContainerNo, ItemLedgerEntry.SBSINVVessel);
+        this.SBSINVDoSetAdditionalCustomFields(LotNoInformation, ItemLedgerEntry."Location Code", ItemLedgerEntry.SBSINVAlternateLotNo, ItemLedgerEntry.SBSINVLotText, ItemLedgerEntry."Expiration Date", ItemLedgerEntry.SBSINVProductionDate, ItemLedgerEntry.SBSINVContainerNo, ItemLedgerEntry.SBSINVVessel);
     end;
 
     /// <summary>
@@ -371,7 +395,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
     /// <param name="LotNoInformation"></param>
     local procedure SBSINVSetAdditionalCustomFields(PurchaseLine: Record "Purchase Line"; var LotNoInformation: Record "Lot No. Information")
     begin
-        this.SBSINVDoSetAdditionalCustomFields(LotNoInformation, PurchaseLine."Location Code", PurchaseLine.SBSINVAlternateLotNo, PurchaseLine.SBSINVLabel, PurchaseLine.SBSINVExpirationDate, PurchaseLine.SBSINVProductionDate, PurchaseLine.SBSINVContainerNo, PurchaseLine.SBSINVVessel);
+        this.SBSINVDoSetAdditionalCustomFields(LotNoInformation, PurchaseLine."Location Code", PurchaseLine.SBSINVAlternateLotNo, PurchaseLine.SBSINVLotText, PurchaseLine.SBSINVExpirationDate, PurchaseLine.SBSINVProductionDate, PurchaseLine.SBSINVContainerNo, PurchaseLine.SBSINVVessel);
     end;
 
     /// <summary>
@@ -389,7 +413,7 @@ tableextension 60305 SBSINVLotNoInformation extends "Lot No. Information"
     begin
         LotNoInformation.SBSINVLocationCode := LocationCode;
         LotNoInformation.SBSINVAlternateLotNo := AlternateLotNo;
-        LotNoInformation.SBSINVLabel := Label;
+        LotNoInformation.SBSINVLotText := Label;
         LotNoInformation.SBSINVExpirationDate := ExpirationDate;
         LotNoInformation.SBSINVProductionDate := ProductionDate;
         LotNoInformation.SBSINVContainerNo := ContainerNo;

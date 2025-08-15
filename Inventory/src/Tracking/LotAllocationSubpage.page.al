@@ -51,7 +51,7 @@ page 60307 "Lot Allocation Subpage"
                     Caption = 'Total Quantity';
                     DecimalPlaces = 0 : 5;
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Total Quantity field.';
+                    ToolTip = 'Specifies the value of the Total Quantity on Hand + Qty. on Purchase Order.';
                 }
                 field(AvailableQuantity; Rec.SBSINVAvailableQuantity)
                 {
@@ -59,7 +59,7 @@ page 60307 "Lot Allocation Subpage"
                     DecimalPlaces = 0 : 5;
                     Editable = false;
                     Style = Unfavorable;
-                    ToolTip = 'Specifies the value of the Available Quantity field.';
+                    ToolTip = 'Specifies the value of the Quantity on Hand + Qty. on Purchase Order - Qty. on Sales Orders.';
                     trigger OnDrillDown()
                     begin
                         this.InfoPaneMgmt.TotalAvailQtyDrillDownByLot(Rec."Item No.", Rec."Variant Code", Rec."Lot No.", this.DateFilter);
@@ -102,11 +102,11 @@ page 60307 "Lot Allocation Subpage"
                     Editable = false;
                     ToolTip = 'Specifies the value of the Alternate Lot No. field.';
                 }
-                field("Label Text"; this.LotNoInformation.SBSINVLabel)
+                field("Lot Text"; this.LotNoInformation.SBSINVLotText)
                 {
-                    Caption = 'Label Text';
+                    Caption = 'Lot Text';
                     Editable = false;
-                    ToolTip = 'Specifies the value of the Label Text field.';
+                    ToolTip = 'Specifies the value of the Lot Text field.';
                 }
                 field(Vessel; this.LotNoInformation.SBSINVVessel)
                 {

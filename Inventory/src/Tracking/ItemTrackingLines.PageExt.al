@@ -40,12 +40,12 @@ pageextension 60304 ItemTrackingLines extends "Item Tracking Lines"
                 Editable = false;
                 ToolTip = 'Specifies the value of the Vessel field.';
             }
-            field(SBSINVLabel; LotNoInformation.SBSINVLabel)
+            field(SBSINVLotText; LotNoInformation.SBSINVLotText)
             {
                 ApplicationArea = All;
-                Caption = 'Label';
+                Caption = 'Lot Text';
                 Editable = false;
-                ToolTip = 'Specifies the value of the Label field.';
+                ToolTip = 'Specifies the value of the Lot Text field.';
             }
             field(SBSINVVendorNo; LotNoInformation.SBSINVVendorNo)
             {

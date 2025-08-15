@@ -43,10 +43,10 @@ pageextension 60303 PurchaseOrderSubform extends "Purchase Order Subform"
                 Caption = 'Alternate Lot No.';
                 Editable = SBSINVAdditionalFieldsEditable;
             }
-            field(SBSINVLabel; Rec.SBSINVLabel)
+            field(SBSINVLotText; Rec.SBSINVLotText)
             {
                 ApplicationArea = All;
-                Caption = 'Label';
+                Caption = 'Lot Text';
                 Editable = SBSINVAdditionalFieldsEditable;
             }
             field(SBSINVVessel; Rec.SBSINVVessel)

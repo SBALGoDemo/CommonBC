@@ -68,11 +68,11 @@ tableextension 60310 SBSINVPurchaseLine extends "Purchase Line"
                 LotNoInformation.SBSINVSetCustomFieldsFromPurchaseLine(Rec);
             end;
         }
-        field(60304; SBSINVLabel; Text[50])
+        field(60304; SBSINVLotText; Text[50])
         {
-            Caption = 'Label';
+            Caption = 'Lot Text';
             DataClassification = CustomerContent;
-            ToolTip = 'Specifies the value of the Label field.';
+            ToolTip = 'Specifies the value of the Lot Text field.';
 
             trigger OnValidate()
             begin
