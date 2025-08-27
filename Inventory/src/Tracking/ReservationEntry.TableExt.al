@@ -35,7 +35,9 @@ tableextension 60301 ReservationEntry extends "Reservation Entry"
             Editable = false;
             FieldClass = FlowField;
         }
+
         /// <summary>
+        /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2947 - Remove Unneeded Fields from Reservation Entry table extension 
         /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/1074 - Lots for a Purchaser
         /// </summary>
         field(60307; SBSINVPurchaserCode; Code[20])
@@ -43,11 +45,17 @@ tableextension 60301 ReservationEntry extends "Reservation Entry"
             Caption = 'Purchaser Code';
             DataClassification = CustomerContent;
             TableRelation = "Salesperson/Purchaser";
+            ObsoleteState = Pending;
+            ObsoleteTag = '25.250730';
+            ObsoleteReason = 'Use Lot No. Information table extension instead.';
         }
         field(60310; SBSINVProductionDate; Date)
         {
             Caption = 'Production Date';
             DataClassification = CustomerContent;
+            ObsoleteState = Pending;
+            ObsoleteTag = '25.250730';
+            ObsoleteReason = 'Use Lot No. Information table extension instead.';
         }
         field(60312; SBSINVNetWeight; Decimal)
         {

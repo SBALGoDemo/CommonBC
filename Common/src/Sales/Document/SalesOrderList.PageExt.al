@@ -1,7 +1,6 @@
 namespace SilverBay.Common.Sales.Document;
 
 using Microsoft.Sales.Document;
-using SilverBay.Common.System.Fields;
 
 /// <summary>
 /// https://odydev.visualstudio.com/ThePlan/_workitems/edit/2882 - Add Ship-to City to Sales Order List page
@@ -42,7 +41,7 @@ pageextension 60103 SalesOrderList extends "Sales Order List"
         }
         addlast(Control1)
         {
-            field(SBSCOMCreatedByUser; SystemFieldUtilities.GetUserNameFromSecurityID(Rec.SystemCreatedBy))
+            field(SBSCOMCreatedByUser; Rec.GetUserNameFromSecurityID(Rec.SystemCreatedBy))
             {
                 ApplicationArea = All;
                 Caption = 'Created by User';
@@ -50,7 +49,4 @@ pageextension 60103 SalesOrderList extends "Sales Order List"
             }
         }
     }
-
-    var
-        SystemFieldUtilities: Codeunit SystemFieldUtilities;
 }
