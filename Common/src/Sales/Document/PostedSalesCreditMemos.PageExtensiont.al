@@ -9,14 +9,14 @@ pageextension 60107 PostedSalesCreditMemos extends "Posted Sales Credit Memos"
     {
         addafter("Sell-to Customer Name")
         {
-            field("Ship-to County";Rec."Ship-to County")
+            field(SBSCOMShiptoCounty; Rec."Ship-to County")
             {
                 ApplicationArea = All;
             }
-            field("External Document No.";Rec."External Document No.")
+            field(SBSCOMExternalDocumentNo; Rec."External Document No.")
             {
                 ApplicationArea = All;
-            }   
+            }
         }
 
     }

@@ -1,6 +1,14 @@
 {
   "folders": [
     {
+      "name": ".AL-Go",
+      "path": ".AL-Go"
+    },
+    {
+      "name": ".github",
+      "path": ".github"
+    },
+    {
       "name": "Common",
       "path": "Common"
     },
@@ -30,19 +38,14 @@
     }
   ],
   "settings": {
-    "al.codeAnalyzers": [                
-      "${AppSourceCop}",
-      "${CodeCop}",
-      "${UICop}"
-    ],
+    "al.codeAnalyzers": [      
+      "${AppSourceCop}", "${CodeCop}", "${UICop}"],
     "al.enableCodeAnalysis": true,
     "al.publisher": "Silver Bay Seafoods",
     "al.rootNamespace": "SilverBay",
     "al.showExplorerAtStartup": "Always",
     "al.ruleSetPath": "..\\SilverBaySeafoods.PTE.Ruleset.json",
-    "al.packageCachePath": [    
-      "..\\.alpackages"
-    ],
+    "al.packageCachePath": ["..\\.alpackages"],
     "alObjectDesigner.singleObjectPerFile": true,
     "ALTB.CheckCommentTranslations": false,
     "CRS.DependencyGraph.IncludeTestApps": true,
@@ -107,9 +110,7 @@
       "SortVariables",
       "TrimTrailingWhitespace"
     ],
-    "alOutline.completionProviders": [
-      "VariableNamesWithType"
-    ],
+    "alOutline.completionProviders": ["VariableNamesWithType"],
     "alOutline.fixCaseRemovesQuotesFromDataTypeIdentifiers": true,
     "alOutline.fixCodeCopMissingParenthesesOnSave": true,
     "alOutline.keepVariableNamesCompletionAffixes": true,
@@ -122,7 +123,7 @@
     "alOutline.defaultApiVersion": "v2.0",
     "alOutline.enableCodeCopFixes": true,
     "alOutline.defaultDataClassification": "CustomerContent",
-    "alOutline.defaultRemoveEmptySectionsSettings": {      
+    "alOutline.defaultRemoveEmptySectionsSettings": {
       "removeActionGroups": true,
       "removeActions": true,
       "ignoreComments": false
@@ -158,6 +159,6 @@
       "green": 196,
       "blue": 0,
       "alpha": 0.3
-    },
+    }
   }
 }

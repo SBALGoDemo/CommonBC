@@ -7,7 +7,7 @@ pageextension 60109 PostedSalesInvoiceLines extends "Posted Sales Invoice Lines"
     {
         addlast(Control1)
         {
-            field("Posting Date";Rec."Posting Date")
+            field(SBSCOMPostingDate; Rec."Posting Date")
             {
                 ApplicationArea = All;
             }
