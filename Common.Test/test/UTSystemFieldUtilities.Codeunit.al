@@ -31,4 +31,4 @@
 //         this.Assert.AreEqual(User."User Name", this.SystemFieldUtilities.GetUserNameFromSecurityID(User."User Security ID"), StrSubstNo(this.WrongFieldValueErr, User.FieldCaption("User Name")));
 //         this.Assert.AreEqual('', this.SystemFieldUtilities.GetUserNameFromSecurityID(CreateGuid()), StrSubstNo(this.WrongFieldValueErr, User.FieldCaption("User Name")));
 //     end;
-}
+// }
