@@ -2,7 +2,7 @@
   "id": "2301e2cd-d475-4ced-a7e3-b666ea2ea658",
   "name": "Inventory.Test",
   "publisher": "Silver Bay Seafoods",
-  "version": "26.0.0.0",
+  "version": "26.1.0.0",
   "brief": "Inventory.Test",
   "description": "Silver Bay Seafoods' Inventory.Test app contains code used to test the Inventory app.",
   "privacyStatement": "https://www.silverbayseafoods.com/",
@@ -30,16 +30,16 @@
       "version": "26.0.0.0"
     },
     {
-      "id":  "23de40a6-dfe8-4f80-80db-d70f83ce8caf",
-      "name":  "Test Runner",
-      "publisher":  "Microsoft",
+      "id": "23de40a6-dfe8-4f80-80db-d70f83ce8caf",
+      "name": "Test Runner",
+      "publisher": "Microsoft",
       "version": "26.0.0.0"
     },
     {
       "publisher": "Silver Bay Seafoods",
       "name": "Inventory",
       "id": "4aa5f0f3-e4be-4584-b1e5-21b2721c2346",
-      "version": "26.0.0.0"
+      "version": "26.1.0.0"
     }
   ],
   "platform": "26.0.0.0",
@@ -61,6 +61,6 @@
   },
   "preprocessorSymbols": [],
   "source": {
-    "repositoryUrl": "https://odydev.visualstudio.com/Business%20Central/_git/CommonBC"    
+    "repositoryUrl": "https://odydev.visualstudio.com/Business%20Central/_git/CommonBC"
   }
 }

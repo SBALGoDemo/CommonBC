@@ -5,5 +5,6 @@
   "appFolders": [],
   "bcptTestFolders": [],
   "artifact": "/OnPrem/*//latest",
-  "doNotRunTests": false
+  "doNotRunTests": false,
+  "repoVersion": "26.1"
 }
