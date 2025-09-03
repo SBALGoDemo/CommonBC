@@ -2,7 +2,7 @@
   "id": "1cddf527-422f-4743-82e7-e2fcb7dba25a",
   "name": "Common.Test",
   "publisher": "Silver Bay Seafoods",
-  "version": "25.0.0.0",
+  "version": "26.1.0.0",
   "brief": "Common.Test",
   "description": "Silver Bay Seafoods' Common.Test app contains code used to test the Common app.",
   "privacyStatement": "https://www.silverbayseafoods.com/",
@@ -15,7 +15,7 @@
       "publisher": "Silver Bay Seafoods",
       "name": "Common",
       "id": "127b2d32-672c-4fe1-b466-9dbe91f87642",
-      "version": "26.0.0.0"
+      "version": "26.1.0.0"
     },
     {
       "publisher": "Microsoft",
@@ -36,9 +36,9 @@
       "version": "26.0.0.0"
     },
     {
-      "id":  "23de40a6-dfe8-4f80-80db-d70f83ce8caf",
-      "name":  "Test Runner",
-      "publisher":  "Microsoft",
+      "id": "23de40a6-dfe8-4f80-80db-d70f83ce8caf",
+      "name": "Test Runner",
+      "publisher": "Microsoft",
       "version": "26.0.0.0"
     }
   ],
@@ -61,6 +61,6 @@
   },
   "preprocessorSymbols": [],
   "source": {
-    "repositoryUrl": "https://odydev.visualstudio.com/Business%20Central/_git/CommonBC"    
+    "repositoryUrl": "https://odydev.visualstudio.com/Business%20Central/_git/CommonBC"
   }
 }

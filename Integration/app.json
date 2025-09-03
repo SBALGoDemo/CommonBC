@@ -2,7 +2,7 @@
   "id": "0f5a8c01-ef76-4043-961c-fcb3772a2411",
   "name": "Integration",
   "publisher": "Silver Bay Seafoods",
-  "version": "26.0.0.0",
+  "version": "26.1.0.0",
   "brief": "Integration",
   "description": "Silver Bay Seafoods' Integration app contains custom APIs required to facilitate SBS & OBF business requirements.",
   "privacyStatement": "https://www.silverbayseafoods.com/",
