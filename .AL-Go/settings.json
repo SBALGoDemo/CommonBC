@@ -4,5 +4,6 @@
   "testFolders": [],
   "appFolders": [],
   "bcptTestFolders": [],
-  "artifact": "/OnPrem/*//latest"
+  "artifact": "/OnPrem/*//latest",
+  "doNotRunTests": false
 }
