@@ -34,11 +34,11 @@
             "numberOfSqlStatements": 10
         },              
         {
-            "name": "Publish: Docker - Closest25Sandbox",
+            "name": "Publish: Docker - commonbc",
             "type": "al",
             "request": "launch",
             "environmentType": "Sandbox",
-            "server": "http://closest25sandbox/",
+            "server": "http://commonbc/",
             "serverInstance": "BC",
             "authentication": "UserPassword",
             "startupObjectId": 22,

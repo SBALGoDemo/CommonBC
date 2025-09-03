@@ -2,7 +2,7 @@
   "id": "4aa5f0f3-e4be-4584-b1e5-21b2721c2346",
   "name": "Inventory",
   "publisher": "Silver Bay Seafoods",
-  "version": "25.250814.0.1",
+  "version": "26.0.0.0",
   "brief": "Inventory",
   "description": "Silver Bay Seafoods' Inventory app contains a collection of enhancements generally related to Business Central's various Inventory features.",
   "privacyStatement": "https://www.silverbayseafoods.com/",
@@ -10,9 +10,9 @@
   "help": "https://www.silverbayseafoods.com/",
   "url": "https://www.silverbayseafoods.com/",
   "logo": "SilverBaySeafoods.png",
-  "platform": "25.0.0.0",
-  "application": "25.0.0.0",
-  "runtime": "14.0",
+  "platform": "26.0.0.0",
+  "application": "26.0.0.0",
+  "runtime": "15.0",
   "idRanges": [
     {
       "from": 60300,

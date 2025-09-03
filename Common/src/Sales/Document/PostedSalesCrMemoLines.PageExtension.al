@@ -7,7 +7,7 @@ pageextension 60108 PostedSalesCrMemoLines extends "Posted Sales Credit Memo Lin
     {
         addlast(Control1)
         {
-            field("Posting Date";Rec."Posting Date")
+            field(SBSCOMPostingDate; Rec."Posting Date")
             {
                 ApplicationArea = All;
             }
